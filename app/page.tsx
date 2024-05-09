@@ -3,7 +3,7 @@ import React from "react";
 export default function Main() {
     return (
         <div>
-            <div className="h-screen bg-[url('/bg.jpg')] bg-cover bg-right">
+            <div className="h-screen bg-[url('/assets/bg.jpg')] bg-cover bg-right">
                 <h1 className="mb-4 text-4xl font-extrabold leading-none \
                         tracking-tight text-gray-900 md:text-5xl lg:text-6xl \
                         dark:text-white">

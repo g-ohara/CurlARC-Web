@@ -3,6 +3,7 @@ import type React from "react";
 import { useState, type FormEvent } from "react"
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import router from "next/router";
 
 const Main: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -14,10 +15,27 @@ const Main: React.FC = () => {
         setError(""); // エラーメッセージをリセット
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            // ログイン成功後の処理（例：ホームページへのリダイレクト）
-            setError("ログインに成功しました。"); // エラーメッセージを設定
-            console.error(error);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const idToken = await userCredential.user.getIdToken();
+
+            // idTokenをバックエンドに送信する
+            const response = await fetch('${process.env.BACKEND_URL}/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id_token: idToken}),
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                // ログイン成功後の処理（例：ユーザー情報を表示し、ホームページにリダイレクト）
+                console.log('ログインに成功しました。', userData);
+                router.push('/home'); // ホームページにリダイレクト
+            } else {
+                const errorData = await response.json();
+                setError(errorData.error || "ログインに失敗しました。"); // エラーメッセージを設定
+            }
         } catch (error) {
             setError("ログインに失敗しました。"); // エラーメッセージを設定
             console.error(error);

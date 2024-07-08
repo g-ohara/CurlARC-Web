@@ -1,5 +1,5 @@
-"use client";
 import React from "react";
+import Link from "next/link";
 
 export default function Main() {
     return (
@@ -14,13 +14,9 @@ export default function Main() {
                         xl:px-48 dark:text-gray-400">
                     A simple application for recording your curling game.
                 </p>
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white \
-                        font-bold py-2 px-4 rounded"
-                    onClick={() => window.location.href = "/login"}
-                >
+                <Link href="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Log in
-                </button>
+                </Link>
             </div>
         </div>
     );

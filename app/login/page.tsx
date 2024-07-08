@@ -19,7 +19,7 @@ const Main: React.FC = () => {
       const idToken = await userCredential.user.getIdToken();
 
       // idTokenをバックエンドに送信する
-      const response = await fetch('${process.env.BACKEND_URL}/signin', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_DEV}/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

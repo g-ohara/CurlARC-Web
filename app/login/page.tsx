@@ -1,14 +1,15 @@
 "use client";
 import type React from "react";
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import router from "next/router";
+import Router from "next/router";
 
-const Main: React.FC = () => {
+export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault(); // フォームのデフォルトの送信を防ぐ
@@ -31,7 +32,7 @@ const Main: React.FC = () => {
         const userData = await response.json();
         // ログイン成功後の処理（例：ユーザー情報を表示し、ホームページにリダイレクト）
         console.log('ログインに成功しました。', userData);
-        router.push('/home'); // ホームページにリダイレクト
+        // setLoginSuccess(true);
       } else {
         const errorData = await response.json();
         setError(errorData.error || "ログインに失敗しました。"); // エラーメッセージを設定
@@ -42,54 +43,42 @@ const Main: React.FC = () => {
     }
   };
 
+  // ログイン成功時にのみリダイレクトを実行
+  useEffect(() => {
+    if (loginSuccess) {
+      Router.push('/home');
+    }
+  }, [loginSuccess]);
+
   return (
-    <div className="h-screen bg-[url('/assets/bg.jpg')] bg-cover bg-right">
-      <h1 className="mb-4 text-4xl font-extrabold leading-none \
-                        tracking-tight text-gray-900 md:text-5xl lg:text-6xl \
-                        dark:text-white">
-        Welcome to Login Page!
-      </h1>
-      <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 \
-                        xl:px-48 dark:text-gray-400">
-        This is login page for <a href="/" className="text-blue-600 hover:underline">CurlARC</a>.
-      </p>
-      <form onSubmit={handleLogin} className="flex flex-col items-center space-y-6">
-        <div>
-          <label htmlFor="email" className="block text-lg font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            className="mt-1 block w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ color: "black" }}
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-lg font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="mt-1 block w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ color: "black" }}
-          />
-        </div>
+    <>
+    <div className="flex items-center justify-center h-screen bg-gray-100 text-black">
+      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md max-w-sm w-full">
+        <h2 className="text-2xl font-bold mb-4 text-center">Login to CurlARC</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
         <button
           type="submit"
-          className="py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
-          Sign In
+          Login
         </button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
       </form>
     </div>
+    </>
   );
 };
 
-export default Main;

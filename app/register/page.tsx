@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword, getIdToken, deleteUser } from 'firebase/auth';
 
-const SignUp: React.FC = () => {
+export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -100,4 +100,3 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;

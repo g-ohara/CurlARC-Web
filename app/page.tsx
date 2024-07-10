@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const Home: React.FC = () => {
+export default function Main(){
     return (
         <div className="h-screen bg-[url('/assets/bg.jpg')] bg-cover bg-right">
             <div className="mt-8 px-4">
@@ -12,5 +12,3 @@ const Home: React.FC = () => {
         </div>
     );
 };
-
-export default Home;

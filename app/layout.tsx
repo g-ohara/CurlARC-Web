@@ -6,21 +6,21 @@ import Navigation from "./(components)/navigator";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "CurlARC",
-    description: "CurlARC is a simple application for recording your curling game.",
+  title: "CurlARC",
+  description: "CurlARC is a simple application for recording your curling game.",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en">
-            <body className={inter.className}>
-                <Navigation />
-                {children}
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <Navigation />
+        {children}
+      </body>
+    </html>
+  );
 }

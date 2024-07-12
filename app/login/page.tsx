@@ -3,17 +3,19 @@ import type React from "react";
 import { useEffect, useState, type FormEvent } from "react"
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault(); // フォームのデフォルトの送信を防ぐ
     setError(""); // エラーメッセージをリセット
+
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -32,7 +34,7 @@ export default function Login() {
         const userData = await response.json();
         // ログイン成功後の処理（例：ユーザー情報を表示し、ホームページにリダイレクト）
         console.log('ログインに成功しました。', userData);
-        // setLoginSuccess(true);
+        setLoginSuccess(true);
       } else {
         const errorData = await response.json();
         setError(errorData.error || "ログインに失敗しました。"); // エラーメッセージを設定
@@ -46,7 +48,7 @@ export default function Login() {
   // ログイン成功時にのみリダイレクトを実行
   useEffect(() => {
     if (loginSuccess) {
-      Router.push('/home');
+      router.push('/home');
     }
   }, [loginSuccess]);
 

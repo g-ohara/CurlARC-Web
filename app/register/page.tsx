@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword, getIdToken, deleteUser } from 'firebase/auth';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -9,6 +11,8 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [error, setError] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +52,7 @@ export default function Register() {
 
       // サインアップ成功後の処理（例：リダイレクト） 
       console.log('Sign up success');
+      setLoginSuccess(true);
     } catch (err) {
       setError('Sign up failed');
       console.error(err);
@@ -59,6 +64,12 @@ export default function Register() {
       }
     }
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      router.push('/home');
+    }
+  }, [loginSuccess]);
 
   return (
     <>
@@ -99,4 +110,3 @@ export default function Register() {
 
   );
 };
-

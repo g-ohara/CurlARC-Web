@@ -11,8 +11,8 @@ export default function Main() {
 
   return (
     <div className="px-10 py-10 grid md:grid-cols-2">
-      <Sheet putStone={putStone} setPutStone={setPutStone} />
+      <Sheet width={400.0} putStone={putStone} setPutStone={setPutStone} />
       <Menu putStone={putStone} setPutStone={setPutStone} />
-    </div >
-  )
+    </div>
+  );
 }

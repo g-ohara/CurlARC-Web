@@ -73,7 +73,7 @@ function drawStone(
   ctx.fillText(String(count), x - r * 0.28, y + r * 0.36);
 }
 
-export function drawSheet(
+function drawSheet(
   canvasRef: React.RefObject<HTMLCanvasElement>,
   x: number,
   y: number,
@@ -104,6 +104,7 @@ let count = 0;
 export function saveShot() { ++count; }
 
 export default function Sheet(props: Readonly<{
+  width: number;
   putStone: boolean;
   setPutStone: Dispatch<SetStateAction<boolean>>;
 }>) {
@@ -112,13 +113,14 @@ export default function Sheet(props: Readonly<{
   let stones: [number, number][] = [];
   const x = 10;
   const y = 10;
-  const ratio = 0.9;
+  const ratio = props.width / 475.0;
   let hammer = false;
 
   const handleClick = (event: MouseEvent) => {
     if (canvasRef.current?.contains(event.target as Node) && count < 16) {
       const click_x = event.clientX - canvasRef.current.offsetLeft;
       const click_y = event.clientY - canvasRef.current.offsetTop;
+
       props.setPutStone(true);
       if (stones.length <= count) {
         stones.push([click_x, click_y]);
@@ -139,7 +141,13 @@ export default function Sheet(props: Readonly<{
     return () => { document.removeEventListener('click', handleClick); };
   }, []);
 
+  const margin = 11;
+
   return (
-    <canvas ref={canvasRef} width={475} height={823} />
+    <canvas
+      ref={canvasRef}
+      width={475.0 * ratio + margin}
+      height={823.0 * ratio + margin}
+    />
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import {
   Button,
   TextField,
@@ -11,7 +11,7 @@ import {
 import { Accordion } from "./components";
 import { saveShot as sheetSaveShot } from "./sheet";
 
-export default function Menu() {
+export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: Dispatch<SetStateAction<boolean>> }>) {
 
   // Parameters for each shot
   const [rotation, setRotation] = useState<boolean | null>(null);
@@ -143,13 +143,14 @@ export default function Menu() {
       setShotType(null);
       setScore(null);
       setDifficulty(null);
+      props.setPutStone(false);
     }
 
     return (
       <Button
         variant="contained"
         onClick={() => { saveShot(); }}
-        disabled={rotation === null}
+        disabled={!props.putStone || rotation === null}
       >
         Save Shot
       </Button>

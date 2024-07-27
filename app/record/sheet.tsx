@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 type Canvas2D = CanvasRenderingContext2D;
 
@@ -103,21 +103,23 @@ let count = 0;
 
 export function saveShot() { ++count; }
 
-export default function Sheet() {
+export default function Sheet(props: Readonly<{
+  putStone: boolean;
+  setPutStone: Dispatch<SetStateAction<boolean>>;
+}>) {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let stones: [number, number][] = [];
   const x = 10;
   const y = 10;
   const ratio = 0.9;
-  let putStone = false;
   let hammer = false;
 
   const handleClick = (event: MouseEvent) => {
     if (canvasRef.current?.contains(event.target as Node) && count < 16) {
       const click_x = event.clientX - canvasRef.current.offsetLeft;
       const click_y = event.clientY - canvasRef.current.offsetTop;
-      putStone = true;
+      props.setPutStone(true);
       if (stones.length <= count) {
         stones.push([click_x, click_y]);
       }

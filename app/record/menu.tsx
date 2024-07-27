@@ -3,10 +3,18 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import {
   Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
+
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { Accordion } from "./components";
 import { saveShot as sheetSaveShot } from "./sheet";
@@ -161,7 +169,26 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
     return (
       <div>
         <Accordion title="Shot History">
-          (Work in Progress)
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Shot No.</TableCell>
+                <TableCell>Player</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>Player 1</TableCell>
+                <TableCell>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button variant="outlined"><EditIcon /></Button>
+                    <Button variant="outlined"><DeleteIcon /></Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </Accordion>
       </div>
     );

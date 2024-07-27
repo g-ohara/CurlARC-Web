@@ -15,8 +15,12 @@ import { saveShot as sheetSaveShot } from "./sheet";
 export default function Menu() {
 
   // Parameters for each shot
-  const [score, setScore] = useState<number>(0);
-  const [rotation, setRotation] = useState<boolean>(false);
+  const [rotation, setRotation] = useState<boolean | null>(null);
+
+  // Optional parameters for each shot
+  const [shotType, setShotType] = useState<string | null>(null);
+  const [score, setScore] = useState<number | null>(null);
+  const [difficulty, setDifficulty] = useState<string | null>(null);
 
   function RotationMenu() {
     return (
@@ -42,6 +46,29 @@ export default function Menu() {
 
   function AdvancedOptions() {
 
+    function ShotTypeMenu() {
+      return (
+        <div>
+          Shot Type
+          <ToggleButtonGroup
+            value={shotType}
+            exclusive
+            color="primary"
+            aria-label="Shot Type"
+            fullWidth
+            className="bg-slate-100"
+            onChange={(_: React.MouseEvent<HTMLElement>, newShotType: string) => {
+              setShotType(newShotType);
+            }}
+          >
+            <ToggleButton value="guard">Guards</ToggleButton>
+            <ToggleButton value="draw">Draws</ToggleButton>
+            <ToggleButton value="hit">Hits</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+      );
+    }
+
     function ScoreMenu() {
       return (
         <div>
@@ -66,13 +93,43 @@ export default function Menu() {
       );
     }
 
+    function DifficultyMenu() {
+      return (
+        <div>
+          Difficulty
+          <ToggleButtonGroup
+            value={difficulty}
+            exclusive
+            color="primary"
+            aria-label="Difficulty"
+            fullWidth
+            className="bg-slate-100"
+            onChange={(_: React.MouseEvent<HTMLElement>, newDifficulty: string) => {
+              setDifficulty(newDifficulty);
+            }}
+          >
+            <ToggleButton value="easy">Easy</ToggleButton>
+            <ToggleButton value="normal">Normal</ToggleButton>
+            <ToggleButton value="hard">Hard</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+      );
+    }
+
     function CommentField() {
-      return <div><TextField multiline rows={4} label="Comment" /></div>;
+      return (
+        <div>
+          <p>Comments</p>
+          <TextField multiline rows={4} className="w-full" />
+        </div>
+      );
     }
 
     return (
       <Accordion title="Advanced Options">
+        <ShotTypeMenu />
         <ScoreMenu />
+        <DifficultyMenu />
         <CommentField />
       </Accordion>
     );

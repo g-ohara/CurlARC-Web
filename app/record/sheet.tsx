@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 type Canvas2D = CanvasRenderingContext2D;
 
 function fillCircle(
@@ -95,4 +97,47 @@ export function drawSheet(
       drawStone(ctx, stone[0], stone[1], ratio, red, ~~(index / 2) + 1);
     });
   }
+}
+
+let count = 0;
+
+export function saveShot() { ++count; }
+
+export default function Sheet() {
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  let stones: [number, number][] = [];
+  const x = 10;
+  const y = 10;
+  const ratio = 0.9;
+  let putStone = false;
+  let hammer = false;
+
+  const handleClick = (event: MouseEvent) => {
+    if (canvasRef.current?.contains(event.target as Node) && count < 16) {
+      const click_x = event.clientX - canvasRef.current.offsetLeft;
+      const click_y = event.clientY - canvasRef.current.offsetTop;
+      putStone = true;
+      if (stones.length <= count) {
+        stones.push([click_x, click_y]);
+      }
+      else {
+        stones[count] = [click_x, click_y];
+      }
+      drawSheet(canvasRef, x, y, ratio, stones, hammer);
+    }
+  };
+
+  useEffect(() => {
+
+    drawSheet(canvasRef, x, y, ratio, stones, hammer);
+    document.addEventListener('click', handleClick);
+
+    // Cleanup function to remove event listener when component unmounts
+    return () => { document.removeEventListener('click', handleClick); };
+  }, []);
+
+  return (
+    <canvas ref={canvasRef} width={475} height={823} />
+  );
 }

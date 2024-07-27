@@ -11,7 +11,6 @@ import {
 import { Accordion } from "./components";
 import { saveShot as sheetSaveShot } from "./sheet";
 
-
 export default function Menu() {
 
   // Parameters for each shot
@@ -140,12 +139,18 @@ export default function Menu() {
     // Save the position, score, and rotation of the shot
     function saveShot() {
       sheetSaveShot();
-      setScore(0);
-      setRotation(true);
+      setRotation(null);
+      setShotType(null);
+      setScore(null);
+      setDifficulty(null);
     }
 
     return (
-      <Button variant="contained" onClick={() => { saveShot(); }}>
+      <Button
+        variant="contained"
+        onClick={() => { saveShot(); }}
+        disabled={rotation === null}
+      >
         Save Shot
       </Button>
     );

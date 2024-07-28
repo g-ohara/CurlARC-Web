@@ -51,94 +51,83 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
     );
   }
 
-  function AdvancedOptions() {
-
-    function ShotTypeMenu() {
-      return (
-        <div>
-          Shot Type
-          <ToggleButtonGroup
-            value={shotType}
-            exclusive
-            color="primary"
-            aria-label="Shot Type"
-            fullWidth
-            className="bg-slate-100"
-            onChange={(_: React.MouseEvent<HTMLElement>, newShotType: string) => {
-              setShotType(newShotType);
-            }}
-          >
-            <ToggleButton value="guard">Guards</ToggleButton>
-            <ToggleButton value="draw">Draws</ToggleButton>
-            <ToggleButton value="hit">Hits</ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      );
-    }
-
-    function ScoreMenu() {
-      return (
-        <div>
-          Score (%)
-          <ToggleButtonGroup
-            value={score}
-            exclusive
-            color="primary"
-            aria-label="Score"
-            onChange={(_: React.MouseEvent<HTMLElement>, newScore: number) => {
-              setScore(newScore);
-            }}
-            fullWidth
-          >
-            <ToggleButton value="0">0</ToggleButton>
-            <ToggleButton value="25">25</ToggleButton>
-            <ToggleButton value="50">50</ToggleButton>
-            <ToggleButton value="75">75</ToggleButton>
-            <ToggleButton value="100">100</ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      );
-    }
-
-    function DifficultyMenu() {
-      return (
-        <div>
-          Difficulty
-          <ToggleButtonGroup
-            value={difficulty}
-            exclusive
-            color="primary"
-            aria-label="Difficulty"
-            fullWidth
-            className="bg-slate-100"
-            onChange={(_: React.MouseEvent<HTMLElement>, newDifficulty: string) => {
-              setDifficulty(newDifficulty);
-            }}
-          >
-            <ToggleButton value="easy">Easy</ToggleButton>
-            <ToggleButton value="normal">Normal</ToggleButton>
-            <ToggleButton value="hard">Hard</ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-      );
-    }
-
-    function CommentField() {
-      return (
-        <div>
-          <p>Comments</p>
-          <TextField multiline rows={4} className="w-full" />
-        </div>
-      );
-    }
-
+  function ShotTypeMenu() {
     return (
-      <Accordion title="Advanced Options">
-        <ShotTypeMenu />
-        <ScoreMenu />
-        <DifficultyMenu />
-        <CommentField />
-      </Accordion>
+      <div>
+        Shot Type
+        <ToggleButtonGroup
+          value={shotType}
+          exclusive
+          color="primary"
+          aria-label="Shot Type"
+          fullWidth
+          className="bg-slate-100"
+          onChange={(_: React.MouseEvent<HTMLElement>, newShotType: string) => {
+            setShotType(newShotType);
+            console.log(shotType);
+          }}
+        >
+          <ToggleButton value="guard">Guards</ToggleButton>
+          <ToggleButton value="draw">Draws</ToggleButton>
+          <ToggleButton value="hit">Hits</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+    );
+  }
+
+  function ScoreMenu() {
+    return (
+      <div>
+        Score (%)
+        <ToggleButtonGroup
+          value={score}
+          exclusive
+          color="primary"
+          aria-label="Score"
+          onChange={(_: React.MouseEvent<HTMLElement>, newScore: number) => {
+            setScore(newScore);
+          }}
+          fullWidth
+        >
+          <ToggleButton value="0">0</ToggleButton>
+          <ToggleButton value="25">25</ToggleButton>
+          <ToggleButton value="50">50</ToggleButton>
+          <ToggleButton value="75">75</ToggleButton>
+          <ToggleButton value="100">100</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+    );
+  }
+
+  function DifficultyMenu() {
+    return (
+      <div>
+        Difficulty
+        <ToggleButtonGroup
+          value={difficulty}
+          exclusive
+          color="primary"
+          aria-label="Difficulty"
+          fullWidth
+          className="bg-slate-100"
+          onChange={(_: React.MouseEvent<HTMLElement>, newDifficulty: string) => {
+            setDifficulty(newDifficulty);
+          }}
+        >
+          <ToggleButton value="easy">Easy</ToggleButton>
+          <ToggleButton value="normal">Normal</ToggleButton>
+          <ToggleButton value="hard">Hard</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+    );
+  }
+
+  function CommentField() {
+    return (
+      <div>
+        <p>Comments</p>
+        <TextField multiline rows={4} className="w-full" />
+      </div>
     );
   }
 
@@ -199,7 +188,12 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
       <div>
         <form className="grid gap-4">
           <RotationMenu />
-          <AdvancedOptions />
+          <Accordion title="Advanced Options">
+            <ShotTypeMenu />
+            <ScoreMenu />
+            <DifficultyMenu />
+            <CommentField />
+          </Accordion>
           <SaveButton />
         </form>
       </div>

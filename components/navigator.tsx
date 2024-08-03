@@ -10,6 +10,7 @@ export default function Navigator() {
           <Link href="/" className="text-white hover:text-gray-300 transition-colors">CurlARC</Link>
         </h1>
         <nav className="ml-auto flex space-x-6">
+          <Link href="/profile" className="text-lg text-gray-300 hover:text-white transition-colors">Profile</Link>
           <Link href="/login" className="text-lg text-gray-300 hover:text-white transition-colors">Login</Link>
           <Link href="/register" className="text-lg text-gray-300 hover:text-white transition-colors">Register</Link>
         </nav>

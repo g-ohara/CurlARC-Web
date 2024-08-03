@@ -22,7 +22,7 @@ export default function Login() {
 
       // idTokenをバックエンドに送信する
       await apiClient.post("/signin", { id_token: idToken });
-      router.push('/home');
+      router.push('/profile');
 
     } catch (error) {
       setError(`ログインに失敗しました。\n${error}`);

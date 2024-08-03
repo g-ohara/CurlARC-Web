@@ -1,56 +1,33 @@
 "use client";
 import type React from "react";
-import { useEffect, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { apiClient } from "@/services/api/client/api";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [loginSuccess, setLoginSuccess] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault(); // フォームのデフォルトの送信を防ぐ
     setError(""); // エラーメッセージをリセット
 
-
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
       // idTokenをバックエンドに送信する
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_DEV}/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id_token: idToken }),
-      });
+      await apiClient.post("/signin", { id_token: idToken });
+      router.push('/home');
 
-      if (response.ok) {
-        const userData = await response.json();
-        // ログイン成功後の処理（例：ユーザー情報を表示し、ホームページにリダイレクト）
-        console.log('ログインに成功しました。', userData);
-        setLoginSuccess(true);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || "ログインに失敗しました。"); // エラーメッセージを設定
-      }
     } catch (error) {
-      setError("ログインに失敗しました。"); // エラーメッセージを設定
-      console.error(error);
+      setError(`ログインに失敗しました。\n${error}`);
     }
   };
-
-  // ログイン成功時にのみリダイレクトを実行
-  useEffect(() => {
-    if (loginSuccess) {
-      router.push('/home');
-    }
-  }, [loginSuccess]);
 
   return (
     <>

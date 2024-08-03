@@ -4,6 +4,7 @@ import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword, getIdToken, deleteUser } from 'firebase/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiClient } from '@/services/api/client/api';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -11,7 +12,6 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const [loginSuccess, setLoginSuccess] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -32,30 +32,16 @@ export default function Register() {
     try {
       const idToken = await getIdToken(userCredential.user);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_DEV}/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-          id_token: idToken,
-          name,
-          email,
-          team_ids: teamIds,
-        }),
+      await apiClient.post('/signup', {
+        id_token: idToken,
+        name,
+        email,
+        team_ids: teamIds,
       });
+      router.push('/profile');
 
-      if (!response.ok) {
-        throw new Error('Failed to save user on backend');
-      }
-
-      // サインアップ成功後の処理（例：リダイレクト） 
-      console.log('Sign up success');
-      setLoginSuccess(true);
     } catch (err) {
-      setError('Sign up failed');
-      console.error(err);
+      setError(`Signup failed ${err}`);
 
       // Firebaseユーザーの削除
       if (userCredential) {
@@ -64,12 +50,6 @@ export default function Register() {
       }
     }
   };
-
-  useEffect(() => {
-    if (loginSuccess) {
-      router.push('/home');
-    }
-  }, [loginSuccess]);
 
   return (
     <>

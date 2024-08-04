@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../services/api/client/api'
 import Link from 'next/link'
-import { get } from 'lodash'
-import { useCookies } from 'next-client-cookies'
 
 interface UserProfile {
   id: string

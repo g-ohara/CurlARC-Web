@@ -2,11 +2,21 @@
 
 import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../services/api/client/api'
+import Link from 'next/link'
+import { get } from 'lodash'
+import { useCookies } from 'next-client-cookies'
 
 interface UserProfile {
   id: string
   name: string
   email: string
+}
+
+export const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null
+  return null
 }
 
 export default function Profile() {
@@ -17,8 +27,8 @@ export default function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const jwt = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('jwt='))
-        if (jwt) {
+        const uuid = getCookie('uuid')
+        if (uuid) {
           const res = await apiClient.get('/auth/users/me')
           setUser(res.data)
         } else {
@@ -30,7 +40,6 @@ export default function Profile() {
         setLoading(false)
       }
     }
-
     fetchUserProfile()
   }, [])
 
@@ -64,7 +73,12 @@ export default function Profile() {
           </div>
         </div>
       ) : (
-        <div className="text-black">ログインしてください</div>
+        <div className="text-black">
+          <Link href="/login" className="text-blue-500 hover:underline">
+            ログイン
+          </Link>
+          してください
+        </div>
       )}
     </div>
   )

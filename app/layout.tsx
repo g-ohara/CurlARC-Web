@@ -1,19 +1,19 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Navigation from "../components/navigator";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import Navigation from '../components/navigator'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "CurlARC",
-  description: "CurlARC is a simple application for recording your curling game.",
-};
+  title: 'CurlARC',
+  description: 'CurlARC is a simple application for recording your curling game.'
+}
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
@@ -22,5 +22,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
+  )
 }

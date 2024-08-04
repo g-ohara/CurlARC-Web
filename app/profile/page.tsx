@@ -17,8 +17,13 @@ export default function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const res = await apiClient.get('/auth/users/me')
-        setUser(res.data)
+        const jwt = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('jwt='))
+        if (jwt) {
+          const res = await apiClient.get('/auth/users/me')
+          setUser(res.data)
+        } else {
+          setUser(null)
+        }
       } catch (error) {
         setError('ユーザー情報の取得に失敗しました。')
       } finally {
@@ -30,15 +35,15 @@ export default function Profile() {
   }, [])
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
+    <div className="flex min-h-screen items-center justify-center bg-white text-black">
       {loading ? (
-        <div className="text-black">Loading...</div>
+        <div>Loading...</div>
       ) : error ? (
         <div className="text-red-500">{error}</div>
       ) : user ? (
-        <div className="shadow-lg rounded-lg p-8 max-w-lg w-full">
-          <div className="flex items-center mb-6">
-            <div className="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-3xl font-bold mr-4">
+        <div className="w-full max-w-lg rounded-lg p-8 shadow-lg">
+          <div className="mb-6 flex items-center">
+            <div className="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500 text-3xl font-bold text-white">
               {user.name.charAt(0)}
             </div>
             <div>
@@ -47,10 +52,10 @@ export default function Profile() {
             </div>
           </div>
           <div className="border-t border-gray-300 pt-4">
-            <p className="text-lg text-gray-700 mb-2">
+            <p className="mb-2 text-lg text-gray-700">
               <strong>ID:</strong> {user.id}
             </p>
-            <p className="text-lg text-gray-700 mb-2">
+            <p className="mb-2 text-lg text-gray-700">
               <strong>Name:</strong> {user.name}
             </p>
             <p className="text-lg text-gray-700">
@@ -59,7 +64,7 @@ export default function Profile() {
           </div>
         </div>
       ) : (
-        <div className="text-black">No user data available.</div>
+        <div className="text-black">ログインしてください</div>
       )}
     </div>
   )

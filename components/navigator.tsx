@@ -1,21 +1,41 @@
-"use client";
-import Link from 'next/link';
-import React from 'react';
+import Link from 'next/link'
+import { EyeIcon, HomeIcon, PlusIcon, UsersIcon } from './icons'
 
 export default function Navigator() {
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white shadow-md">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 className="text-4xl font-extrabold leading-none tracking-tight">
-          <Link href="/" className="text-white hover:text-gray-300 transition-colors">CurlARC</Link>
-        </h1>
-        <nav className="ml-auto flex space-x-6">
-          <Link href="/team" className="text-lg text-gray-300 hover:text-white transition-colors">Team</Link>
-          <Link href="/profile" className="text-lg text-gray-300 hover:text-white transition-colors">Profile</Link>
-          <Link href="/login" className="text-lg text-gray-300 hover:text-white transition-colors">Login</Link>
-          <Link href="/register" className="text-lg text-gray-300 hover:text-white transition-colors">Register</Link>
-        </nav>
-      </div>
-    </header>
-  );
-};
+    <nav className="flex flex-col gap-6 border-r border-primary-foreground/10 bg-primary-foreground/5 p-6">
+      <Link
+        href="/"
+        className="flex items-center gap-3 font-medium text-primary hover:text-primary-foreground"
+        prefetch={false}
+      >
+        <HomeIcon className="h-6 w-6" />
+        Home
+      </Link>
+      <Link
+        href="/team"
+        className="flex items-center gap-3 text-muted-foreground hover:text-foreground"
+        prefetch={false}
+      >
+        <UsersIcon className="h-6 w-6" />
+        My Teams
+      </Link>
+      <Link
+        href="/record"
+        className="flex items-center gap-3 text-muted-foreground hover:text-foreground"
+        prefetch={false}
+      >
+        <PlusIcon className="h-6 w-6" />
+        Create Record
+      </Link>
+      <Link
+        href="/record"
+        className="flex items-center gap-3 text-muted-foreground hover:text-foreground"
+        prefetch={false}
+      >
+        <EyeIcon className="h-6 w-6" />
+        Following
+      </Link>
+    </nav>
+  )
+}

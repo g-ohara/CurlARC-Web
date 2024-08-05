@@ -14,7 +14,7 @@ export default function Navigator() {
   }
 
   return (
-    <nav className="flex flex-col gap-5 border-r border-primary-foreground/10 bg-primary-foreground/5 p-4 pt-6">
+    <nav className="flex flex-col gap-5 border-r border-primary-foreground/10 bg-primary-foreground/5 m-5 w-1/5 bg-light-blue">
       <Link href="/" className={getLinkClass('/')}>
         <HomeIcon className="h-6 w-6" />
         Home
@@ -25,7 +25,7 @@ export default function Navigator() {
       </Link>
       <Link href="/record" className={getLinkClass('/record')}>
         <PlusIcon className="h-6 w-6" />
-        Create Record
+        Create  Record
       </Link>
       <Link href="/view" className={getLinkClass('/view')}>
         <EyeIcon className="h-6 w-6" />

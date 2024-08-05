@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react'
 import { auth } from '../firebaseConfig'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { apiClient } from '@/services/api/client/api'
+import { apiClient } from '../utils/api/api'
 
 export default function Login() {
   const [email, setEmail] = useState<string>('')

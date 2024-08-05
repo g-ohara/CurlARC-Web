@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/header'
-import Navigator from '@/components/navigator'
-import RecordButton from '@/components/recordButton'
+import Header from '@/app/components/header'
+import Navigator from '@/app/components/navigator'
+import RecordButton from '@/app/components/recordButton'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex h-screen flex-col bg-background">
+        <div className="bg-background flex h-screen flex-col">
           <Header />
           <div className="flex flex-1">
             <Navigator />

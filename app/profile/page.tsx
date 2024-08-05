@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { apiClient } from '../../services/api/client/api'
 import Link from 'next/link'
+import { apiClient } from '../utils/api/api'
 
 interface UserProfile {
   id: string

@@ -4,6 +4,7 @@ import './globals.css'
 import Header from '@/components/header'
 import Navigator from '@/components/navigator'
 import RecordButton from '@/components/recordButton'
+import { AppProvider } from './context/appProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,12 +22,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex h-screen flex-col bg-background">
-          <Header />
-          <div className="flex flex-1">
-            <Navigator />
-            {children}
-            <RecordButton />
-          </div>
+          <AppProvider>
+            <Header />
+            <div className="flex flex-1">
+              <Navigator />
+              {children}
+              <RecordButton />
+            </div>
+          </AppProvider>
         </div>
       </body>
     </html>

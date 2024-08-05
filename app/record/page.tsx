@@ -10,7 +10,7 @@ export default function Main() {
   const [putStone, setPutStone] = useState(false);
 
   return (
-    <div className="px-10 py-10 grid md:grid-cols-2">
+    <div className="p-7 grid md:grid-cols-2">
       <Sheet width={400.0} putStone={putStone} setPutStone={setPutStone} />
       <Menu putStone={putStone} setPutStone={setPutStone} />
     </div>

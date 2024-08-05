@@ -36,7 +36,7 @@ export default function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/20">
               <img
-                src="/placeholder.svg"
+                src=""
                 width={32}
                 height={32}
                 alt="User Avatar"

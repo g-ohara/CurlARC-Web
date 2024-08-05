@@ -9,12 +9,12 @@ export default function Navigator() {
 
   const getLinkClass = (path: string) => {
     return pathname === path
-      ? 'flex items-center gap-3 font-medium text-primary'
-      : 'flex items-center gap-3 text-muted-foreground hover:text-foreground'
+      ? 'flex items-center gap-3 font-medium text-bold bg-light-blue p-2 rounded-lg'
+      : 'flex items-center gap-3 text-muted-foreground p-1 hover:text-foreground'
   }
 
   return (
-    <nav className="flex flex-col gap-6 border-r border-primary-foreground/10 bg-primary-foreground/5 p-6">
+    <nav className="flex flex-col gap-5 border-r border-primary-foreground/10 bg-primary-foreground/5 p-4 pt-6">
       <Link href="/" className={getLinkClass('/')}>
         <HomeIcon className="h-6 w-6" />
         Home
@@ -27,9 +27,9 @@ export default function Navigator() {
         <PlusIcon className="h-6 w-6" />
         Create Record
       </Link>
-      <Link href="/following" className={getLinkClass('/following')}>
+      <Link href="/view" className={getLinkClass('/view')}>
         <EyeIcon className="h-6 w-6" />
-        Following
+        View Records
       </Link>
     </nav>
   )

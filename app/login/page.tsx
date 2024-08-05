@@ -1,10 +1,10 @@
 'use client'
 import type React from 'react'
 import { useState, type FormEvent } from 'react'
-import { auth } from '../firebaseConfig'
+import { auth } from '../../firebaseConfig'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { apiClient } from '../utils/api/api'
+import { apiClient } from '../../utils/api/api'
 
 export default function Login() {
   const [email, setEmail] = useState<string>('')
@@ -30,30 +30,30 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex h-screen items-center justify-center bg-gray-100 text-black">
-        <form onSubmit={handleLogin} className="w-full max-w-sm rounded bg-white p-8 shadow-md">
+      <div className="bg-gray-100 text-black flex h-screen items-center justify-center">
+        <form onSubmit={handleLogin} className="rounded bg-white w-full max-w-sm p-8 shadow-md">
           <h2 className="mb-4 text-center text-2xl font-bold">Login to CurlARC</h2>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mb-4 w-full rounded border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+            className="rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500 mb-4 w-full border px-4 py-2 focus:outline-none"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mb-4 w-full rounded border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+            className="rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500 mb-4 w-full border px-4 py-2 focus:outline-none"
           />
           <button
             type="submit"
-            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none"
+            className="rounded bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 w-full px-4 py-2 focus:outline-none"
           >
             Login
           </button>
-          {error && <p className="mt-4 text-red-500">{error}</p>}
+          {error && <p className="text-red-500 mt-4">{error}</p>}
         </form>
       </div>
     </>

@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Input } from '@/app/components/ui/input'
-import { Button } from '@/app/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -8,23 +8,23 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem
-} from '@/app/components/ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu'
 import { BellIcon, ConeIcon, LogOutIcon, SearchIcon, SettingsIcon, UserIcon } from './icons'
 
 export default function Header() {
   return (
-    <header className="bg-primary text-primary-foreground flex items-center justify-between px-6 py-4 shadow-md">
+    <header className="flex items-center justify-between bg-primary px-6 py-4 text-primary-foreground shadow-md">
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <ConeIcon className="h-8 w-8" />
           <span className="text-xl font-bold">CurlARC</span>
         </Link>
         <div className="relative">
-          <SearchIcon className="text-muted-foreground absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2" />
+          <SearchIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search teams or records"
-            className="bg-primary-foreground/10 focus:ring-primary rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+            className="rounded-md bg-primary-foreground/10 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           />
         </div>
       </div>

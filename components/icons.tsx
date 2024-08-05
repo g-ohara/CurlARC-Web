@@ -105,6 +105,7 @@ export function HomeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement
 export function LogInIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"

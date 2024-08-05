@@ -21,11 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex h-screen flex-col bg-background">
+        <div className="z-0 flex h-screen flex-col bg-background">
           <AppProvider>
             <Header />
-            <div className="flex flex-1">
+            <div className="flex h-screen">
               <Navigator />
+              <div className="flex"></div>
               {children}
               <RecordButton />
             </div>

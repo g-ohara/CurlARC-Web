@@ -2,19 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Cookies from 'js-cookie'
 import { apiClient } from '../../utils/api/api'
 
 interface UserProfile {
   id: string
   name: string
   email: string
-}
-
-export const getCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null
-  return null
 }
 
 export default function Profile() {
@@ -25,7 +19,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const uuid = getCookie('uuid')
+        const uuid = Cookies.get('uuid')
         if (uuid) {
           const res = await apiClient.get('/auth/users/me')
           setUser(res.data)
@@ -42,7 +36,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <div className="bg-white text-black flex min-h-screen items-center justify-center">
+    <div className="bg-white text-black mx-auto flex h-80">
       {loading ? (
         <div>Loading...</div>
       ) : error ? (

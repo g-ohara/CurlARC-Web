@@ -16,11 +16,22 @@ import { useApp } from '@/app/context/appProvider'
 import { useState } from 'react'
 import LoginModal from './loginModal'
 import RegisterModal from './registerModal'
+import { useRouter } from 'next/navigation'
 
 export default function Header() {
   const { isLoggedIn, user, logout } = useApp()
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
+  const goToProfile = () => {
+    router.push('/profile')
+  }
 
   return (
     <>
@@ -65,7 +76,7 @@ export default function Header() {
                 <>
                   <DropdownMenuLabel>Logged in as {user.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={goToProfile}>
                     <UserIcon className="mr-2 h-4 w-4" />
                     Profile
                   </DropdownMenuItem>
@@ -74,7 +85,7 @@ export default function Header() {
                     Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOutIcon className="mr-2 h-4 w-4" />
                     Logout
                   </DropdownMenuItem>

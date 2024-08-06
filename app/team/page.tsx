@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { TeamHeader } from './teamHeader'
@@ -7,31 +5,41 @@ import { TeamStatistics } from './teamStatistics'
 import { TeamFooter } from './teamFooter'
 import { TeamMembers } from './teamMembers'
 import { TeamDetails } from './teamDetails'
+import { getTeamsByUserId } from '@/lib/api/team'
+import { useApp } from '@/app/context/appProvider'
+import Cookies from 'js-cookie'
 
-export default function TeamPage() {
-  const teamMembers = [
-    { name: 'John Doe', role: 'Skip' },
-    { name: 'Jane Smith', role: 'Vice-Skip' },
-    { name: 'Bob Johnson', role: 'Lead' },
-    { name: 'Sarah Lee', role: 'Second' },
-    { name: 'Mike Brown', role: 'Lead' }
-  ]
+const teamMembers = [
+  { name: 'John Doe', role: 'Skip' },
+  { name: 'Jane Smith', role: 'Vice-Skip' },
+  { name: 'Bob Johnson', role: 'Lead' },
+  { name: 'Sarah Lee', role: 'Second' },
+  { name: 'Mike Brown', role: 'Lead' }
+]
 
-  const data = [
-    { month: 'January', desktop: 186 },
-    { month: 'February', desktop: 305 },
-    { month: 'March', desktop: 237 },
-    { month: 'April', desktop: 273 },
-    { month: 'May', desktop: 209 },
-    { month: 'June', desktop: 214 }
-  ]
+const data = [
+  { month: 'January', desktop: 186 },
+  { month: 'February', desktop: 305 },
+  { month: 'March', desktop: 237 },
+  { month: 'April', desktop: 273 },
+  { month: 'May', desktop: 209 },
+  { month: 'June', desktop: 214 }
+]
 
-  const teamDetails = [
-    { key: 'Location', value: 'Toronto, ON' },
-    { key: 'Established', value: '2015' },
-    { key: 'Home Arena', value: 'Toronto Curling Club' },
-    { key: 'Sponsor', value: 'Frosty Inc' }
-  ]
+const teamDetails = [
+  { key: 'Location', value: 'Toronto, ON' },
+  { key: 'Established', value: '2015' },
+  { key: 'Home Arena', value: 'Toronto Curling Club' },
+  { key: 'Sponsor', value: 'Frosty Inc' }
+]
+
+export default async function TeamPage() {
+  const uuid = Cookies.get('uuid')
+  console.log('uuid', uuid)
+  if (uuid) {
+    const team = await getTeamsByUserId(uuid)
+    console.log(team)
+  }
 
   return (
     <main className="flex-1 p-8">

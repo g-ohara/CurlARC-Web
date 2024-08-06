@@ -3,11 +3,12 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import Cookies from 'js-cookie'
 import { apiClient } from '@/utils/api/api'
-import { useRouter } from 'next/navigation'
+import { getUser } from '@/lib/api/user'
 
 interface User {
+  id: string
   name: string
-  avatarUrl: string
+  email: string
 }
 
 interface AppContextType {
@@ -22,7 +23,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<User | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
     // コンポーネントがマウントされたときにcookieをチェック
@@ -34,9 +34,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const fetchUserData = async () => {
     try {
-      const response = await apiClient.get('/auth/users/me')
-      console.log(response.data)
-      login(response.data)
+      const user = await getUser()
+      login(user.data)
     } catch (error) {
       console.error('Failed to fetch user data:', error)
       logout()

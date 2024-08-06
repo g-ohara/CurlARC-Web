@@ -1,3 +1,5 @@
+'use client'
+
 import { ChartTooltipContent, ChartTooltip, ChartContainer } from '@/components/ui/chart'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 

@@ -59,7 +59,7 @@ export default function Header() {
               <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/20">
                 {isLoggedIn && user ? (
                   <img
-                    src={user.avatarUrl || '/placeholder.svg'}
+                    src={'/placeholder.svg'}
                     width={32}
                     height={32}
                     alt="User Avatar"

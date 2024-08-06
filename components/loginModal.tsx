@@ -48,8 +48,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
-      <div className="bg-black bg-gray-500/50 fixed inset-0 z-10 bg-opacity-20 transition-all" onClick={onClose}></div>
+    <div className="fixed inset-0 z-10 flex items-center justify-center">
+      <div className="bg-black fixed inset-0 bg-opacity-60 transition-all" onClick={onClose}></div>
       <div className="bg-white z-20 w-full max-w-md rounded-lg p-8 shadow-lg">
         <h2 className="mb-6 text-2xl font-semibold">Login</h2>
         <form onSubmit={handleSubmit}>

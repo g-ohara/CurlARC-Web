@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation'
 interface User {
   name: string
   avatarUrl: string
-  uuid: string
 }
 
 interface AppContextType {
@@ -35,7 +34,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const fetchUserData = async () => {
     try {
-      // ここで実際のAPIエンドポイントを使用してユーザーデータを取得
       const response = await apiClient.get('/auth/users/me')
       console.log(response.data)
       login(response.data)

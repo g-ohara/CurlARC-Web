@@ -9,5 +9,5 @@ interface UserProfile {
 }
 
 export default function Profile() {
-  return <div className="text-8xl">This is Team page.</div>
+  return <div className="text-8xl w-full">This is Team page.</div>
 }

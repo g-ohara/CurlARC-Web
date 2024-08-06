@@ -16,7 +16,7 @@ export default function Navigator() {
   const commonStyle = 'flex items-center gap-3 p-2 rounded-lg'
 
   return (
-    <nav className="m-5 flex w-1/5 flex-col gap-2 border-r border-primary-foreground/10 bg-primary-foreground/5">
+    <nav className="flex w-1/5 flex-col gap-2 bg-slate-100 p-3 shadow-md">
       <Link href="/" className={commonStyle + ' ' + getLinkClass('/')}>
         <HomeIcon className="h-6 w-6" />
         Home

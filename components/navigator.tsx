@@ -9,14 +9,14 @@ export default function Navigator() {
 
   const getLinkClass = (path: string) => {
     return pathname === path
-      ? 'font-medium text-bold bg-light-blue'
-      : 'transition ease-in-out text-muted-foreground hover:bg-light-blue hover:scale-110 hover:duration-300'
+      ? 'font-medium text-bold bg-light-blue scale-105'
+      : 'transition ease-in-out text-muted-foreground hover:bg-light-blue hover:scale-105 hover:duration-300'
   }
 
   const commonStyle = 'flex items-center gap-3 p-2 rounded-lg'
 
   return (
-    <nav className="flex w-1/5 flex-col gap-2 bg-slate-100 p-3 shadow-md">
+    <nav className="flex w-1/6 flex-col gap-2 bg-slate-100 p-3 shadow-md">
       <Link href="/" className={commonStyle + ' ' + getLinkClass('/')}>
         <HomeIcon className="h-6 w-6" />
         Home

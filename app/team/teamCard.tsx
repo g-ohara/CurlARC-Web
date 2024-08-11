@@ -11,7 +11,7 @@ interface TeamCardProps {
   teamName: string
   memberCount: number
   score: { red: number; blue: number }
-  members: Array<{ name: string; role: string }>
+  members: Array<{ name: string; email: string }>
   statisticsData: Array<{ month: string; desktop: number }>
   teamDetails: Array<{ key: string; value: string }>
   lastGameDate: string

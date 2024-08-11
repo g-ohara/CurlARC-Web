@@ -1,64 +1,65 @@
 import React from 'react'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { TeamHeader } from './teamHeader'
-import { TeamStatistics } from './teamStatistics'
-import { TeamFooter } from './teamFooter'
-import { TeamMembers } from './teamMembers'
-import { TeamDetails } from './teamDetails'
-import { getTeamsByUserId } from '@/lib/api/team'
-import { useApp } from '@/app/context/appProvider'
-import Cookies from 'js-cookie'
-
-const teamMembers = [
-  { name: 'John Doe', role: 'Skip' },
-  { name: 'Jane Smith', role: 'Vice-Skip' },
-  { name: 'Bob Johnson', role: 'Lead' },
-  { name: 'Sarah Lee', role: 'Second' },
-  { name: 'Mike Brown', role: 'Lead' }
-]
-
-const data = [
-  { month: 'January', desktop: 186 },
-  { month: 'February', desktop: 305 },
-  { month: 'March', desktop: 237 },
-  { month: 'April', desktop: 273 },
-  { month: 'May', desktop: 209 },
-  { month: 'June', desktop: 214 }
-]
-
-const teamDetails = [
-  { key: 'Location', value: 'Toronto, ON' },
-  { key: 'Established', value: '2015' },
-  { key: 'Home Arena', value: 'Toronto Curling Club' },
-  { key: 'Sponsor', value: 'Frosty Inc' }
-]
+import { TeamCard } from './teamCard'
+import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
+import { cookies } from 'next/headers'
 
 export default async function TeamPage() {
-  const uuid = Cookies.get('uuid')
-  console.log('uuid', uuid)
+  const cookieStore = cookies()
+  const uuid = cookieStore.get('uuid')?.value
+  let teamsWithMembers: Team[] = []
+
   if (uuid) {
-    const team = await getTeamsByUserId(uuid)
-    console.log(team)
+    const teamsResponse = await getTeamsByUserId(uuid)
+    const teams = teamsResponse.data
+
+    // チームの詳細情報とメンバー情報を非同期で取得
+    teamsWithMembers = await Promise.all(
+      teams.map(async (team) => {
+        const [teamDetails, membersResponse] = await Promise.all([getTeamDetails(team.id), getMembersByTeamId(team.id)])
+
+        return {
+          id: team.id,
+          name: team.name,
+          members: membersResponse.data.members,
+          details: teamDetails.data.details
+        }
+      })
+    )
+  }
+
+  if (teamsWithMembers.length === 0) {
+    return (
+      <main className="flex-1 p-8">
+        <p>No teams found. Please join or create a team.</p>
+      </main>
+    )
   }
 
   return (
     <main className="flex-1 p-8">
-      <div className="grid grid-cols-1 gap-6">
-        <Card className="rounded-lg bg-white p-4 shadow-md">
-          <CardHeader>
-            <TeamHeader teamName="Team Frosty" memberCount={5} score={{ red: 8, blue: 10 }} />
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-6">
-              <TeamMembers className="col-span-1" members={teamMembers} />
-              <TeamStatistics className="col-span-1" data={data} />
-              <TeamDetails data={teamDetails} />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <TeamFooter lastGameDate="April 15, 2023" />
-          </CardFooter>
-        </Card>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {teamsWithMembers.map((team) => (
+          <TeamCard
+            key={team.id}
+            teamName={team.name}
+            memberCount={team.members.length}
+            score={{ red: 0, blue: 0 }}
+            members={team.members.map((member) => ({
+              name: member.name,
+              email: member.email
+            }))}
+            statisticsData={[]}
+            teamDetails={Object.entries(team)
+              .filter(([key]) =>
+                ['location', 'established', 'homeArena', 'sponsor', 'league', 'division'].includes(key)
+              )
+              .map(([key, value]) => ({
+                key: key.charAt(0).toUpperCase() + key.slice(1),
+                value: value?.toString() || 'N/A'
+              }))}
+            lastGameDate={'N/A'}
+          />
+        ))}
       </div>
     </main>
   )

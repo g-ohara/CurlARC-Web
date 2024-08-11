@@ -1,9 +1,9 @@
 interface TeamMemberProps {
   name: string
-  role: string
+  email: string
 }
 
-const TeamMember: React.FC<TeamMemberProps> = ({ name, role }) => (
+const TeamMember: React.FC<TeamMemberProps> = ({ name, email }) => (
   <li className="flex items-center gap-2">
     <img
       src="/placeholder.svg"
@@ -15,7 +15,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, role }) => (
     />
     <div>
       <p className="font-medium">{name}</p>
-      <p className="text-sm text-muted-foreground">{role}</p>
+      <p className="text-sm text-muted-foreground">{email}</p>
     </div>
   </li>
 )

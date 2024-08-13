@@ -1,5 +1,6 @@
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
+import Cookies from 'js-cookie'
 
 const baseURL: string | undefined =
   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
@@ -11,17 +12,28 @@ const makeRequestBody = <T = object>(body: T) => {
   return JSON.stringify(toJSONFormat(body))
 }
 
+const getAuthHeaders = (jwt: string | undefined) => {
+  const JWT = Cookies.get('jwt') || jwt
+
+  const headers = new Headers({
+    'Content-Type': 'application/json'
+  })
+
+  if (JWT) {
+    headers.append('Authorization', `Bearer ${JWT}`)
+  }
+  return headers
+}
+
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
-const http = async (path: string, method: TMethod, body?: any) => {
+const http = async (path: string, method: TMethod, body?: any, jwt?: string) => {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     mode: 'cors',
     body: makeRequestBody(body),
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: getAuthHeaders(jwt)
   })
   if (!res.ok) {
     const data: { status: string; message: string } = await res.json()

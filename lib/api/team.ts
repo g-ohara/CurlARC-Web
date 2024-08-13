@@ -1,8 +1,9 @@
 import { apiClient } from '@/utils/api/api'
+import { GetServerSidePropsContext, NextPageContext } from 'next'
 import { cache } from 'react'
 
-export const getTeamsByUserId = cache(async (userId: string): Promise<getTeamsResponse> => {
-  const res = await apiClient.get(`/auth/users/${userId}/teams`)
+export const getTeamsByUserId = cache(async (jwt: string): Promise<getTeamsResponse> => {
+  const res = await apiClient.get(`/auth/users/me/teams`)
   return res
 })
 

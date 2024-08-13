@@ -5,26 +5,31 @@ import { cookies } from 'next/headers'
 
 export default async function TeamPage() {
   const cookieStore = cookies()
-  const uuid = cookieStore.get('uuid')?.value
+  const jwt = cookieStore.get('jwt')?.value
   let teamsWithMembers: Team[] = []
 
-  if (uuid) {
-    const teamsResponse = await getTeamsByUserId(uuid)
+  if (jwt) {
+    const teamsResponse = await getTeamsByUserId(jwt)
     const teams = teamsResponse.data
 
     // チームの詳細情報とメンバー情報を非同期で取得
-    teamsWithMembers = await Promise.all(
-      teams.map(async (team) => {
-        const [teamDetails, membersResponse] = await Promise.all([getTeamDetails(team.id), getMembersByTeamId(team.id)])
+    if (teams) {
+      teamsWithMembers = await Promise.all(
+        teams.map(async (team) => {
+          const [teamDetails, membersResponse] = await Promise.all([
+            getTeamDetails(team.id),
+            getMembersByTeamId(team.id)
+          ])
 
-        return {
-          id: team.id,
-          name: team.name,
-          members: membersResponse.data.members,
-          details: teamDetails.data.details
-        }
-      })
-    )
+          return {
+            id: team.id,
+            name: team.name,
+            members: membersResponse.data.members,
+            details: teamDetails.data.details
+          }
+        })
+      )
+    }
   }
 
   if (teamsWithMembers.length === 0) {

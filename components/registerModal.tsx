@@ -14,6 +14,7 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -70,10 +71,17 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center">
-      <div className="bg-black absolute inset-0 bg-opacity-50" onClick={onClose}></div>
-      <div className="bg-white z-20 w-full max-w-md rounded-lg p-8 shadow-lg">
+      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      <div className="z-20 w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h2 className="mb-4 text-2xl font-semibold">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            type="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            className="w-full"
+          />
           <Input
             type="email"
             value={email}
@@ -103,7 +111,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
               Cancel
             </Button>
           </div>
-          {error && <div className="text-red-500 border-red-500 rounded mt-4 border p-2">{error}</div>}
+          {error && <div className="mt-4 rounded border border-red-500 p-2 text-red-500">{error}</div>}
         </form>
       </div>
     </div>

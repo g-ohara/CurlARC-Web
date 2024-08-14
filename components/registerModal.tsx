@@ -7,6 +7,8 @@ import { createUserWithEmailAndPassword, deleteUser, getIdToken } from 'firebase
 import { auth } from '@/firebaseConfig'
 import { apiClient } from '@/utils/api/api'
 import { useRouter } from 'next/navigation'
+import { registerUser } from '@/lib/api/user'
+import { useApp } from '@/app/context/appProvider'
 
 interface RegisterModalProps {
   isOpen: boolean
@@ -19,6 +21,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string>('')
+  const { login } = useApp()
   const router = useRouter()
 
   useEffect(() => {
@@ -50,10 +53,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
     try {
       const idToken = await getIdToken(userCredential.user)
 
-      await apiClient.post('/signup', {
-        id_token: idToken,
-        email
-      })
+      const userId = await registerUser({ email: email, name: name, id_token: idToken })
+      login({ id: userId, name: name, email: email })
       router.push('/profile')
       onClose() // 登録成功後にモーダルを閉じる
     } catch (err) {
@@ -62,7 +63,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       // Firebaseユーザーの削除
       if (userCredential) {
         await deleteUser(userCredential.user)
-        console.log('Firebase user deleted due to backend signup failure')
       }
     }
   }

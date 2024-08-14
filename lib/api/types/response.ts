@@ -5,31 +5,25 @@ interface User {
 }
 
 interface getTeamsResponse {
-  status: string
-  data: {
-    id: string
-    name: string
+  Teams: {
+    Id: string
+    Name: string
   }[]
 }
 
 interface getUserResponse {
-  status: string
-  data: User
+  id: string
+  name: string
+  email: string
 }
 
 interface getMembersResponse {
-  status: string
-  data: {
-    members: User[]
-  }
+  Members: User[]
 }
 
 interface getTeamDetailsResponse {
-  status: string
-  data: {
-    details: {
-      key: string
-      value: string
-    }[]
-  }
+  details: {
+    key: string
+    value: string
+  }[]
 }

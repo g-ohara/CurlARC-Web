@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import Cookies from 'js-cookie'
-import { apiClient } from '@/utils/api/api'
 import { getUser } from '@/lib/api/user'
 
 interface User {
@@ -35,7 +34,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const fetchUserData = async () => {
     try {
       const user = await getUser()
-      login(user.data)
+      login(user)
     } catch (error) {
       console.error('Failed to fetch user data:', error)
       logout()

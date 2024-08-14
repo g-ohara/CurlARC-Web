@@ -8,6 +8,7 @@ import { apiClient } from '@/utils/api/api'
 import { useRouter } from 'next/navigation'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/firebaseConfig'
+import { getUser } from '@/lib/api/user'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -36,8 +37,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
       // idTokenをバックエンドに送信する
       await apiClient.post('/signin', { id_token: idToken })
-      const response = await apiClient.get('/auth/users/me')
-      login({ id: response.data.id, name: response.data.name, email: email })
+      const res = await getUser()
+      login({ id: res.id, name: res.name, email: res.email })
       router.push('/profile')
       onClose() // ログイン成功時にモーダルを閉じる
     } catch (error) {

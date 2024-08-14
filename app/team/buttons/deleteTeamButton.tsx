@@ -1,0 +1,98 @@
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { deleteTeam } from '@/lib/api/team'
+
+interface DeleteTeamButtonProps {
+  teamName: string
+  teamId: string
+}
+
+export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonProps) {
+  const [confirmText, setConfirmText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (confirmText !== `sudo rm ${teamName}`) {
+      setError('Confirmation text does not match. Please try again.')
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    try {
+      await deleteTeam(teamId)
+      setSuccess('Team deleted successfully!')
+      setConfirmText('')
+    } catch (error) {
+      setError('Failed to delete team. Please try again.\n' + error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="default"
+            className="border-red-600 text-red-600 hover:bg-red-100 hover:text-red-700"
+          >
+            Delete Team
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Team</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. Please type <code>sudo rm {teamName}</code> to confirm.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4">
+              <div className="mb-4 grid gap-2">
+                <Label htmlFor="confirm-text">Confirmation</Label>
+                <Input
+                  id="confirm-text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder={`sudo rm ${teamName}`}
+                  required
+                />
+              </div>
+            </div>
+            {error && <p className="text-red-600">{error}</p>}
+            {success && <p className="text-green-600">{success}</p>}
+            <DialogFooter>
+              <Button type="button" variant="ghost">
+                Cancel
+              </Button>
+              <Button type="submit" className="ml-auto bg-red-600 hover:bg-red-700" disabled={loading}>
+                {loading ? 'Deleting...' : 'Delete Team'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}

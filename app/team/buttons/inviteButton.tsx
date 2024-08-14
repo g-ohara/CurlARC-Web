@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
 
-export default function CreateTeamsButton() {
+export default function InviteButton() {
   const [teamName, setTeamName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -46,8 +46,8 @@ export default function CreateTeamsButton() {
     <>
       <Dialog defaultOpen={false}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="default">
-            Create Team
+          <Button variant="outline" size="default" className="text-red">
+            Invite Users
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

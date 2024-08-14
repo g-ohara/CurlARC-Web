@@ -2,6 +2,8 @@ import React from 'react'
 import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
 import { cookies } from 'next/headers'
+import CreateTeamsButton from './buttons/createTeamsButton'
+import ViewInvitedTeamsButton from './buttons/viewInvitedTeamsButton'
 
 export default async function TeamPage() {
   const cookieStore = cookies()
@@ -9,62 +11,64 @@ export default async function TeamPage() {
   let teamsWithMembers: Team[] = []
 
   if (jwt) {
-    const teamsResponse = await getTeamsByUserId(jwt)
-    const teams = teamsResponse.data
+    const res = await getTeamsByUserId(jwt)
+    const teams = res.Teams
+    console.log(teams)
 
     // チームの詳細情報とメンバー情報を非同期で取得
     if (teams) {
       teamsWithMembers = await Promise.all(
         teams.map(async (team) => {
           const [teamDetails, membersResponse] = await Promise.all([
-            getTeamDetails(team.id),
-            getMembersByTeamId(team.id)
+            getTeamDetails(team.Id),
+            getMembersByTeamId(team.Id, jwt)
           ])
 
           return {
-            id: team.id,
-            name: team.name,
-            members: membersResponse.data.members,
-            details: teamDetails.data.details
+            id: team.Id,
+            name: team.Name,
+            members: membersResponse.Members,
+            details: teamDetails.details
           }
         })
       )
     }
   }
 
-  if (teamsWithMembers.length === 0) {
-    return (
-      <main className="flex-1 p-8">
-        <p>No teams found. Please join or create a team.</p>
-      </main>
-    )
-  }
-
   return (
     <main className="flex-1 p-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {teamsWithMembers.map((team) => (
-          <TeamCard
-            key={team.id}
-            teamName={team.name}
-            memberCount={team.members.length}
-            score={{ red: 0, blue: 0 }}
-            members={team.members.map((member) => ({
-              name: member.name,
-              email: member.email
-            }))}
-            statisticsData={[]}
-            teamDetails={Object.entries(team)
-              .filter(([key]) =>
-                ['location', 'established', 'homeArena', 'sponsor', 'league', 'division'].includes(key)
-              )
-              .map(([key, value]) => ({
-                key: key.charAt(0).toUpperCase() + key.slice(1),
-                value: value?.toString() || 'N/A'
+      <div className="grid grid-cols-1 gap-6">
+        {teamsWithMembers.length > 0 ? (
+          teamsWithMembers.map((team) => (
+            <TeamCard
+              key={team.id}
+              teamId={team.id}
+              teamName={team.name}
+              memberCount={team.members.length}
+              score={{ red: 0, blue: 0 }}
+              members={team.members.map((member) => ({
+                name: member.name,
+                email: member.email
               }))}
-            lastGameDate={'N/A'}
-          />
-        ))}
+              statisticsData={[]}
+              teamDetails={Object.entries(team)
+                .filter(([key]) =>
+                  ['location', 'established', 'homeArena', 'sponsor', 'league', 'division'].includes(key)
+                )
+                .map(([key, value]) => ({
+                  key: key.charAt(0).toUpperCase() + key.slice(1),
+                  value: value?.toString() || 'N/A'
+                }))}
+              lastGameDate={'N/A'}
+            />
+          ))
+        ) : (
+          <p>No teams found. Please join or create a team.</p>
+        )}
+      </div>
+      <div className="fixed bottom-6 right-6 flex flex-col gap-4">
+        <ViewInvitedTeamsButton />
+        <CreateTeamsButton />
       </div>
     </main>
   )

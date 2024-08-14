@@ -8,6 +8,7 @@ import { TeamMembers } from './teamMembers'
 import { TeamDetails } from './teamDetails'
 
 interface TeamCardProps {
+  teamId: string
   teamName: string
   memberCount: number
   score: { red: number; blue: number }
@@ -18,6 +19,7 @@ interface TeamCardProps {
 }
 
 export function TeamCard({
+  teamId,
   teamName,
   memberCount,
   score,
@@ -39,7 +41,7 @@ export function TeamCard({
         </div>
       </CardContent>
       <CardFooter>
-        <TeamFooter lastGameDate={lastGameDate} />
+        <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} />
       </CardFooter>
     </Card>
   )

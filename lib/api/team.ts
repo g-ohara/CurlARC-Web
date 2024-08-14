@@ -12,7 +12,7 @@ export const deleteTeam = async (teamId: string): Promise<any> => {
 }
 
 export const getTeamsByUserId = cache(async (jwt: string): Promise<getTeamsResponse> => {
-  const res = await apiClient.get<getTeamsResponse>(`/auth/users/me/teams`, jwt)
+  const res = await apiClient.get<getTeamsResponse>(`/auth/users/me/teams`, jwt, 'getTeamsByUserId')
   return res
 })
 

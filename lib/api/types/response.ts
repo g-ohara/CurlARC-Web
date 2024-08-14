@@ -5,20 +5,14 @@ interface User {
 }
 
 interface getTeamsResponse {
-  Teams: {
-    Id: string
-    Name: string
+  teams: {
+    id: string
+    name: string
   }[]
 }
 
-interface getUserResponse {
-  id: string
-  name: string
-  email: string
-}
-
 interface getMembersResponse {
-  Members: User[]
+  members: User[]
 }
 
 interface getTeamDetailsResponse {
@@ -26,4 +20,17 @@ interface getTeamDetailsResponse {
     key: string
     value: string
   }[]
+}
+
+// user
+interface getUserResponse {
+  id: string
+  name: string
+  email: string
+}
+
+interface signInResponse {
+  id: string
+  name: string
+  email: string
 }

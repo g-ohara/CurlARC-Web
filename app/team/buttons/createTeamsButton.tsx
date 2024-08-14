@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,12 +14,25 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateByTag } from '../serverActions'
 
 export default function CreateTeamsButton() {
   const [teamName, setTeamName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setIsOpen(false)
+        setSuccess(null)
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -28,15 +41,13 @@ export default function CreateTeamsButton() {
     setSuccess(null)
 
     try {
-      await createTeam(teamName)
+      await createTeam(teamName) // チームを作成
+      setTeamName('') // フォームのリセット
+      revalidateByTag('getTeamsByUserId') // チーム一覧を再取得
 
-      // 成功メッセージ
       setSuccess('Team created successfully!')
-      // フォームのリセット
-      setTeamName('')
     } catch (error) {
-      // エラーメッセージ
-      setError('Failed to create team. Please try again.\n' + error)
+      setError('Failed to create team. Please try again.\n' + error) // エラーメッセージ
     } finally {
       setLoading(false)
     }
@@ -44,7 +55,7 @@ export default function CreateTeamsButton() {
 
   return (
     <>
-      <Dialog defaultOpen={false}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="default">
             Create Team
@@ -85,7 +96,7 @@ export default function CreateTeamsButton() {
             {error && <p className="text-red-600">{error}</p>}
             {success && <p className="text-green-600">{success}</p>}
             <DialogFooter>
-              <Button type="button" variant="ghost">
+              <Button type="button" variant="ghost" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
               <Button type="submit" className="ml-auto" disabled={loading}>

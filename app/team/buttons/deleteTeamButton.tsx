@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { deleteTeam } from '@/lib/api/team'
+import { revalidateByTag } from '../serverActions'
 
 interface DeleteTeamButtonProps {
   teamName: string
@@ -25,6 +26,17 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setIsOpen(false)
+        setSuccess(null)
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -39,6 +51,7 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
 
     try {
       await deleteTeam(teamId)
+      revalidateByTag('getTeamsByUserId')
       setSuccess('Team deleted successfully!')
       setConfirmText('')
     } catch (error) {
@@ -50,7 +63,7 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button
             variant="outline"

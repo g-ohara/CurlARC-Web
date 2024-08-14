@@ -27,13 +27,16 @@ const getAuthHeaders = (jwt: string | undefined) => {
 
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
-const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string) => {
+const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string, tags?: string) => {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     mode: 'cors',
     body: makeRequestBody(body),
     credentials: 'include',
-    headers: getAuthHeaders(jwt)
+    headers: getAuthHeaders(jwt),
+    next: {
+      tags: [tags ?? '']
+    }
   })
   if (!res.ok) {
     const data: { status: string; error: string } = await res.json()
@@ -48,8 +51,8 @@ const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string) 
   return tmp
 }
 
-const get = async <T = any>(path: string, jwt?: string): Promise<T> => {
-  return await http<T>(path, 'GET', null, jwt)
+const get = async <T = any>(path: string, jwt?: string, tags?: string): Promise<T> => {
+  return await http<T>(path, 'GET', null, jwt, tags)
 }
 
 const post = async <T = any>(path: string, body?: any): Promise<T> => {

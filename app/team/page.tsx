@@ -12,22 +12,21 @@ export default async function TeamPage() {
 
   if (jwt) {
     const res = await getTeamsByUserId(jwt)
-    const teams = res.Teams
-    console.log(teams)
+    const teams = res.teams
 
     // チームの詳細情報とメンバー情報を非同期で取得
     if (teams) {
       teamsWithMembers = await Promise.all(
         teams.map(async (team) => {
           const [teamDetails, membersResponse] = await Promise.all([
-            getTeamDetails(team.Id),
-            getMembersByTeamId(team.Id, jwt)
+            getTeamDetails(team.id),
+            getMembersByTeamId(team.id, jwt)
           ])
 
           return {
-            id: team.Id,
-            name: team.Name,
-            members: membersResponse.Members,
+            id: team.id,
+            name: team.name,
+            members: membersResponse.members,
             details: teamDetails.details
           }
         })

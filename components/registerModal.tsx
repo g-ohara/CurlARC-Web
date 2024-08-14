@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword, deleteUser, getIdToken } from 'firebase
 import { auth } from '@/firebaseConfig'
 import { apiClient } from '@/utils/api/api'
 import { useRouter } from 'next/navigation'
-import { registerUser } from '@/lib/api/user'
+import { registerUser, signIn } from '@/lib/api/user'
 import { useApp } from '@/app/context/appProvider'
 
 interface RegisterModalProps {
@@ -45,16 +45,15 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       userCredential = await createUserWithEmailAndPassword(auth, email, password)
     } catch (err) {
       setError('Failed to create user on Firebase')
-      console.error(err)
       return
     }
 
     // ユーザー情報をバックエンドに保存
     try {
       const idToken = await getIdToken(userCredential.user)
-
-      const userId = await registerUser({ email: email, name: name, id_token: idToken })
-      login({ id: userId, name: name, email: email })
+      await registerUser({ email: email, name: name, id_token: idToken })
+      const res = await signIn({ email: email, password: password })
+      login({ id: res.id, name: res.name, email: res.email })
       router.push('/profile')
       onClose() // 登録成功後にモーダルを閉じる
     } catch (err) {

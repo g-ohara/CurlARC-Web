@@ -13,7 +13,7 @@ const makeRequestBody = <T = object>(body: T) => {
 }
 
 const getAuthHeaders = (jwt: string | undefined) => {
-  const JWT = Cookies.get('jwt') || jwt
+  const JWT = Cookies.get('jwt') ?? jwt
 
   const headers = new Headers({
     'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ const getAuthHeaders = (jwt: string | undefined) => {
 
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
-const http = async (path: string, method: TMethod, body?: any, jwt?: string) => {
+const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string) => {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     mode: 'cors',
@@ -36,33 +36,32 @@ const http = async (path: string, method: TMethod, body?: any, jwt?: string) => 
     headers: getAuthHeaders(jwt)
   })
   if (!res.ok) {
-    const data: { status: string; message: string } = await res.json()
-    throw new FetchError(data.message, res.status)
+    const data: { status: string; error: string } = await res.json()
+    throw new FetchError(data.error, res.status)
   }
 
-  if (res.status === 204) return {}
+  if (res.status === 204) return {} as T
+  // const tmp = toJSONFormat((await res.json()).data) as T
+  const tmp = (await res.json()).data as T
+  console.log(path, method, tmp)
 
-  return res.json()
+  return tmp
 }
 
-const get = async (path: string) => {
-  const data = await http(path, 'GET')
-  return data
+const get = async <T = any>(path: string, jwt?: string): Promise<T> => {
+  return await http<T>(path, 'GET', null, jwt)
 }
 
-const post = async (path: string, body?: any) => {
-  const data = await http(path, 'POST', body)
-  return data
+const post = async <T = any>(path: string, body?: any): Promise<T> => {
+  return await http<T>(path, 'POST', body)
 }
 
-const patch = async (path: string, body?: any) => {
-  const data = await http(path, 'PATCH', body)
-  return data
+const patch = async <T = any>(path: string, body?: any): Promise<T> => {
+  return await http<T>(path, 'PATCH', body)
 }
 
-const destroy = async (path: string) => {
-  const data = await http(path, 'DELETE')
-  return data
+const destroy = async <T = any>(path: string): Promise<T> => {
+  return await http<T>(path, 'DELETE')
 }
 
 export const apiClient = {

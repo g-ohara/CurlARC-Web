@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -13,13 +13,24 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { createTeam } from '@/lib/api/team'
+import { Textarea } from '@/components/ui/textarea'
 
 export default function InviteButton() {
-  const [teamName, setTeamName] = useState('')
+  const [teamMembers, setTeamMembers] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setIsOpen(false)
+        setSuccess(null)
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -28,12 +39,12 @@ export default function InviteButton() {
     setSuccess(null)
 
     try {
-      await createTeam(teamName)
-
+      const users = teamMembers.split(',').map((email) => email.trim())
+      console.log('Inviting users:', users)
+      setTeamMembers('')
       // 成功メッセージ
       setSuccess('Team created successfully!')
       // フォームのリセット
-      setTeamName('')
     } catch (error) {
       // エラーメッセージ
       setError('Failed to create team. Please try again.\n' + error)
@@ -44,7 +55,7 @@ export default function InviteButton() {
 
   return (
     <>
-      <Dialog defaultOpen={false}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen} defaultOpen={false}>
         <DialogTrigger asChild>
           <Button variant="outline" size="default" className="text-red">
             Invite Users
@@ -52,26 +63,16 @@ export default function InviteButton() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Create a New Team</DialogTitle>
+            <DialogTitle>Invite Users to Your Team</DialogTitle>
             <DialogDescription>Fill out the form to create a new curling team.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
-              <div className="mb-4 grid gap-2">
-                <Label htmlFor="team-name">Team Name</Label>
-                <Input
-                  id="team-name"
-                  value={teamName}
-                  onChange={(e) => setTeamName(e.target.value)}
-                  placeholder="Enter team name"
-                  required
-                />
+              <div className="grid gap-2">
+                <Label htmlFor="team-logo">Team Logo (Comming Soon....)</Label>
+                {/* <Input id="team-logo" type="file" /> */}
               </div>
-              {/* <div className="grid gap-2">
-                <Label htmlFor="team-logo">Team Logo</Label>
-                <Input id="team-logo" type="file" />
-              </div> */}
-              {/* <div className="grid gap-2">
+              <div className="grid gap-2">
                 <Label htmlFor="team-members">Team Members</Label>
                 <Textarea
                   id="team-members"
@@ -80,16 +81,16 @@ export default function InviteButton() {
                   placeholder="Enter email addresses separated by commas"
                   required
                 />
-              </div> */}
+              </div>
             </div>
             {error && <p className="text-red-600">{error}</p>}
             {success && <p className="text-green-600">{success}</p>}
-            <DialogFooter>
+            <DialogFooter className="mt-3">
               <Button type="button" variant="ghost">
                 Cancel
               </Button>
               <Button type="submit" className="ml-auto" disabled={loading}>
-                {loading ? 'Creating...' : 'Create Team'}
+                {loading ? 'Inviting...' : 'Invite'}
               </Button>
             </DialogFooter>
           </form>

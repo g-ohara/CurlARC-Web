@@ -14,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { revalidateByTag } from '../serverActions'
 
 export default function CreateTeamsButton() {
@@ -78,20 +77,6 @@ export default function CreateTeamsButton() {
                   required
                 />
               </div>
-              {/* <div className="grid gap-2">
-                <Label htmlFor="team-logo">Team Logo</Label>
-                <Input id="team-logo" type="file" />
-              </div> */}
-              {/* <div className="grid gap-2">
-                <Label htmlFor="team-members">Team Members</Label>
-                <Textarea
-                  id="team-members"
-                  value={teamMembers}
-                  onChange={(e) => setTeamMembers(e.target.value)}
-                  placeholder="Enter email addresses separated by commas"
-                  required
-                />
-              </div> */}
             </div>
             {error && <p className="text-red-600">{error}</p>}
             {success && <p className="text-green-600">{success}</p>}

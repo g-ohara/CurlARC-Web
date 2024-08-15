@@ -73,17 +73,20 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
             Delete Team
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="bg-red-200 sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete Team</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. Please type <code>sudo rm {teamName}</code> to confirm.
+            <DialogTitle className="text-red-800">Delete Team</DialogTitle>
+            <DialogDescription className="text-red-400">
+              This action cannot be undone. <br></br>
+              Please type "<code>sudo rm {teamName}</code>" to confirm.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="mb-4 grid gap-2">
-                <Label htmlFor="confirm-text">Confirmation</Label>
+                <Label htmlFor="confirm-text" className="text-red-800">
+                  Confirmation
+                </Label>
                 <Input
                   id="confirm-text"
                   value={confirmText}

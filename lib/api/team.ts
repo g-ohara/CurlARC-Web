@@ -11,13 +11,28 @@ export const deleteTeam = async (teamId: string): Promise<any> => {
   return res
 }
 
-export const getTeamsByUserId = cache(async (jwt: string): Promise<getTeamsResponse> => {
-  const res = await apiClient.get<getTeamsResponse>(`/auth/users/me/teams`, jwt, 'getTeamsByUserId')
+export const inviteUsers = async (teamId: string, emails: string[]): Promise<any> => {
+  const res = await apiClient.post<any>(`/auth/teams/${teamId}/invite`, { target_user_emails: emails })
+  return res
+}
+
+export const acceptInvitation = async (teamId: string): Promise<any> => {
+  const res = await apiClient.post<any>(`/auth/teams/${teamId}/accept`)
+  return res
+}
+
+export const getInvitedTeams = cache(async (): Promise<getTeamsResponse> => {
+  const res = await apiClient.get<getTeamsResponse>(`/auth/users/me/teams/invited`, 'getInvitedTeams')
   return res
 })
 
-export const getMembersByTeamId = cache(async (teamId: string, jwt: string): Promise<getMembersResponse> => {
-  const res = await apiClient.get<getMembersResponse>(`/auth/teams/${teamId}`, jwt)
+export const getTeamsByUserId = cache(async (): Promise<getTeamsResponse> => {
+  const res = await apiClient.get<getTeamsResponse>(`/auth/users/me/teams`, 'getTeamsByUserId')
+  return res
+})
+
+export const getMembersByTeamId = cache(async (teamId: string): Promise<getMembersResponse> => {
+  const res = await apiClient.get<getMembersResponse>(`/auth/teams/${teamId}`)
   return res
 })
 

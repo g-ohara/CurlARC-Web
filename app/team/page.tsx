@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react'
 import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
@@ -11,7 +12,7 @@ export default async function TeamPage() {
   let teamsWithMembers: Team[] = []
 
   if (jwt) {
-    const res = await getTeamsByUserId(jwt)
+    const res = await getTeamsByUserId()
     const teams = res.teams
 
     // チームの詳細情報とメンバー情報を非同期で取得
@@ -20,13 +21,13 @@ export default async function TeamPage() {
         teams.map(async (team) => {
           const [teamDetails, membersResponse] = await Promise.all([
             getTeamDetails(team.id),
-            getMembersByTeamId(team.id, jwt)
+            getMembersByTeamId(team.id)
           ])
 
           return {
             id: team.id,
             name: team.name,
-            members: membersResponse.members,
+            members: membersResponse.members ?? [],
             details: teamDetails.details
           }
         })
@@ -50,14 +51,7 @@ export default async function TeamPage() {
                 email: member.email
               }))}
               statisticsData={[]}
-              teamDetails={Object.entries(team)
-                .filter(([key]) =>
-                  ['location', 'established', 'homeArena', 'sponsor', 'league', 'division'].includes(key)
-                )
-                .map(([key, value]) => ({
-                  key: key.charAt(0).toUpperCase() + key.slice(1),
-                  value: value?.toString() || 'N/A'
-                }))}
+              teamDetails={team.details}
               lastGameDate={'N/A'}
             />
           ))

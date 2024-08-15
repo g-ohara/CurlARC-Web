@@ -14,14 +14,26 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { inviteUsers } from '@/lib/api/team'
 
-export default function InviteButton() {
-  const [teamMembers, setTeamMembers] = useState('')
+interface InviteButtonProps {
+  teamId: string
+  teamName: string
+}
+
+export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
+  const [invitedUsers, setInvitedUsers] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  // 成功メッセージを表示してから1秒後にダイアログを閉じる
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
@@ -32,6 +44,7 @@ export default function InviteButton() {
     }
   }, [success])
 
+  // フォームの送信処理
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
@@ -39,12 +52,16 @@ export default function InviteButton() {
     setSuccess(null)
 
     try {
-      const users = teamMembers.split(',').map((email) => email.trim())
-      console.log('Inviting users:', users)
-      setTeamMembers('')
+      // メールアドレスをカンマ区切りで分割して配列に変換
+      const emails = invitedUsers.split(',').map((email) => email.trim())
+      const validEmails = emails.filter((email) => isValidEmail(email))
+      console.log('Inviting users:', validEmails)
+
+      // ユーザー招待APIを呼び出す
+      await inviteUsers(teamId, validEmails)
+      setInvitedUsers('')
       // 成功メッセージ
       setSuccess('Team created successfully!')
-      // フォームのリセット
     } catch (error) {
       // エラーメッセージ
       setError('Failed to create team. Please try again.\n' + error)
@@ -63,7 +80,7 @@ export default function InviteButton() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Invite Users to Your Team</DialogTitle>
+            <DialogTitle>Invite Users to {teamName} Team</DialogTitle>
             <DialogDescription>Fill out the form to create a new curling team.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
@@ -76,8 +93,8 @@ export default function InviteButton() {
                 <Label htmlFor="team-members">Team Members</Label>
                 <Textarea
                   id="team-members"
-                  value={teamMembers}
-                  onChange={(e) => setTeamMembers(e.target.value)}
+                  value={invitedUsers}
+                  onChange={(e) => setInvitedUsers(e.target.value)}
                   placeholder="Enter email addresses separated by commas"
                   required
                 />

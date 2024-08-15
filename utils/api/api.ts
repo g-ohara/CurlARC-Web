@@ -1,3 +1,4 @@
+import { getJWT } from './cookieGetter'
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
 import Cookies from 'js-cookie'
@@ -12,8 +13,8 @@ const makeRequestBody = <T = object>(body: T) => {
   return JSON.stringify(toJSONFormat(body))
 }
 
-const getAuthHeaders = (jwt: string | undefined) => {
-  const JWT = Cookies.get('jwt') ?? jwt
+const getAuthHeaders = async () => {
+  const JWT = await getJWT()
 
   const headers = new Headers({
     'Content-Type': 'application/json'
@@ -27,13 +28,13 @@ const getAuthHeaders = (jwt: string | undefined) => {
 
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
-const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string, tags?: string) => {
+const http = async <T>(path: string, method: TMethod, body?: any, tags?: string) => {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     mode: 'cors',
     body: makeRequestBody(body),
     credentials: 'include',
-    headers: getAuthHeaders(jwt),
+    headers: await getAuthHeaders(),
     next: {
       tags: [tags ?? '']
     }
@@ -51,8 +52,8 @@ const http = async <T>(path: string, method: TMethod, body?: any, jwt?: string, 
   return tmp
 }
 
-const get = async <T = any>(path: string, jwt?: string, tags?: string): Promise<T> => {
-  return await http<T>(path, 'GET', null, jwt, tags)
+const get = async <T = any>(path: string, tags?: string): Promise<T> => {
+  return await http<T>(path, 'GET', null, tags)
 }
 
 const post = async <T = any>(path: string, body?: any): Promise<T> => {

@@ -5,8 +5,8 @@ import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 
 interface TeamStatisticsProps {
   data: {
-    month: string
-    desktop: number
+    key: string
+    value: number
   }[]
   className?: string
 }
@@ -28,9 +28,9 @@ export const TeamStatistics: React.FC<TeamStatisticsProps> = ({ data, className 
           >
             <RadarChart data={data}>
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-              <PolarAngleAxis dataKey="month" />
+              <PolarAngleAxis dataKey="key" />
               <PolarGrid />
-              <Radar dataKey="desktop" fill="var(--color-desktop)" fillOpacity={0.6} />
+              <Radar dataKey="value" fill="var(--color-desktop)" fillOpacity={0.6} />
             </RadarChart>
           </ChartContainer>
         </div>

@@ -5,11 +5,12 @@ interface TeamDetailsProps {
     key: string
     value: string
   }[]
+  className?: string
 }
 
-export const TeamDetails: React.FC<TeamDetailsProps> = ({ data }) => {
+export const TeamDetails: React.FC<TeamDetailsProps> = ({ data, className }: TeamDetailsProps) => {
   return (
-    <div>
+    <div className={className}>
       <h4 className="mb-4 text-2xl font-medium">Team Details</h4>
       {data.map((item) => (
         <div key={item.key}>

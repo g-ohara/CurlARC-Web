@@ -61,10 +61,10 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
       await inviteUsers(teamId, validEmails)
       setInvitedUsers('')
       // 成功メッセージ
-      setSuccess('Team created successfully!')
+      setSuccess('Invited users successfully!')
     } catch (error) {
       // エラーメッセージ
-      setError('Failed to create team. Please try again.\n' + error)
+      setError('Failed to Invite. Please try again.\n' + error)
     } finally {
       setLoading(false)
     }
@@ -74,7 +74,11 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen} defaultOpen={false}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="default" className="text-red">
+          <Button
+            variant="outline"
+            size="default"
+            className="border-blue-600 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
+          >
             Invite Users
           </Button>
         </DialogTrigger>

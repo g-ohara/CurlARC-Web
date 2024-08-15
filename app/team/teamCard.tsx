@@ -13,7 +13,7 @@ interface TeamCardProps {
   memberCount: number
   score: { red: number; blue: number }
   members: Array<{ name: string; email: string }>
-  statisticsData: Array<{ month: string; desktop: number }>
+  statisticsData: Array<{ key: string; value: number }>
   teamDetails: Array<{ key: string; value: string }>
   lastGameDate: string
 }
@@ -34,10 +34,10 @@ export function TeamCard({
         <TeamHeader teamName={teamName} memberCount={memberCount} score={score} />
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-6">
-          <TeamMembers className="col-span-1" members={members} />
-          <TeamStatistics className="col-span-1" data={statisticsData} />
-          <TeamDetails data={teamDetails} />
+        <div className="grid grid-cols-10 gap-6">
+          <TeamMembers className="col-span-3" members={members} />
+          <TeamStatistics className="col-span-4" data={statisticsData} />
+          <TeamDetails className="col-span-3" data={teamDetails} />
         </div>
       </CardContent>
       <CardFooter>

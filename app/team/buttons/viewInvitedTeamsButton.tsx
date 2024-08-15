@@ -23,6 +23,7 @@ type Team = {
 export default function ViewInvitedTeamsButton() {
   const [isOpen, setIsOpen] = useState(false)
   const [invitedTeams, setInvitedTeams] = useState<Team[]>([])
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +38,7 @@ export default function ViewInvitedTeamsButton() {
     if (isOpen) {
       fetchData()
     }
-  }, [isOpen])
+  }, [isOpen, refresh])
 
   return (
     <>
@@ -75,7 +76,7 @@ export default function ViewInvitedTeamsButton() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <AcceptInvitationButton teamId={team.id} />
+                        <AcceptInvitationButton teamId={team.id} onAccept={() => setRefresh(!refresh)} />
                       </div>
                     </div>
                   </CardHeader>

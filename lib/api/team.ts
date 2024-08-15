@@ -11,6 +11,11 @@ export const deleteTeam = async (teamId: string): Promise<any> => {
   return res
 }
 
+export const removeTeamMembers = async (teamId: string, userId: string): Promise<any> => {
+  const res = await apiClient.destroy<any>(`/auth/teams/${teamId}/${userId}`)
+  return res
+}
+
 export const inviteUsers = async (teamId: string, emails: string[]): Promise<any> => {
   const res = await apiClient.post<any>(`/auth/teams/${teamId}/invite`, { target_user_emails: emails })
   return res

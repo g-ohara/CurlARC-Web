@@ -1,5 +1,7 @@
+import { getJWT } from './cookieGetter'
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
+import Cookies from 'js-cookie'
 
 const baseURL: string | undefined =
   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
@@ -11,46 +13,59 @@ const makeRequestBody = <T = object>(body: T) => {
   return JSON.stringify(toJSONFormat(body))
 }
 
+const getAuthHeaders = async () => {
+  const JWT = await getJWT()
+
+  const headers = new Headers({
+    'Content-Type': 'application/json'
+  })
+
+  if (JWT) {
+    headers.append('Authorization', `Bearer ${JWT}`)
+  }
+  return headers
+}
+
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
-const http = async (path: string, method: TMethod, body?: any) => {
+const http = async <T>(path: string, method: TMethod, body?: any, tags?: string) => {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     mode: 'cors',
     body: makeRequestBody(body),
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
+    headers: await getAuthHeaders(),
+    next: {
+      tags: [tags ?? '']
     }
   })
   if (!res.ok) {
-    const data: { status: string; message: string } = await res.json()
-    throw new FetchError(data.message, res.status)
+    const data: { status: string; error: string } = await res.json()
+    throw new FetchError(data.error, res.status)
   }
 
-  if (res.status === 204) return {}
+  if (res.status === 204) return {} as T
+  // const tmp = toJSONFormat((await res.json()).data) as T
+  const tmp = (await res.json()).data as T
+  console.log(path, method, tmp)
 
-  return res.json()
+  return tmp
 }
 
-const get = async (path: string) => {
-  const data = await http(path, 'GET')
-  return data
+const get = async <T = any>(path: string, tags?: string): Promise<T> => {
+  return await http<T>(path, 'GET', null, tags)
 }
 
-const post = async (path: string, body?: any) => {
-  const data = await http(path, 'POST', body)
-  return data
+const post = async <T = any>(path: string, body?: any): Promise<T> => {
+  return await http<T>(path, 'POST', body)
 }
 
-const patch = async (path: string, body?: any) => {
-  const data = await http(path, 'PATCH', body)
-  return data
+const patch = async <T = any>(path: string, body?: any): Promise<T> => {
+  return await http<T>(path, 'PATCH', body)
 }
 
-const destroy = async (path: string) => {
-  const data = await http(path, 'DELETE')
-  return data
+const destroy = async <T = any>(path: string): Promise<T> => {
+  return await http<T>(path, 'DELETE')
 }
 
 export const apiClient = {

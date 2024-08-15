@@ -4,10 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useApp } from '@/app/context/appProvider'
-import { apiClient } from '@/utils/api/api'
 import { useRouter } from 'next/navigation'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/firebaseConfig'
+import { signIn } from '@/lib/api/user'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -31,12 +29,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault()
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      const idToken = await userCredential.user.getIdToken()
-
-      // idTokenをバックエンドに送信する
-      await apiClient.post('/signin', { id_token: idToken })
-      login({ name: email, avatarUrl: '/placeholder.svg' })
+      const res = await signIn({ email: email, password: password })
+      login({ id: res.id, name: res.name, email: res.email })
       router.push('/profile')
       onClose() // ログイン成功時にモーダルを閉じる
     } catch (error) {
@@ -49,8 +43,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center">
-      <div className="bg-black fixed inset-0 bg-opacity-60 transition-all" onClick={onClose}></div>
-      <div className="bg-white z-20 w-full max-w-md rounded-lg p-8 shadow-lg">
+      <div className="fixed inset-0 bg-black bg-opacity-60 transition-all" onClick={onClose}></div>
+      <div className="z-20 w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h2 className="mb-6 text-2xl font-semibold">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -79,7 +73,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               Cancel
             </Button>
           </div>
-          {error && <div className="text-red-500 mt-4">{error}</div>}
+          {error && <div className="mt-4 text-red-500">{error}</div>}
         </form>
       </div>
     </div>

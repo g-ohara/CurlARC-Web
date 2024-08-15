@@ -7,6 +7,8 @@ import { createUserWithEmailAndPassword, deleteUser, getIdToken } from 'firebase
 import { auth } from '@/firebaseConfig'
 import { apiClient } from '@/utils/api/api'
 import { useRouter } from 'next/navigation'
+import { registerUser, signIn } from '@/lib/api/user'
+import { useApp } from '@/app/context/appProvider'
 
 interface RegisterModalProps {
   isOpen: boolean
@@ -14,10 +16,12 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string>('')
+  const { login } = useApp()
   const router = useRouter()
 
   useEffect(() => {
@@ -41,18 +45,15 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       userCredential = await createUserWithEmailAndPassword(auth, email, password)
     } catch (err) {
       setError('Failed to create user on Firebase')
-      console.error(err)
       return
     }
 
     // ユーザー情報をバックエンドに保存
     try {
       const idToken = await getIdToken(userCredential.user)
-
-      await apiClient.post('/signup', {
-        id_token: idToken,
-        email
-      })
+      await registerUser({ email: email, name: name, id_token: idToken })
+      const res = await signIn({ email: email, password: password })
+      login({ id: res.id, name: res.name, email: res.email })
       router.push('/profile')
       onClose() // 登録成功後にモーダルを閉じる
     } catch (err) {
@@ -61,7 +62,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       // Firebaseユーザーの削除
       if (userCredential) {
         await deleteUser(userCredential.user)
-        console.log('Firebase user deleted due to backend signup failure')
       }
     }
   }
@@ -70,10 +70,17 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center">
-      <div className="bg-black absolute inset-0 bg-opacity-50" onClick={onClose}></div>
-      <div className="bg-white z-20 w-full max-w-md rounded-lg p-8 shadow-lg">
+      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      <div className="z-20 w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h2 className="mb-4 text-2xl font-semibold">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            type="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            className="w-full"
+          />
           <Input
             type="email"
             value={email}
@@ -103,7 +110,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
               Cancel
             </Button>
           </div>
-          {error && <div className="text-red-500 border-red-500 rounded mt-4 border p-2">{error}</div>}
+          {error && <div className="mt-4 rounded border border-red-500 p-2 text-red-500">{error}</div>}
         </form>
       </div>
     </div>

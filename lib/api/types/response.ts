@@ -34,3 +34,14 @@ interface signInResponse {
   name: string
   email: string
 }
+
+interface getRecordsByTeamIdResponse {
+  records: {
+    id: string
+    team_id: string
+    place: string
+    date: Date
+    ends_data: JSON
+    is_public: boolean
+  }[]
+}

@@ -10,13 +10,18 @@ type Team = {
   name: string
 }
 
-export default function TeamDropdownMenu() {
-  const [selectedTeam, setSelectedTeam] = useState<Team>()
-  const teams = [
-    { id: '1', name: 'Team Frosty' },
-    { id: '2', name: 'Team Snowflake' },
-    { id: '3', name: 'Team Icicle' }
-  ]
+type TeamDropdownMenuProps = {
+  teams: Team[]
+  onSelect: (teamId: string) => void
+}
+
+export default function TeamDropdownMenu({ teams, onSelect }: TeamDropdownMenuProps) {
+  const [selectedTeam, setSelectedTeam] = useState<Team | undefined>()
+
+  const handleTeamSelect = (team: Team) => {
+    setSelectedTeam(team)
+    onSelect(team.id)
+  }
 
   return (
     <DropdownMenu>
@@ -27,13 +32,13 @@ export default function TeamDropdownMenu() {
           className="transition ease-in-out hover:scale-105 hover:bg-primary-foreground"
         >
           {selectedTeam ? (
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center">
               <img
                 src="/placeholder.svg"
                 width={32}
                 height={32}
                 alt="Team Logo"
-                className="rounded-full"
+                className="mr-5 rounded-full"
                 style={{ aspectRatio: '32/32', objectFit: 'cover' }}
               />
               <span>{selectedTeam.name}</span>
@@ -50,7 +55,7 @@ export default function TeamDropdownMenu() {
         {teams.map((team) => (
           <DropdownMenuItem
             key={team.id}
-            onClick={() => setSelectedTeam(team)}
+            onClick={() => handleTeamSelect(team)}
             className={selectedTeam?.id === team.id ? 'bg-primary text-primary-foreground' : ''}
           >
             <div className="flex items-center gap-2">

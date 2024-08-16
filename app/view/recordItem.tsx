@@ -2,15 +2,19 @@ import { ChevronRightIcon } from '@/components/icons'
 import Link from 'next/link'
 
 type RecordItemProps = {
+  recordId: string
   result: 'win' | 'loss'
-  teamName: string
+  enemyTeamName: string
   date: string
 }
 
-function RecordItem({ result, teamName, date }: RecordItemProps) {
+function RecordItem({ recordId, result, enemyTeamName, date }: RecordItemProps) {
   const isWin = result === 'win'
   return (
-    <Link href="#" className="flex items-center justify-between rounded-lg bg-muted/10 p-4 hover:bg-muted/20">
+    <Link
+      href={`/view/${recordId}`}
+      className="flex items-center justify-between rounded-lg bg-muted/10 p-4 hover:bg-muted/20"
+    >
       <div className="flex items-center gap-4">
         <div
           className={`w-16 rounded-md px-2 py-1 text-center text-sm font-medium ${isWin ? 'bg-primary text-primary-foreground' : 'bg-red-500 text-white'}`}
@@ -18,7 +22,7 @@ function RecordItem({ result, teamName, date }: RecordItemProps) {
           {isWin ? 'Win' : 'Loss'}
         </div>
         <div>
-          <p className="font-medium">{`vs. ${teamName}`}</p>
+          <p className="font-medium">{`vs. ${enemyTeamName}`}</p>
           <p className="text-sm text-muted-foreground">{date}</p>
         </div>
       </div>

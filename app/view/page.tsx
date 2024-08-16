@@ -1,25 +1,21 @@
 'use server'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import TeamDropdownMenu from './teamDropdownMenu'
-import RecordItem from './recordItem'
+import { getTeamsByUserId } from '@/lib/api/team'
+import RecordsClient from './recordsClient'
 
 export default async function View() {
+  const teamsRes = await getTeamsByUserId()
+
   return (
     <main className="flex-1 p-8">
       <div className="grid grid-cols-1 gap-6">
         <Card className="rounded-lg bg-white shadow-md">
           <CardHeader>
-            <div className="flex items-center justify-start gap-6">
-              <h2 className="text-2xl font-bold">Records</h2>
-              <TeamDropdownMenu />
-            </div>
+            <h2 className="text-2xl font-bold">Records</h2>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 gap-4">
-              <RecordItem result="win" teamName="Team Frosty" date="2021-10-01" />
-              <RecordItem result="loss" teamName="Team Snowflake" date="2021-10-02" />
-            </div>
+            <RecordsClient teams={teamsRes.teams} />
           </CardContent>
         </Card>
       </div>

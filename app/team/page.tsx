@@ -1,4 +1,5 @@
-'use strict'
+'use server'
+
 import React from 'react'
 import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'

@@ -4,12 +4,6 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import Cookies from 'js-cookie'
 import { getUser } from '@/lib/api/user'
 
-interface User {
-  id: string
-  name: string
-  email: string
-}
-
 interface AppContextType {
   isLoggedIn: boolean
   user: User | null

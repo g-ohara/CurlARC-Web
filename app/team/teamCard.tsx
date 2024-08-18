@@ -7,7 +7,7 @@ import { TeamFooter } from './teamFooter'
 import { TeamMembers } from './teamMembers'
 import { TeamDetails } from './teamDetails'
 
-interface TeamCardProps {
+type TeamCardProps = {
   teamId: string
   teamName: string
   memberCount: number

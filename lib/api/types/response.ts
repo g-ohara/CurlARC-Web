@@ -1,21 +1,15 @@
-interface User {
-  id: string
-  name: string
-  email: string
-}
-
-interface getTeamsResponse {
+type getTeamsResponse = {
   teams: {
     id: string
     name: string
   }[]
 }
 
-interface getMembersResponse {
+type getMembersResponse = {
   members: User[]
 }
 
-interface getTeamDetailsResponse {
+type getTeamDetailsResponse = {
   details: {
     key: string
     value: string
@@ -23,25 +17,24 @@ interface getTeamDetailsResponse {
 }
 
 // user
-interface getUserResponse {
+type getUserResponse = {
   id: string
   name: string
   email: string
 }
 
-interface signInResponse {
+type signInResponse = {
   id: string
   name: string
   email: string
 }
 
-interface getRecordsByTeamIdResponse {
-  records: {
+type getRecordIndicesByTeamIdResponse = {
+  record_indices: {
     id: string
-    team_id: string
+    result: Result
+    enemy_team_name: string
     place: string
     date: Date
-    ends_data: JSON
-    is_public: boolean
   }[]
 }

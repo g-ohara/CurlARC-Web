@@ -1,6 +1,6 @@
 import { UsersIcon } from '@/components/icons'
 
-interface TeamHeaderProps {
+type TeamHeaderProps = {
   teamName: string
   memberCount: number
   score: {

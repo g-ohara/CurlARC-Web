@@ -1,15 +1,17 @@
-type getTeamsResponse = {
+import { RecordDetail, Result, User } from './model'
+
+export type getTeamsResponse = {
   teams: {
     id: string
     name: string
   }[]
 }
 
-type getMembersResponse = {
+export type getMembersResponse = {
   members: User[]
 }
 
-type getTeamDetailsResponse = {
+export type getTeamDetailsResponse = {
   details: {
     key: string
     value: string
@@ -17,19 +19,19 @@ type getTeamDetailsResponse = {
 }
 
 // user
-type getUserResponse = {
+export type getUserResponse = {
   id: string
   name: string
   email: string
 }
 
-type signInResponse = {
+export type signInResponse = {
   id: string
   name: string
   email: string
 }
 
-type getRecordIndicesByTeamIdResponse = {
+export type getRecordIndicesByTeamIdResponse = {
   record_indices: {
     id: string
     result: Result
@@ -39,6 +41,6 @@ type getRecordIndicesByTeamIdResponse = {
   }[]
 }
 
-type getRecordDetailsByRecordIdResponse = {
+export type getRecordDetailsByRecordIdResponse = {
   record: RecordDetail
 }

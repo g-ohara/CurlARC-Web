@@ -52,25 +52,31 @@ export default function TeamDropdownMenu({ teams, onSelect }: TeamDropdownMenuPr
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {teams.map((team) => (
-          <DropdownMenuItem
-            key={team.id}
-            onClick={() => handleTeamSelect(team)}
-            className={selectedTeam?.id === team.id ? 'bg-primary text-primary-foreground' : ''}
-          >
-            <div className="flex items-center gap-2">
-              <img
-                src="/placeholder.svg"
-                width={32}
-                height={32}
-                alt="Team Logo"
-                className="rounded-full"
-                style={{ aspectRatio: '32/32', objectFit: 'cover' }}
-              />
-              <span>{team.name}</span>
-            </div>
+        {teams ? (
+          teams.map((team) => (
+            <DropdownMenuItem
+              key={team.id}
+              onClick={() => handleTeamSelect(team)}
+              className={selectedTeam?.id === team.id ? 'bg-primary text-primary-foreground' : ''}
+            >
+              <div className="flex items-center gap-2">
+                <img
+                  src="/placeholder.svg"
+                  width={32}
+                  height={32}
+                  alt="Team Logo"
+                  className="rounded-full"
+                  style={{ aspectRatio: '32/32', objectFit: 'cover' }}
+                />
+                <span>{team.name}</span>
+              </div>
+            </DropdownMenuItem>
+          ))
+        ) : (
+          <DropdownMenuItem disabled>
+            <span>No teams available</span>
           </DropdownMenuItem>
-        ))}
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

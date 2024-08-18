@@ -1,7 +1,6 @@
 import { getJWT } from './cookieGetter'
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
-import Cookies from 'js-cookie'
 
 const baseURL: string | undefined =
   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'

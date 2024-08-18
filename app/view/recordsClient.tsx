@@ -22,8 +22,8 @@ type RecordsClientProps = {
 }
 
 export default function RecordsClient({ teams }: RecordsClientProps) {
-  const [selectedTeamId, setSelectedTeamId] = useState(teams[0]?.id || '')
-  const [records, setRecords] = useState<Record[]>()
+  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
+  const [records, setRecords] = useState<Record[]>([])
 
   const handleTeamChange = async (teamId: string) => {
     setSelectedTeamId(teamId)
@@ -39,7 +39,7 @@ export default function RecordsClient({ teams }: RecordsClientProps) {
         <TeamDropdownMenu teams={teams} onSelect={handleTeamChange} />
       </div>
       <div className="grid grid-cols-1 gap-4">
-        {records ? (
+        {records.length > 0 ? (
           records.map((record) => (
             <RecordItem
               key={record.id}

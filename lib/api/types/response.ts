@@ -38,3 +38,7 @@ type getRecordIndicesByTeamIdResponse = {
     date: Date
   }[]
 }
+
+type getRecordDetailsByRecordIdResponse = {
+  record: RecordDetail
+}

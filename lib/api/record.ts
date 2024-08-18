@@ -5,3 +5,10 @@ export const getRecordsByTeamId = cache(async (teamId: string): Promise<getRecor
   const res = await apiClient.get<getRecordIndicesByTeamIdResponse>(`/auth/records/${teamId}`)
   return res
 })
+
+export const getRecordDetailsByRecordId = cache(
+  async (recordId: string): Promise<getRecordDetailsByRecordIdResponse> => {
+    const res = await apiClient.get<getRecordDetailsByRecordIdResponse>(`/auth/records/${recordId}/detail`)
+    return res
+  }
+)

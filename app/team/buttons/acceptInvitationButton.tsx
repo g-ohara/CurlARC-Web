@@ -10,7 +10,6 @@ type AcceptInvitationButtonProps = {
 export default function AcceptInvitationButton({ teamId, onAccept }: AcceptInvitationButtonProps) {
   const handleAcceptInvitation = async () => {
     try {
-      console.log('Accepting invitation...')
       await acceptInvitation(teamId)
       revalidateByTag('getTeamsByUserId')
       revalidateByTag('getInvitedTeams')

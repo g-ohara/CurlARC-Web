@@ -3,13 +3,13 @@ import Link from 'next/link'
 
 type RecordItemProps = {
   recordId: string
-  result: 'win' | 'loss'
+  result: Result
   enemyTeamName: string
   date: string
 }
 
 function RecordItem({ recordId, result, enemyTeamName, date }: RecordItemProps) {
-  const isWin = result === 'win'
+  const isWin = result === 'WIN'
   return (
     <Link
       href={`/view/${recordId}`}

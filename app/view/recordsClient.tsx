@@ -23,14 +23,12 @@ type RecordsClientProps = {
 
 export default function RecordsClient({ teams }: RecordsClientProps) {
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
-  const [records, setRecords] = useState<Record[]>([])
+  const [records, setRecords] = useState<RecordIndex[]>()
 
   const handleTeamChange = async (teamId: string) => {
     setSelectedTeamId(teamId)
-    console.log('teamId:', teamId)
     const res = await getRecordsByTeamId(teamId)
-    console.log('records:', res)
-    setRecords(res.records)
+    setRecords(res.record_indices)
   }
 
   return (
@@ -39,13 +37,13 @@ export default function RecordsClient({ teams }: RecordsClientProps) {
         <TeamDropdownMenu teams={teams} onSelect={handleTeamChange} />
       </div>
       <div className="grid grid-cols-1 gap-4">
-        {records.length > 0 ? (
+        {records ? (
           records.map((record) => (
             <RecordItem
               key={record.id}
               recordId={record.id}
-              result={'win'}
-              enemyTeamName={'testing'}
+              result={record.result}
+              enemyTeamName={record.enemy_team_name}
               date={record.date.toString()}
             />
           ))

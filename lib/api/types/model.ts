@@ -14,6 +14,17 @@ type RecordIndex = {
   date: Date
 }
 
+type RecordDetail = {
+  id: string
+  team_id: string
+  result: Result
+  enemy_team_name: string
+  place: string
+  date: Date
+  ends_data: JSON
+  is_public: boolean
+}
+
 type Team = {
   id: string
   name: string

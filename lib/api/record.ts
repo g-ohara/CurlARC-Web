@@ -13,3 +13,8 @@ export const getRecordDetailsByRecordId = cache(
     return res
   }
 )
+
+export const deleteRecord = async (recordId: string): Promise<any> => {
+  const res = await apiClient.destroy<any>(`/auth/records/${recordId}`)
+  return res
+}

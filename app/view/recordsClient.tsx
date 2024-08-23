@@ -4,15 +4,7 @@ import { useState } from 'react'
 import TeamDropdownMenu from './teamDropdownMenu'
 import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
-
-type Record = {
-  id: string
-  team_id: string
-  place: string
-  date: Date
-  ends_data: JSON
-  is_public: boolean
-}
+import { RecordIndex } from '@/lib/api/types/model'
 
 type RecordsClientProps = {
   teams: {
@@ -38,15 +30,18 @@ export default function RecordsClient({ teams }: RecordsClientProps) {
       </div>
       <div className="grid grid-cols-1 gap-4">
         {records ? (
-          records.map((record) => (
-            <RecordItem
-              key={record.id}
-              recordId={record.id}
-              result={record.result}
-              enemyTeamName={record.enemy_team_name}
-              date={record.date.toString()}
-            />
-          ))
+          teams.map((team) =>
+            records.map((record) => (
+              <RecordItem
+                key={record.id}
+                recordId={record.id}
+                result={record.result}
+                teamName={team.name}
+                enemyTeamName={record.enemy_team_name}
+                date={record.date.toString()}
+              />
+            ))
+          )
         ) : (
           <p>No records found for this team.</p>
         )}

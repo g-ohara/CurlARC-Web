@@ -26,26 +26,26 @@ export type RecordDetail = {
 }
 
 type DataPerEnd = {
-  Score: number
-  Shots: Shot[]
+  score: number
+  shots: Shot[]
 }
 
 type Shot = {
-  Type: string
-  SuccessRate: number
-  Shooter: string
-  Stones: Stones
+  type: string
+  success_rate: number
+  shooter: string
+  stones: Stones
 }
 
 type Stones = {
-  FriendStones: Coordinate[]
-  EnemyStones: Coordinate[]
+  friend_stones: Coordinate[]
+  enemy_stones: Coordinate[]
 }
 
 type Coordinate = {
-  Index: number
-  R: number
-  Theta: number
+  index: number
+  r: number
+  theta: number
 }
 
 export type Team = {

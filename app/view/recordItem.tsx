@@ -1,18 +1,20 @@
 import { ChevronRightIcon } from '@/components/icons'
+import { Result } from '@/lib/api/types/model'
 import Link from 'next/link'
 
 type RecordItemProps = {
   recordId: string
   result: Result
+  teamName: string
   enemyTeamName: string
   date: string
 }
 
-function RecordItem({ recordId, result, enemyTeamName, date }: RecordItemProps) {
+function RecordItem({ recordId, result, teamName, enemyTeamName, date }: RecordItemProps) {
   const isWin = result === 'WIN'
   return (
     <Link
-      href={`/view/${recordId}`}
+      href={`/view/${teamName}/${recordId}`}
       className="flex items-center justify-between rounded-lg bg-muted/10 p-4 hover:bg-muted/20"
     >
       <div className="flex items-center gap-4">

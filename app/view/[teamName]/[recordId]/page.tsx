@@ -1,11 +1,15 @@
 import { getRecordDetailsByRecordId } from '@/lib/api/record'
 import ScoreBoard, { TeamScore } from './scoreBoard'
 import StoneCoordinates from './stoneCoordinates'
+import { DeleteRecordButton } from './components/DeleteRecordButton'
 
-export default async function RecordPage({ params }: { params: { recordId: string } }) {
+export default async function RecordPage({ params }: { params: { teamName: string; recordId: string } }) {
+  console.log(params)
   const res = await getRecordDetailsByRecordId(params.recordId)
   const recordDetails = res.record
-  console.log(recordDetails.ends_data)
+  if (recordDetails.ends_data) {
+    console.log(recordDetails.ends_data[0].shots[0])
+  }
 
   const scoresData: TeamScore[] = [
     {
@@ -24,9 +28,13 @@ export default async function RecordPage({ params }: { params: { recordId: strin
 
   return (
     <div className="w-full">
-      <div className="m-5 ml-8 text-4xl font-bold">
-        vs. {recordDetails.enemy_team_name}@{recordDetails.place}
+      <div className="flex items-center">
+        <div className="m-5 ml-8 w-4/5 text-4xl font-bold">
+          {params.teamName} vs. {recordDetails.enemy_team_name} @{recordDetails.place}
+        </div>
+        <DeleteRecordButton recordId={params.recordId} className="m-5" />
       </div>
+
       <div className="flex flex-col items-center gap-6">
         <div>{String(recordDetails.date)}</div>
         <ScoreBoard scores={scoresData} />

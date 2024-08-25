@@ -1,14 +1,5 @@
 import { FC } from 'react'
 
-interface ScoreCellProps {
-  score: number | string
-}
-
-interface ScoreBoardProps {
-  friendScore: ScoreData
-  enemyScore: ScoreData
-}
-
 const ScoreCell: FC<ScoreCellProps> = ({ score }) => (
   <td className="border-b border-muted px-4 py-2 text-center">{score}</td>
 )

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { getTeamsByUserId } from '@/lib/api/team'
-import RecordsClient from './recordsClient'
+import RecordsClient from './components/recordsClient'
 import { cookies } from 'next/headers'
 
 export default async function View() {

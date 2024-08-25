@@ -15,3 +15,12 @@ type ScoreRow = {
   scores: (number | string)[]
   total: number
 }
+
+interface ScoreCellProps {
+  score: number | string
+}
+
+interface ScoreBoardProps {
+  friendScore: ScoreData
+  enemyScore: ScoreData
+}

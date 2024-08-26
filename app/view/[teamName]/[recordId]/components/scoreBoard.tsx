@@ -32,7 +32,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({ friendScore, enemyScore }) => {
           </tr>
         </thead>
         <tbody>
-          <ScoreRow key={`team-${enemyScore.team}`} {...friendScore} />
+          <ScoreRow key={`team-${friendScore.team}`} {...friendScore} />
           <ScoreRow key={`team-${enemyScore.team}`} {...enemyScore} />
         </tbody>
       </table>

@@ -1,7 +1,6 @@
 import { RecordDetail } from '@/app/@types/model'
 
 export function extractTeamsScoreData(record: RecordDetail): TeamScore {
-  const myTeamName = 'My Team' // 自チーム名を適切に設定してください
   const opponentTeamName = record.enemy_team_name
 
   const myTeamScores: (number | string)[] = ['']
@@ -29,14 +28,14 @@ export function extractTeamsScoreData(record: RecordDetail): TeamScore {
 
   return {
     friend: {
-      team: myTeamName,
+      team: '',
       color: 'red',
       scores: myTeamScores,
       total: myTeamTotal
     },
     enemy: {
       team: opponentTeamName,
-      color: 'yellow',
+      color: 'blue',
       scores: opponentTeamScores,
       total: opponentTeamTotal
     }

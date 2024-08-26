@@ -8,25 +8,8 @@ export default async function RecordPage({ params }: { params: { teamName: strin
   console.log(params)
   const res = await getRecordDetailsByRecordId(params.recordId)
   const recordDetails = res.record
-  let teamScoreData: TeamScore = {
-    friend: {
-      team: 'My Team',
-      color: 'red',
-      scores: [],
-      total: 0
-    },
-    enemy: {
-      team: recordDetails.enemy_team_name,
-      color: 'yellow',
-      scores: [],
-      total: 0
-    }
-  }
-
-  if (recordDetails.ends_data) {
-    teamScoreData = extractTeamsScoreData(recordDetails)
-    console.log('extracted score:', teamScoreData)
-  }
+  const teamScoreData = extractTeamsScoreData(recordDetails)
+  teamScoreData.friend.team = params.teamName // recordDetailsには自チーム名が含まれていないため、ここで代入
 
   return (
     <div className="w-full">

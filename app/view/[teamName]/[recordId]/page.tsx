@@ -15,7 +15,7 @@ export default async function RecordPage({ params }: { params: { teamName: strin
     <div className="w-full">
       <div className="flex items-center">
         <div className="m-5 ml-8 w-4/5 text-4xl font-bold">
-          {params.teamName} vs. {recordDetails.enemy_team_name} @{recordDetails.place}
+          {params.teamName} vs. {recordDetails.enemy_team_name} @ {recordDetails.place}
         </div>
         <DeleteRecordButton recordId={params.recordId} className="m-5" />
       </div>

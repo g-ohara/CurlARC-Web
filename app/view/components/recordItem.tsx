@@ -1,5 +1,5 @@
+import { Result } from '@/app/@types/model'
 import { ChevronRightIcon } from '@/components/icons'
-import { Result } from '@/lib/api/types/model'
 import Link from 'next/link'
 
 type RecordItemProps = {

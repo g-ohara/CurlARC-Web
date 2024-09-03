@@ -6,6 +6,7 @@ import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/
 import { cookies } from 'next/headers'
 import CreateTeamsButton from './buttons/createTeamsButton'
 import ViewInvitedTeamsButton from './buttons/viewInvitedTeamsButton'
+import { Team } from '../@types/model'
 
 export default async function TeamPage() {
   const cookieStore = cookies()

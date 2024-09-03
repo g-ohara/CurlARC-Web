@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface TeamDetailsProps {
+type TeamDetailsProps = {
   data: {
     key: string
     value: string

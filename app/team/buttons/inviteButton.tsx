@@ -55,7 +55,6 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
       // メールアドレスをカンマ区切りで分割して配列に変換
       const emails = invitedUsers.split(',').map((email) => email.trim())
       const validEmails = emails.filter((email) => isValidEmail(email))
-      console.log('Inviting users:', validEmails)
 
       // ユーザー招待APIを呼び出す
       await inviteUsers(teamId, validEmails)

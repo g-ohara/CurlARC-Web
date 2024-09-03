@@ -3,12 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import Cookies from 'js-cookie'
 import { getUser } from '@/lib/api/user'
-
-interface User {
-  id: string
-  name: string
-  email: string
-}
+import { User } from '../@types/model'
 
 interface AppContextType {
   isLoggedIn: boolean

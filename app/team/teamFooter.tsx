@@ -3,7 +3,7 @@ import DeleteTeamButton from './buttons/deleteTeamButton'
 import InviteButton from './buttons/inviteButton'
 import LeaveTeamButton from './buttons/leaveTeamButton'
 
-interface TeamFooterProps {
+type TeamFooterProps = {
   lastGameDate: string
   teamName: string
   teamId: string

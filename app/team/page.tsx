@@ -1,10 +1,12 @@
-'use strict'
+'use server'
+
 import React from 'react'
 import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
 import { cookies } from 'next/headers'
 import CreateTeamsButton from './buttons/createTeamsButton'
 import ViewInvitedTeamsButton from './buttons/viewInvitedTeamsButton'
+import { Team } from '../@types/model'
 
 export default async function TeamPage() {
   const cookieStore = cookies()

@@ -1,3 +1,4 @@
+import { getUserResponse, signInResponse } from '@/app/@types/response'
 import { auth } from '@/firebaseConfig'
 import { apiClient } from '@/utils/api/api'
 import { signInWithEmailAndPassword } from 'firebase/auth'

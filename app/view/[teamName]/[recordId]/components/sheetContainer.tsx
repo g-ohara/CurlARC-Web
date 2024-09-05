@@ -16,7 +16,7 @@ export const SheetContainer = ({friendStones, enemyStones} : props) => {
     <Sheet
     canvasRef={canvasRef}
     width={400}
-    height={400}
+    height={800}
     friendStones={friendStones}
     enemyStones={enemyStones}
     friendIsRed={true}

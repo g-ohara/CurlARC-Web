@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import Sheet from './sheet'
+import RecordSheet from './sheet'
 import Menu from './menu'
 
 import { Button } from '@/components/ui/button'
@@ -34,6 +34,7 @@ export default function Subpage(props: SubpageProps) {
   const [ends_data, setEndsData] = useState<End[]>([])
 
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [shotSaved, setShotSaved] = useState(false)
 
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
@@ -103,13 +104,14 @@ export default function Subpage(props: SubpageProps) {
 
   return (
     <div className="z-0 grid w-full p-7 md:grid-cols-2">
-      <Sheet
+      <RecordSheet
         width={width}
         height={height}
         putStone={putStone}
         setPutStone={setPutStone}
         setEndsData={setEndsData}
         isSubmitted={isSubmitted}
+        shotSaved={shotSaved}
       />
       <div className="z-0 grid w-full p-7">
         <Menu
@@ -120,6 +122,7 @@ export default function Subpage(props: SubpageProps) {
           setDate={setDate}
           setPlace={setPlace}
           isSubmitted={isSubmitted}
+          setShotSaved={setShotSaved}
         />
         <SubmitButton />
         {teamId}

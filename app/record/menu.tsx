@@ -18,10 +18,9 @@ import { Button } from '@/components/ui/button'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { Accordion } from "./components";
-import { saveShot as sheetSaveShot } from "./sheet";
+import { Accordion } from "./components/accordion";
+import { DatePicker } from "./components/datePicker";
 
-import { DatePicker } from "./datePicker";
 import TeamDropdownMenu from "../view/components/teamDropdownMenu";
 
 export default function Menu(
@@ -36,6 +35,7 @@ export default function Menu(
     setDate: Dispatch<SetStateAction<Date | undefined>>,
     setPlace: Dispatch<SetStateAction<string>>,
     isSubmitted: boolean
+    setShotSaved: Dispatch<SetStateAction<boolean>>
   }>
 ) {
 
@@ -154,12 +154,16 @@ export default function Menu(
 
     // Save the position, score, and rotation of the shot
     function saveShot() {
-      sheetSaveShot();
+      props.setShotSaved(true);
       setRotation(null);
       setShotType(null);
       setScore(null);
       setDifficulty(null);
       props.setPutStone(false);
+
+      setTimeout(() => {
+        props.setShotSaved(false);
+      }, 1000);
     }
 
     return (

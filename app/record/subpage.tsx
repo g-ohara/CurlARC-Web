@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dialog'
 
 import { createRecord } from '@/lib/api/record'
+import { DataPerEnd, RecordDetail } from '../@types/model';
+import { createRecordRequest } from '../@types/request';
 
 type SubpageProps = {
   teams: {
@@ -31,7 +33,7 @@ export default function Subpage(props: SubpageProps) {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [place, setPlace] = useState('')
 
-  const [ends_data, setEndsData] = useState<End[]>([])
+  const [ends_data, setEndsData] = useState<DataPerEnd[]>([])
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [shotSaved, setShotSaved] = useState(false)
@@ -58,15 +60,13 @@ export default function Subpage(props: SubpageProps) {
     async function submitGame() {
       setIsSubmitted(true);
 
-      // submit game
-      const record = {
+      const req: createRecordRequest = {
         place: place,
         date: date ? date : new Date(),
         ends_data: ends_data
       }
-      console.log(record)
-      await createRecord(props.teams[0].id, record) // チームを作成
-      console.log(record)
+
+      await createRecord(props.teams[0].id, req) // チームを作成
 
       setTimeout(() => {
         setIsOpen(false);

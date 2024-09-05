@@ -3,8 +3,8 @@ import { RecordDetail } from '@/app/@types/model'
 export function extractTeamsScoreData(record: RecordDetail): TeamScore {
   const opponentTeamName = record.enemy_team_name
 
-  const myTeamScores: (number | string)[] = ['']
-  const opponentTeamScores: (number | string)[] = ['']
+  const myTeamScores: number[] = []
+  const opponentTeamScores: number[] = []
   let myTeamTotal = 0
   let opponentTeamTotal = 0
 

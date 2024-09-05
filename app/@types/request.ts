@@ -1,34 +1,12 @@
-interface Stone {
-  index: number;
-  r: number;
-  theta: number;
-}
+import { DataPerEnd } from "./model";
 
-interface Shot {
-  index: number;
-  type: string;
-  success_rate: number;
-  shooter: string;
-  stones: {
-    friend_stones: Stone[];
-    enemy_stones: Stone[];
-  };
-};
-
-interface End {
-  index: number;
-  score: number;
-  shots: Shot[];
-}
-
-
-type registerUserRequest = {
+export type registerUserRequest = {
   name: string
   email: string
   id_token: string
 }
 
-type signInRequest = {
+export type signInRequest = {
   email: string
   password: string
 }
@@ -36,5 +14,5 @@ type signInRequest = {
 export type createRecordRequest = {
   place: string
   date: Date
-  ends_data: End[]
+  ends_data: DataPerEnd[]
 }

@@ -6,7 +6,7 @@ import {
 
 export function Accordion(props: any) {
   return (
-    <MuiAccordion className="bg-slate-100">
+    <MuiAccordion>
       <AccordionSummary>{props.title}</AccordionSummary>
       <AccordionDetails className="grid gap-2">{props.children}</AccordionDetails>
     </MuiAccordion>

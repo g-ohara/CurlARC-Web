@@ -1,7 +1,7 @@
 type ScoreData = {
   team: string
   color: string
-  scores: (number | string)[]
+  scores: number[]
   total: number
 }
 
@@ -12,7 +12,7 @@ type TeamScore = {
 
 type ScoreRow = {
   team: string
-  scores: (number | string)[]
+  scores: number[]
   total: number
 }
 

@@ -15,6 +15,12 @@ function fillCircle(
   ctx.stroke();
 }
 
+const sheetConst = {
+  width: 475.0,
+  height: 823.0,
+  radius: 182.9,
+};
+
 function drawIce(ctx: Canvas2D, x: number, y: number, ratio: number) {
 
   function drawHouse(ctx: Canvas2D, x: number, y: number, r: number) {
@@ -28,8 +34,8 @@ function drawIce(ctx: Canvas2D, x: number, y: number, ratio: number) {
   const sheet = {
     x: x,
     y: y,
-    width: 475.0 * ratio,
-    height: 823.0 * ratio,
+    width: sheetConst.width * ratio,
+    height: sheetConst.height * ratio,
   }
 
   const house = {
@@ -78,8 +84,9 @@ function drawSheet(
   x: number,
   y: number,
   ratio: number,
-  stones: [number, number][],
-  hammerIsRed: boolean,
+  friendStones: Stone[],
+  enemyStones: Stone[],
+  friendIsRed: boolean,
 ) {
   if (canvasRef.current) {
     let ctx: Canvas2D;
@@ -91,55 +98,158 @@ function drawSheet(
       throw new Error("Failed to get context");
     }
     drawIce(ctx, x, y, ratio);
-    stones.forEach((stone, index) => {
-      const hammer: boolean = index % 2 == 1;
-      const red: boolean = (hammerIsRed && hammer) || (!hammerIsRed && !hammer);
-      drawStone(ctx, stone[0], stone[1], ratio, red, ~~(index / 2) + 1);
+
+    friendStones.forEach(stone => {
+      const r = stone.r
+      const theta = stone.theta
+      const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
+      const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
+      drawStone(ctx, stone_x, stone_y, ratio, friendIsRed, stone.index);
+    });
+
+    enemyStones.forEach(stone => {
+      const r = stone.r
+      const theta = stone.theta
+      const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
+      const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
+      drawStone(ctx, stone_x, stone_y, ratio, !friendIsRed, stone.index);
     });
   }
 }
 
 let count = 0;
+let ends_data: End[] = [];
+let shots: Shot[] = [];
+let friendStones: Stone[] = [];
+let enemyStones: Stone[] = [];
 
-export function saveShot() { ++count; }
+function getScore(friendStones: Stone[], enemyStones: Stone[]): number {
+  const friendRadius = friendStones.map(stone => stone.r);
+  const enemyRadius = enemyStones.map(stone => stone.r);
+
+  friendRadius.sort((a, b) => a - b);
+  enemyRadius.sort((a, b) => a - b);
+
+  console.log(friendRadius);
+  console.log(enemyRadius);
+
+  if (friendRadius[0] < enemyRadius[0]) {
+    let score = 0;
+    for (let i = 0; i < friendRadius.length; ++i) {
+      if (friendRadius[i] < enemyRadius[0]) {
+        ++score;
+      } else {
+        break;
+      }
+    }
+    return score;
+  }
+  else {
+    let score = 0;
+    for (let i = 0; i < enemyRadius.length; ++i) {
+      if (enemyRadius[i] < friendRadius[0]) {
+        --score;
+      } else {
+        break;
+      }
+    }
+    return score;
+  }
+}
+
+export function saveShot() {
+  const shot = {
+    index: shots.length + 1,
+    type: "Unknown",
+    success_rate: 100,
+    shooter: "Unknown",
+    stones: {
+      friend_stones: friendStones.slice(),
+      enemy_stones: enemyStones.slice(),
+    },
+  }
+  shots.push(shot);
+  ++count;
+
+  if (count >= 4) {
+    const end = {
+      index: ends_data.length + 1,
+      score: getScore(friendStones, enemyStones),
+      shots: shots.slice(),
+    }
+    console.log(end);
+    ends_data.push(end);
+    shots = [];
+    friendStones = [];
+    enemyStones = [];
+    count = 0;
+  }
+}
 
 export default function Sheet(props: Readonly<{
   width: number;
+  height: number;
   putStone: boolean;
   setPutStone: Dispatch<SetStateAction<boolean>>;
+  setEndsData: Dispatch<SetStateAction<End[]>>;
+  isSubmitted: boolean;
 }>) {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  let stones: [number, number][] = [];
   const x = 10;
   const y = 10;
-  const ratio = props.width / 475.0;
+  const ratio = Math.min(props.width / 475.0, props.height / 823.0);
   let hammer = false;
+  let friendIsRed = true;
 
   const handleClick = (event: MouseEvent) => {
     if (canvasRef.current?.contains(event.target as Node) && count < 16) {
       const click_x = event.clientX - canvasRef.current.offsetLeft;
       const click_y = event.clientY - canvasRef.current.offsetTop;
+      const new_x = (click_x - x) / ratio - sheetConst.width / 2;
+      const new_y = sheetConst.radius - (click_y - y) / ratio;
+      const new_r = Math.sqrt(new_x * new_x + new_y * new_y);
+      const new_theta = Math.atan2(new_y, new_x);
 
       props.setPutStone(true);
-      if (stones.length <= count) {
-        stones.push([click_x, click_y]);
+      const index = Math.floor(count / 2) + 1;
+      const stone = {
+        index: index,
+        r: new_r,
+        theta: new_theta
+      };
+      if (friendStones.length + enemyStones.length <= count) {
+        if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
+          friendStones.push(stone);
+        } else {
+          enemyStones.push(stone);
+        }
       }
       else {
-        stones[count] = [click_x, click_y];
+        if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
+          friendStones[index - 1] = stone;
+        } else {
+          enemyStones[index - 1] = stone;
+        }
       }
-      drawSheet(canvasRef, x, y, ratio, stones, hammer);
+      drawSheet(canvasRef, x, y, ratio, friendStones, enemyStones, friendIsRed);
     }
   };
 
   useEffect(() => {
 
-    drawSheet(canvasRef, x, y, ratio, stones, hammer);
+    drawSheet(canvasRef, x, y, ratio, friendStones, enemyStones, friendIsRed);
     document.addEventListener('click', handleClick);
 
     // Cleanup function to remove event listener when component unmounts
     return () => { document.removeEventListener('click', handleClick); };
-  }, []);
+  }, [props.width, props.height]);
+
+  useEffect(() => {
+    if (props.isSubmitted) {
+      props.setEndsData(ends_data);
+    }
+  }, [props.isSubmitted]);
 
   const margin = 11;
 

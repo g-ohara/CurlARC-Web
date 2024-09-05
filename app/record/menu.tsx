@@ -1,8 +1,7 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState, useEffect } from "react"
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +12,36 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { Accordion } from "./components";
 import { saveShot as sheetSaveShot } from "./sheet";
 
-export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: Dispatch<SetStateAction<boolean>> }>) {
+import { DatePicker } from "./datePicker";
+import TeamDropdownMenu from "../view/components/teamDropdownMenu";
+
+export default function Menu(
+  props: Readonly<{
+    putStone: boolean,
+    setPutStone: Dispatch<SetStateAction<boolean>>,
+    teams: {
+      id: string
+      name: string
+    }[],
+    setTeamId: Dispatch<SetStateAction<string>>,
+    setDate: Dispatch<SetStateAction<Date | undefined>>,
+    setPlace: Dispatch<SetStateAction<string>>,
+    isSubmitted: boolean
+  }>
+) {
+
+  const [teamId, setTeamId] = useState('')
+  const [place, setPlace] = useState('')
+  const [date, setDate] = useState<Date | undefined>(undefined)
 
   // Parameters for each shot
   const [rotation, setRotation] = useState<boolean | null>(null);
@@ -42,7 +64,6 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
             setRotation(newRotation);
           }}
           fullWidth
-          className="bg-slate-100"
         >
           <ToggleButton value="false">Clockwise</ToggleButton>
           <ToggleButton value="true">CounterClockwise</ToggleButton>
@@ -61,7 +82,6 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
           color="primary"
           aria-label="Shot Type"
           fullWidth
-          className="bg-slate-100"
           onChange={(_: React.MouseEvent<HTMLElement>, newShotType: string) => {
             setShotType(newShotType);
             console.log(shotType);
@@ -109,7 +129,6 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
           color="primary"
           aria-label="Difficulty"
           fullWidth
-          className="bg-slate-100"
           onChange={(_: React.MouseEvent<HTMLElement>, newDifficulty: string) => {
             setDifficulty(newDifficulty);
           }}
@@ -145,7 +164,6 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
 
     return (
       <Button
-        variant="contained"
         onClick={() => { saveShot(); }}
         disabled={!props.putStone || rotation === null}
       >
@@ -171,8 +189,8 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
                 <TableCell>Player 1</TableCell>
                 <TableCell>
                   <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outlined"><EditIcon /></Button>
-                    <Button variant="outlined"><DeleteIcon /></Button>
+                    <Button variant="ghost"><EditIcon /></Button>
+                    <Button variant="ghost"><DeleteIcon /></Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -182,6 +200,32 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
       </div>
     );
   }
+
+  function Place() {
+    return (
+      <Input
+        id="team-name"
+        value={place}
+        onChange={(e) => setPlace(e.target.value)}
+        placeholder="Place"
+        className="w-full"
+        required
+      />
+    );
+  }
+
+  function Date() {
+    return <DatePicker date={date} setDate={setDate} />
+  }
+
+  useEffect(() => {
+    if (props.isSubmitted) {
+      props.setPlace(place);
+      props.setDate(date);
+      props.setTeamId(teamId);
+      console.log("Submitted");
+    }
+  }, [props.isSubmitted]);
 
   return (
     <div className="grid">
@@ -195,6 +239,14 @@ export default function Menu(props: Readonly<{ putStone: boolean, setPutStone: D
             <CommentField />
           </Accordion>
           <SaveButton />
+          <Accordion title="Game Info">
+            <TeamDropdownMenu
+              teams={props.teams}
+              onSelect={(id: string) => { setTeamId(id); }}
+            />
+            <Place />
+            <Date />
+          </Accordion>
         </form>
       </div>
       <History />

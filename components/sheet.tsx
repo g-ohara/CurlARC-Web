@@ -1,12 +1,7 @@
 import { useEffect } from "react";
+import { Coordinate } from "@/app/@types/model";
 
 type Canvas2D = CanvasRenderingContext2D;
-
-export type Stone = {
-  index: number;
-  r: number;
-  theta: number;
-}
 
 function fillCircle(
   ctx: Canvas2D, x: number, y: number, r: number, color: string
@@ -88,8 +83,8 @@ function drawSheet(
   x: number,
   y: number,
   ratio: number,
-  friendStones: Stone[],
-  enemyStones: Stone[],
+  friendStones: Coordinate[],
+  enemyStones: Coordinate[],
   friendIsRed: boolean,
 ) {
   if (canvasRef.current) {
@@ -125,8 +120,8 @@ export function Sheet(props: Readonly<{
   canvasRef: React.RefObject<HTMLCanvasElement>;
   width: number;
   height: number;
-  friendStones: Stone[];
-  enemyStones: Stone[];
+  friendStones: Coordinate[];
+  enemyStones: Coordinate[];
   friendIsRed: boolean;
 }>) {
   const x = 10;

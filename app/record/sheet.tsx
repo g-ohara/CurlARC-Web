@@ -2,30 +2,14 @@
 
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 
-import { Stone, Sheet, sheetConst } from "@/components/sheet";
-
-interface Shot {
-  index: number;
-  type: string;
-  success_rate: number;
-  shooter: string;
-  stones: {
-    friend_stones: Stone[];
-    enemy_stones: Stone[];
-  };
-};
-
-interface End {
-  index: number;
-  score: number;
-  shots: Shot[];
-}
+import { Sheet, sheetConst } from "@/components/sheet";
+import { Coordinate, DataPerEnd, Shot } from "../@types/model";
 
 let count = 0;
-let ends_data: End[] = [];
+let ends_data: DataPerEnd[] = [];
 let shots: Shot[] = [];
 
-function getScore(friendStones: Stone[], enemyStones: Stone[]): number {
+function getScore(friendStones: Coordinate[], enemyStones: Coordinate[]): number {
   const friendRadius = friendStones.map(stone => stone.r);
   const enemyRadius = enemyStones.map(stone => stone.r);
 
@@ -64,13 +48,13 @@ export default function RecordSheet(props: Readonly<{
   height: number;
   putStone: boolean;
   setPutStone: Dispatch<SetStateAction<boolean>>;
-  setEndsData: Dispatch<SetStateAction<End[]>>;
+  setEndsData: Dispatch<SetStateAction<DataPerEnd[]>>;
   isSubmitted: boolean;
   shotSaved: boolean;
 }>) {
 
-  const [friendStones, setFriendStones] = useState<Stone[]>([]);
-  const [enemyStones, setEnemyStones] = useState<Stone[]>([]);
+  const [friendStones, setFriendStones] = useState<Coordinate[]>([]);
+  const [enemyStones, setEnemyStones] = useState<Coordinate[]>([]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const x = 10;

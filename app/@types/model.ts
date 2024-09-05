@@ -25,24 +25,24 @@ export type RecordDetail = {
   is_public: boolean
 }
 
-type DataPerEnd = {
+export type DataPerEnd = {
   score: number
   shots: Shot[]
 }
 
-type Shot = {
+export type Shot = {
   type: string
   success_rate: number
   shooter: string
   stones: Stones
 }
 
-type Stones = {
+export type Stones = {
   friend_stones: Coordinate[]
   enemy_stones: Coordinate[]
 }
 
-type Coordinate = {
+export type Coordinate = {
   index: number
   r: number
   theta: number

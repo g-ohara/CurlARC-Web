@@ -69,46 +69,52 @@ export default function RecordSheet(props: Readonly<{
   let hammer = false;
   let friendIsRed = true;
 
-  const handleClick = (event: MouseEvent) => {
-    if (canvasRef.current?.contains(event.target as Node) && count < 16) {
+  const rectToPolar = (x: number, y: number) => {
+    const r = Math.sqrt(x * x + y * y);
+    const theta = Math.atan2(y, x);
+    return [r, theta];
+  };
+
+  const getClickedCoordinate = (event: MouseEvent, canvasRef: React.RefObject<HTMLCanvasElement>): Coordinate | null => {
+    if (canvasRef.current?.contains(event.target as Node)) {
       const click_x = event.clientX - canvasRef.current.offsetLeft;
       const click_y = event.clientY - canvasRef.current.offsetTop;
       const new_x = (click_x - x) / ratio - sheetConst.width / 2;
       const new_y = sheetConst.radius - (click_y - y) / ratio;
-      const new_r = Math.sqrt(new_x * new_x + new_y * new_y);
-      const new_theta = Math.atan2(new_y, new_x);
+      const [new_r, new_theta] = rectToPolar(new_x, new_y);
 
-      props.setPutStone(true);
-      const index = Math.floor(count / 2) + 1;
-      const stone = {
-        index: index,
+      return {
+        index: Math.floor(count / 2) + 1,
         r: new_r,
         theta: new_theta
       };
+    }
+    else {
+      return null;
+    }
+  };
+
+  const handleClick = (event: MouseEvent) => {
+    const coordinate = getClickedCoordinate(event, canvasRef);
+    if (coordinate) {
+
+      props.setPutStone(true);
 
       const append = (stones: Coordinate[]) => {
         ++stonesCount;
-        return [...stones, stone];
+        return [...stones, coordinate];
       }
       const replace = (stones: Coordinate[]) => {
         const _stones = [...stones];
-        _stones[stone.index - 1] = stone;
+        _stones[coordinate.index - 1] = coordinate;
         return _stones;
       }
+      const operation = stonesCount <= count ? append : replace;
 
-      if (stonesCount <= count) {
-        if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
-          setFriendStones(append);
-        } else {
-          setEnemyStones(append);
-        }
-      }
-      else {
-        if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
-          setFriendStones(replace);
-        } else {
-          setEnemyStones(replace);
-        }
+      if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
+        setFriendStones(operation);
+      } else {
+        setEnemyStones(operation);
       }
     }
   };

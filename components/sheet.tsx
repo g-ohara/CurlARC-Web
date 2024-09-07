@@ -4,13 +4,20 @@ import { Coordinate } from "@/app/@types/model";
 type Canvas2D = CanvasRenderingContext2D;
 
 function fillCircle(
-  ctx: Canvas2D, x: number, y: number, r: number, color: string
+  ctx: Canvas2D,
+  x: number,
+  y: number,
+  r: number,
+  fillColor: string,
+  lineWidth: number = 0.6,
+  lineColor: string = "black",
 ) {
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2.0, false);
-  ctx.fillStyle = color;
+  ctx.fillStyle = fillColor;
   ctx.fill();
-  ctx.lineWidth = 0.6;
+  ctx.lineWidth = lineWidth;
+  ctx.strokeStyle = lineColor;
   ctx.stroke();
 }
 
@@ -18,6 +25,7 @@ export const sheetConst = {
   width: 475.0,
   height: 823.0,
   radius: 182.9,
+  stoneRadius: 14.55
 };
 
 function drawIce(ctx: Canvas2D, x: number, y: number, ratio: number) {
@@ -70,9 +78,15 @@ function drawStone(
   ratio: number,
   red: boolean,
   count: number,
+  highlight: boolean,
 ) {
-  let r = 14.55 * ratio;
-  fillCircle(ctx, x, y, r, "grey")
+  let r = sheetConst.stoneRadius * ratio;
+  if (highlight) {
+    fillCircle(ctx, x, y, r, "grey", 1.0, red ? "red" : "yellow");
+  }
+  else {
+    fillCircle(ctx, x, y, r, "grey");
+  }
   fillCircle(ctx, x, y, r * 0.7, (red) ? "red" : "yellow")
   ctx.fillStyle = "black";
   ctx.fillText(String(count), x - r * 0.28, y + r * 0.36);
@@ -86,6 +100,8 @@ function drawSheet(
   friendStones: Coordinate[],
   enemyStones: Coordinate[],
   friendIsRed: boolean,
+  highlightFriendStonesIndex: number[],
+  highlightEnemyStonesIndex: number[],
 ) {
   if (canvasRef.current) {
     let ctx: Canvas2D;
@@ -98,12 +114,15 @@ function drawSheet(
     }
     drawIce(ctx, x, y, ratio);
 
+    console.log(highlightFriendStonesIndex);
+
     friendStones.forEach(stone => {
       const r = stone.r
       const theta = stone.theta
       const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
       const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
-      drawStone(ctx, stone_x, stone_y, ratio, friendIsRed, stone.index);
+      const highlight = highlightFriendStonesIndex.includes(stone.index);
+      drawStone(ctx, stone_x, stone_y, ratio, friendIsRed, stone.index, highlight);
     });
 
     enemyStones.forEach(stone => {
@@ -111,7 +130,8 @@ function drawSheet(
       const theta = stone.theta
       const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
       const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
-      drawStone(ctx, stone_x, stone_y, ratio, !friendIsRed, stone.index);
+      const highlight = highlightEnemyStonesIndex.includes(stone.index);
+      drawStone(ctx, stone_x, stone_y, ratio, !friendIsRed, stone.index, highlight);
     });
   }
 }
@@ -123,13 +143,25 @@ export function Sheet(props: Readonly<{
   friendStones: Coordinate[];
   enemyStones: Coordinate[];
   friendIsRed: boolean;
+  highlightFriendStonesIndex: number[];
+  highlightEnemyStonesIndex: number[];
 }>) {
   const x = 10;
   const y = 10;
   const ratio = Math.min(props.width / 475.0, props.height / 823.0);
 
   useEffect(() => {
-    drawSheet(props.canvasRef, x, y, ratio, props.friendStones, props.enemyStones, props.friendIsRed);
+    drawSheet(
+      props.canvasRef,
+      x,
+      y,
+      ratio,
+      props.friendStones,
+      props.enemyStones,
+      props.friendIsRed,
+      props.highlightFriendStonesIndex,
+      props.highlightEnemyStonesIndex,
+    );
   }, [props.width, props.height, props.friendStones, props.enemyStones, props.friendIsRed]);
 
   const margin = 11;

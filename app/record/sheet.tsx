@@ -6,6 +6,12 @@ import { Sheet, sheetConst } from "@/components/sheet";
 import { Coordinate, DataPerEnd, Shot } from "../@types/model";
 
 let count = 0;
+
+// Number of appended stones.
+// It equals friendStones.length + enemyStones.length,
+// which cannot gotten directly.
+let stonesCount = 0;
+
 let ends_data: DataPerEnd[] = [];
 let shots: Shot[] = [];
 
@@ -80,24 +86,28 @@ export default function RecordSheet(props: Readonly<{
         theta: new_theta
       };
 
-      let _friendStones = friendStones.slice();
-      let _enemyStones = enemyStones.slice();
-      if (_friendStones.length + _enemyStones.length <= count) {
+      const append = (stones: Coordinate[]) => {
+        ++stonesCount;
+        return [...stones, stone];
+      }
+      const replace = (stones: Coordinate[]) => {
+        const _stones = [...stones];
+        _stones[stone.index - 1] = stone;
+        return _stones;
+      }
+
+      if (stonesCount <= count) {
         if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
-          _friendStones.push(stone);
-          setFriendStones(_friendStones);
+          setFriendStones(append);
         } else {
-          _enemyStones.push(stone);
-          setEnemyStones(_enemyStones);
+          setEnemyStones(append);
         }
       }
       else {
         if (count % 2 == 0 && !hammer || count % 2 == 1 && hammer) {
-          _friendStones[index - 1] = stone;
-          setFriendStones(_friendStones);
+          setFriendStones(replace);
         } else {
-          _enemyStones[index - 1] = stone;
-          setEnemyStones(_enemyStones);
+          setEnemyStones(replace);
         }
       }
     }

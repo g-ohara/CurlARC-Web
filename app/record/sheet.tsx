@@ -175,6 +175,8 @@ export default function RecordSheet(props: Readonly<{
       friendStones={friendStones}
       enemyStones={enemyStones}
       friendIsRed={friendIsRed}
+      highlightFriendStonesIndex={[]}
+      highlightEnemyStonesIndex={[]}
     />
   );
 }

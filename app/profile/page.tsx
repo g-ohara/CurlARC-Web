@@ -13,7 +13,7 @@ export default function Profile() {
         <div className="w-full max-w-lg rounded-lg p-8 shadow-lg">
           <div className="mb-6 flex items-center">
             <div className="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500 text-3xl font-bold text-white">
-              {user.name.charAt(0)}
+              {user.name ? user.name.charAt(0) : 'U'}
             </div>
             <div>
               <h2 className="text-4xl font-bold text-gray-800">User Profile</h2>

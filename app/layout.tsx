@@ -3,8 +3,9 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/header'
 import Navigator from '@/components/navigator'
-import RecordButton from '@/components/recordButton'
 import { AppProvider } from './context/appProvider'
+import { SessionProvider } from 'next-auth/react'
+import NextAuthProvider from './providers/NextAuth'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,7 +27,11 @@ export default function RootLayout({
             <Header />
             <div className="flex h-screen">
               <Navigator />
-              <div className="flex w-full">{children}</div>
+              <div className="flex w-full">
+                <NextAuthProvider>
+                  {children}
+                </NextAuthProvider>
+              </div>
               {/* <RecordButton /> */}
             </div>
           </AppProvider>

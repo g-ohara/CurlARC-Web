@@ -1,6 +1,7 @@
 "use client"
 
-import { signIn, useSession } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import React from 'react';
 
 export default function Login() {
@@ -14,9 +15,19 @@ export default function Login() {
 		return (
 			<div>
 				<p>あなたはログインしていません</p>
-				<button onClick={() => signIn('google', {}, { prompt: 'login' })}>
+				<Button onClick={() => signIn('google', {}, { prompt: 'login' })}>
 					Googleでログイン
-				</button>
+				</Button>
+			</div>
+		);
+	}
+
+	if (session) {
+		return (
+			<div>
+				<p>あなたはログインしています</p>
+				<p>ようこそ、{session.user?.name}さん</p>
+				<Button onClick={() => signOut()}>ログアウト</Button>
 			</div>
 		);
 	}

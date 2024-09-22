@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { revalidateByTag } from '../serverActions'
 import { removeTeamMembers } from '@/lib/api/team'
-import { useApp } from '@/app/context/appProvider'
+import { useSession } from 'next-auth/react'
 
 interface LeaveTeamButtonProps {
   teamName: string
@@ -28,7 +28,9 @@ export default function LeaveTeamButton({ teamName, teamId }: LeaveTeamButtonPro
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const { user } = useApp()
+
+  const {data: session} = useSession()
+  const user = session?.user
 
   useEffect(() => {
     if (success) {

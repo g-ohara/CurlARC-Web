@@ -1,4 +1,4 @@
-import { getJWT } from './cookieGetter'
+import { useSession } from 'next-auth/react'
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
 
@@ -13,7 +13,8 @@ const makeRequestBody = <T = object>(body: T) => {
 }
 
 const getAuthHeaders = async () => {
-  const JWT = await getJWT()
+  const {data: session} = useSession()
+  const JWT = session?.accessToken
 
   const headers = new Headers({
     'Content-Type': 'application/json'

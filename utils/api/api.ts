@@ -1,6 +1,7 @@
-import { useSession } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import { FetchError } from './fetchError'
 import { toJSONFormat } from './toJSONFormat'
+import { getBackendAccessToken } from './getJWT'
 
 const baseURL: string | undefined =
   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
@@ -13,18 +14,20 @@ const makeRequestBody = <T = object>(body: T) => {
 }
 
 const getAuthHeaders = async () => {
-  const {data: session} = useSession()
-  const JWT = session?.accessToken
-
   const headers = new Headers({
     'Content-Type': 'application/json'
-  })
+  });
 
-  if (JWT) {
-    headers.append('Authorization', `Bearer ${JWT}`)
+  // Get the current session
+  const backendAccessToken = await getBackendAccessToken();
+
+  // Check if the JWT is available and append it to the headers
+  if (backendAccessToken) {
+    headers.append('Authorization', `Bearer ${backendAccessToken}`);
   }
-  return headers
-}
+
+  return headers;
+};
 
 type TMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 

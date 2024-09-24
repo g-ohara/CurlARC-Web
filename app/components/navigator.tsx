@@ -1,8 +1,8 @@
 'use client'
 
+import { EyeIcon, HomeIcon, PlusIcon, UsersIcon } from '@/components/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { EyeIcon, HomeIcon, PlusIcon, UsersIcon } from './icons'
 
 export default function Navigator() {
   const pathname = usePathname()
@@ -17,10 +17,10 @@ export default function Navigator() {
 
   return (
     <nav className="flex w-1/6 flex-col gap-2 bg-slate-100 p-3 shadow-md">
-      <Link href="/" className={commonStyle + ' ' + getLinkClass('/')}>
+      {/* <Link href="/home" className={commonStyle + ' ' + getLinkClass('/')}>
         <HomeIcon className="h-6 w-6" />
         Home
-      </Link>
+      </Link> */}
       <Link href="/team" className={commonStyle + ' ' + getLinkClass('/team')}>
         <UsersIcon className="h-6 w-6" />
         My Teams

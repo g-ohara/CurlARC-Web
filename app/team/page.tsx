@@ -24,11 +24,10 @@ export default async function TeamPage() {
             getTeamDetails(team.id),
             getMembersByTeamId(team.id)
           ])
-
           return {
             id: team.id,
             name: team.name,
-            members: membersResponse.members ?? [],
+            members: membersResponse.users ?? [],
             details: teamDetails.details
           }
         })

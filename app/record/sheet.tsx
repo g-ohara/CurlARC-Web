@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 
 import { Sheet, sheetConst } from "@/components/sheet";
-import { Coordinate, DataPerEnd, Shot } from "../@types/model";
+import { Coordinate, DataPerEnd, Shot } from "@/types/model";
 
 let count = 0;
 let ends_data: DataPerEnd[] = [];

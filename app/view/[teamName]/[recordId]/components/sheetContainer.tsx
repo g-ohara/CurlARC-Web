@@ -1,7 +1,7 @@
 'use client';
 
-import { Coordinate } from "@/app/@types/model";
 import { Sheet } from "@/components/sheet";
+import { Coordinate } from "@/types/model";
 import { useRef } from "react";
 
 type props = {

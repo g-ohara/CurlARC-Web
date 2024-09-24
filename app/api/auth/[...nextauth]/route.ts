@@ -37,8 +37,6 @@ const handler = NextAuth({
           },
           body: JSON.stringify({
             id_token: token.idToken,
-            name: session.user.name,
-            email: session.user.email,
           }),
         });
 
@@ -47,9 +45,9 @@ const handler = NextAuth({
           session.user.id = resJSON.data.user.id;
         }
 
-        if (resJSON.data.accessToken) {
-          session.backendAccessToken = resJSON.data.accessToken;
-          cookies().set("access_token", resJSON.data.accessToken, {
+        if (resJSON.data.access_token) {
+          session.backendAccessToken = resJSON.data.access_token;
+          cookies().set("backend_access_token", resJSON.data.access_token, {
             maxAge: 30 * 24 * 60 * 60, // 30 days
           });
         }

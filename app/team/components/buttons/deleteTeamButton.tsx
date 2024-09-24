@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { deleteTeam } from '@/lib/api/team'
-import { revalidateByTag } from '../serverActions'
+import { revalidateByTag } from '../../serverActions'
 
 interface DeleteTeamButtonProps {
   teamName: string

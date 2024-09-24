@@ -1,5 +1,5 @@
+import { Coordinate } from "@/types/model";
 import { useEffect } from "react";
-import { Coordinate } from "@/app/@types/model";
 
 type Canvas2D = CanvasRenderingContext2D;
 

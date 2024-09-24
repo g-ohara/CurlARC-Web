@@ -1,9 +1,6 @@
-import { createRecordRequest } from '@/app/@types/request'
-import {
-  createRecordResponse,
-  getRecordDetailsByRecordIdResponse,
-  getRecordIndicesByTeamIdResponse
-} from '@/app/@types/response'
+
+import { createRecordRequest } from '@/types/request'
+import { createRecordResponse, getRecordDetailsByRecordIdResponse, getRecordIndicesByTeamIdResponse } from '@/types/response'
 import { apiClient } from '@/utils/api/api'
 import { cache } from 'react'
 

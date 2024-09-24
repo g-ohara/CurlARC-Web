@@ -1,7 +1,7 @@
 import { CalendarIcon } from '@/components/icons'
-import DeleteTeamButton from './buttons/deleteTeamButton'
 import InviteButton from './buttons/inviteButton'
 import LeaveTeamButton from './buttons/leaveTeamButton'
+import DeleteTeamButton from './buttons/deleteTeamButton'
 
 type TeamFooterProps = {
   lastGameDate: string

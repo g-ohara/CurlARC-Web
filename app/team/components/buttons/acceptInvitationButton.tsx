@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { acceptInvitation } from '@/lib/api/team'
-import { revalidateByTag } from '../serverActions'
+import { revalidateByTag } from '../../serverActions'
 
 type AcceptInvitationButtonProps = {
   teamId: string

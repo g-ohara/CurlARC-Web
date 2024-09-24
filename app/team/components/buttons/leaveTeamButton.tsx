@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { revalidateByTag } from '../serverActions'
+import { revalidateByTag } from '../../serverActions'
 import { removeTeamMembers } from '@/lib/api/team'
 import { useSession } from 'next-auth/react'
 

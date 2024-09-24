@@ -1,13 +1,12 @@
 'use server'
 
 import React from 'react'
-import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
-import CreateTeamsButton from './buttons/createTeamsButton'
-import ViewInvitedTeamsButton from './buttons/viewInvitedTeamsButton'
+import CreateTeamsButton from './components/buttons/createTeamsButton'
+import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
 import { Team } from '@/types/model'
-import { useSession } from 'next-auth/react'
 import { getServerSession } from 'next-auth'
+import { TeamCard } from './components/teamCard'
 
 export default async function TeamPage() {
   const session = await getServerSession()

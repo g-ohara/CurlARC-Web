@@ -1,5 +1,3 @@
-'use client'
-
 import React, { FC, useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
@@ -23,7 +21,7 @@ interface ScoreBoardProps {
 }
 
 const ScoreCell: FC<{
-  score: number
+  score: number | string
   isHeader: boolean
   isSelected: boolean
   onClick?: () => void
@@ -51,34 +49,47 @@ const TeamNameCell: FC<{ team: string; color: string }> = ({ team, color }) => (
   </td>
 )
 
-const ScoreRow: FC<ScoreData & { 
-  selectedRound: number | null
-  onRoundSelect: (round: number) => void 
-}> = ({ team, color, scores, total, selectedRound, onRoundSelect }) => (
-  <tr>
-    <TeamNameCell team={team} color={color} />
-    {scores.map((score, index) => (
-      <ScoreCell 
-        key={`${team}-${index}`} 
-        score={score} 
-        isHeader={false}
-        isSelected={selectedRound === index}
-        onClick={() => onRoundSelect(index)}
-        ariaLabel={`${team} score for round ${index + 1}: ${score}`}
-      />
-    ))}
-    <td className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base font-bold">{total}</td>
-  </tr>
+const FirstStoneCell: FC<{ isFirstStone: boolean }> = ({ isFirstStone }) => (
+  <td className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
+    {isFirstStone ? '●' : ''}
+  </td>
 )
 
-const ScoreBoard: FC<ScoreBoardProps> = ({ 
+const ScoreRow: FC<ScoreData & {
+  selectedRound: number | null
+  onRoundSelect: (round: number) => void
+}> = ({ team, color, scores, total, selectedRound, onRoundSelect }) => {
+  const isFirstStone = scores[0] === -1
+  const displayScores = scores.slice(1)  // 2番目の要素から表示
+
+  return (
+    <tr>
+      <TeamNameCell team={team} color={color} />
+      <FirstStoneCell isFirstStone={isFirstStone} />
+      {displayScores.map((score, index) => (
+        <ScoreCell
+          key={`${team}-${index}`}
+          score={score}
+          isHeader={false}
+          isSelected={selectedRound === index}
+          onClick={() => onRoundSelect(index)}
+          ariaLabel={`${team} score for round ${index + 1}: ${score}`}
+        />
+      ))}
+      <td className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base font-bold">{total}</td>
+    </tr>
+  )
+}
+
+const ScoreBoard: FC<ScoreBoardProps> = ({
   friendScore, 
   enemyScore, 
   onRoundSelect,
   customColors = {}
 }) => {
   const [selectedRound, setSelectedRound] = useState<number>(0)
-  const headers = useMemo(() => Array.from({ length: 10 }, (_, i) => i + 1), [])
+  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length) - 1  // 先攻/後攻の要素を除く
+  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 
   const handleRoundSelect = (round: number) => {
@@ -100,8 +111,11 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             <th className="border-b border-muted px-2 py-1 text-left text-xs sm:text-sm md:text-base">
               <div className="max-w-[100px] md:max-w-[150px] overflow-hidden">TEAM</div>
             </th>
+            <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
+              1st
+            </th>
             {headers.map((header) => (
-              <motion.th 
+              <motion.th
                 key={`header-${header}`} 
                 className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
                   ${selectedRound + 1 === header ? `${selectedBorder} border-2` : `${hoverBg}`}`}

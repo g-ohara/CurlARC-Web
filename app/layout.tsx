@@ -25,7 +25,7 @@ export default function RootLayout({
             <Header />
             <div className="flex h-screen">
               <Navigator />
-              <div className="flex w-full">
+              <div className="flex w-5/6">
                   {children}
               </div>
               {/* <RecordButton /> */}

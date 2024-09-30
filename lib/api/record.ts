@@ -21,7 +21,7 @@ export const getRecordsByTeamId = cache(async (teamId: string): Promise<getRecor
 
 export const getRecordDetailsByRecordId = cache(
   async (recordId: string): Promise<getRecordDetailsByRecordIdResponse> => {
-    const res = await apiClient.get<getRecordDetailsByRecordIdResponse>(`/auth/records/${recordId}/detail`)
+    const res = await apiClient.get<getRecordDetailsByRecordIdResponse>(`/auth/records/${recordId}/details`)
     return res
   }
 )

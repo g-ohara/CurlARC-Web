@@ -6,14 +6,14 @@ import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { RecordIndex } from '@/types/model'
 
-type RecordsClientProps = {
+type Props = {
   teams: {
     id: string
     name: string
   }[]
 }
 
-export default function RecordsClient({ teams }: RecordsClientProps) {
+export default function RecordsClient({ teams }: Props) {
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
   const [records, setRecords] = useState<RecordIndex[]>()
 
@@ -35,7 +35,7 @@ export default function RecordsClient({ teams }: RecordsClientProps) {
                 key={record.id}
                 recordId={record.id}
                 result={record.result}
-                teamName={teams.find(team => team.id === selectedTeamId)?.name ?? ""}
+                teamId={selectedTeamId}
                 enemyTeamName={record.enemy_team_name}
                 date={record.date.toString()}
               />

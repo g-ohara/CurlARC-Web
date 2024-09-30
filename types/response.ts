@@ -12,10 +12,10 @@ export type getMembersResponse = {
 }
 
 export type getTeamDetailsResponse = {
-  details: {
-    key: string
-    value: string
-  }[]
+  team: {
+    id: string
+    name: string
+  }
 }
 
 // user

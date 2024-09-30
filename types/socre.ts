@@ -1,5 +1,5 @@
 type ScoreData = {
-  team: string
+  teamName: string
   color: string
   scores: number[]
   total: number

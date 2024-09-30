@@ -3,8 +3,8 @@ import ScoreBoard from './components/scoreBoard'
 import { DeleteRecordButton } from './components/DeleteRecordButton'
 import { extractTeamsScoreData } from '@/utils/func/score'
 import { SheetContainer } from './components/sheetContainer'
-import { Coordinate } from '@/app/@types/model'
 import { ShotSelector } from './components/shotSelector'
+import { Coordinate } from '@/types/model'
 
 export default async function RecordPage({ params }: { params: { teamName: string; recordId: string } }) {
   console.log(params)

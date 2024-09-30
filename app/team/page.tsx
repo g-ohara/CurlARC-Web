@@ -1,19 +1,18 @@
 'use server'
 
 import React from 'react'
-import { TeamCard } from './teamCard'
 import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
-import { cookies } from 'next/headers'
-import CreateTeamsButton from './buttons/createTeamsButton'
-import ViewInvitedTeamsButton from './buttons/viewInvitedTeamsButton'
-import { Team } from '../@types/model'
+import CreateTeamsButton from './components/buttons/createTeamsButton'
+import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
+import { Team } from '@/types/model'
+import { getServerSession } from 'next-auth'
+import { TeamCard } from './components/teamCard'
 
 export default async function TeamPage() {
-  const cookieStore = cookies()
-  const jwt = cookieStore.get('jwt')?.value
+  const session = await getServerSession()
   let teamsWithMembers: Team[] = []
 
-  if (jwt) {
+  if (session) {
     const res = await getTeamsByUserId()
     const teams = res.teams
 
@@ -25,11 +24,10 @@ export default async function TeamPage() {
             getTeamDetails(team.id),
             getMembersByTeamId(team.id)
           ])
-
           return {
             id: team.id,
             name: team.name,
-            members: membersResponse.members ?? [],
+            members: membersResponse.users ?? [],
             details: teamDetails.details
           }
         })

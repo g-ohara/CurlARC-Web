@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/dialog'
 
 import { createRecord } from '@/lib/api/record'
-import { DataPerEnd, RecordDetail } from '../@types/model';
-import { createRecordRequest } from '../@types/request';
+import { DataPerEnd } from '@/types/model';
+import { createRecordRequest } from '@/types/request';
 
 type SubpageProps = {
   teams: {

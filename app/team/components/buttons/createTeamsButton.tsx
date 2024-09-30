@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
-import { revalidateByTag } from '../serverActions'
+import { revalidateByTag } from '../../serverActions'
 
 export default function CreateTeamsButton() {
   const [teamName, setTeamName] = useState('')

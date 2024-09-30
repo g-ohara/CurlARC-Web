@@ -8,7 +8,7 @@ export type getTeamsResponse = {
 }
 
 export type getMembersResponse = {
-  members: User[]
+  users: User[]
 }
 
 export type getTeamDetailsResponse = {

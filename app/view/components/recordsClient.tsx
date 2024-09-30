@@ -4,7 +4,7 @@ import { useState } from 'react'
 import TeamDropdownMenu from './teamDropdownMenu'
 import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
-import { RecordIndex } from '@/app/@types/model'
+import { RecordIndex } from '@/types/model'
 
 type RecordsClientProps = {
   teams: {

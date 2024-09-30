@@ -1,4 +1,4 @@
-import { RecordDetail } from '@/app/@types/model'
+import { RecordDetail } from "@/types/model"
 
 export function extractTeamsScoreData(record: RecordDetail): TeamScore {
   const opponentTeamName = record.enemy_team_name

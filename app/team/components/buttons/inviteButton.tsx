@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { inviteUsers } from '@/lib/api/team'
@@ -55,7 +54,11 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
       // メールアドレスをカンマ区切りで分割して配列に変換
       const emails = invitedUsers.split(',').map((email) => email.trim())
       const validEmails = emails.filter((email) => isValidEmail(email))
-
+      // validEmailsが空の場合はエラーメッセージを設定
+      if (validEmails.length === 0) {
+      setError('Please enter at least one valid email address.')
+      return
+      }
       // ユーザー招待APIを呼び出す
       await inviteUsers(teamId, validEmails)
       setInvitedUsers('')

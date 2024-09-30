@@ -1,4 +1,4 @@
-import { getMembersResponse, getTeamDetailsResponse, getTeamsResponse } from '@/app/@types/response'
+import { getMembersResponse, getTeamDetailsResponse, getTeamsResponse } from '@/types/response'
 import { apiClient } from '@/utils/api/api'
 import { cache } from 'react'
 

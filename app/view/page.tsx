@@ -3,13 +3,12 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { getTeamsByUserId } from '@/lib/api/team'
 import RecordsClient from './components/recordsClient'
-import { cookies } from 'next/headers'
+import { getServerSession } from 'next-auth'
 
 export default async function View() {
-  const cookieStore = cookies()
-  const jwt = cookieStore.get('jwt')?.value
+  const session = await getServerSession()
   let teams: { id: string; name: string }[] = []
-  if (jwt) {
+  if (session) {
     const res = await getTeamsByUserId()
     teams = res.teams
   }

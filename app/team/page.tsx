@@ -1,12 +1,20 @@
 'use server'
 
 import React from 'react'
-import { getMembersByTeamId, getTeamsByUserId, getTeamDetails } from '@/lib/api/team'
+import { getMembersByTeamId, getTeamDetailsByTeamId, getTeamsByUserId } from '@/lib/api/team'
 import CreateTeamsButton from './components/buttons/createTeamsButton'
 import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
 import { Team } from '@/types/model'
 import { getServerSession } from 'next-auth'
 import { TeamCard } from './components/teamCard'
+
+const teamDetailsDummy = [
+  { key: 'Wins', value: '25' },
+  { key: 'Losses', value: '36' },
+  { key: 'Ties', value: '26' },
+  { key: 'Established', value: '2021-01-01' },
+  { key: 'Team Captain', value: 'John Doe' }
+]
 
 export default async function TeamPage() {
   const session = await getServerSession()
@@ -21,14 +29,14 @@ export default async function TeamPage() {
       teamsWithMembers = await Promise.all(
         teams.map(async (team) => {
           const [teamDetails, membersResponse] = await Promise.all([
-            getTeamDetails(team.id),
+            getTeamDetailsByTeamId(team.id),
             getMembersByTeamId(team.id)
           ])
           return {
             id: team.id,
             name: team.name,
             members: membersResponse.users ?? [],
-            details: teamDetails.details
+            details: teamDetailsDummy
           }
         })
       )

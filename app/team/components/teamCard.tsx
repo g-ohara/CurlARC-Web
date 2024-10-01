@@ -1,43 +1,45 @@
-// components/TeamCard.tsx
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { TeamHeader } from './teamHeader'
-import { TeamStatistics } from './teamStatistics'
+import { AsyncTeamMembers } from './asyncTeamMembers'
+import { AsyncTeamStatistics } from './asyncTeamStatistics'
+import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
-import { TeamMembers } from './teamMembers'
-import { TeamDetails } from './teamDetails'
+import { LoadingPlaceholder } from './loadingPlaceholder'
 
 type TeamCardProps = {
   teamId: string
   teamName: string
-  memberCount: number
-  score: { red: number; blue: number }
-  members: Array<{ name: string; email: string }>
-  statisticsData: Array<{ key: string; value: number }>
-  teamDetails: Array<{ key: string; value: string }>
+  score: {
+    red: number
+    blue: number
+  }
   lastGameDate: string
 }
 
-export function TeamCard({
-  teamId,
-  teamName,
-  memberCount,
-  score,
-  members,
-  statisticsData,
-  teamDetails,
-  lastGameDate
-}: TeamCardProps) {
+export function TeamCard({ teamId, teamName, score, lastGameDate }: TeamCardProps) {
   return (
     <Card className="rounded-lg bg-white p-4 shadow-md">
       <CardHeader>
-        <TeamHeader teamName={teamName} memberCount={memberCount} score={score} />
+        <TeamHeader teamName={teamName} score={score} />
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-10 gap-6">
-          <TeamMembers className="col-span-3" members={members} />
-          <TeamStatistics className="col-span-4" data={statisticsData} />
-          <TeamDetails className="col-span-3" data={teamDetails} />
+          <div className="col-span-3">
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <AsyncTeamMembers teamId={teamId} />
+            </Suspense>
+          </div>
+          <div className="col-span-4">
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <AsyncTeamStatistics teamId={teamId} />
+            </Suspense>
+          </div>
+          <div className="col-span-3">
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <AsyncTeamDetails teamId={teamId} />
+            </Suspense>
+          </div>
         </div>
       </CardContent>
       <CardFooter>

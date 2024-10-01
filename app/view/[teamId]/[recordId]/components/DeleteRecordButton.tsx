@@ -14,12 +14,12 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 
-type DeleteRecordButtonProps = {
+type Props = {
   recordId: string
   className?: string
 }
 
-export const DeleteRecordButton = ({ recordId, className }: DeleteRecordButtonProps) => {
+export const DeleteRecordButton = ({ recordId, className }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 

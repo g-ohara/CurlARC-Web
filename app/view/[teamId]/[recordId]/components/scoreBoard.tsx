@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive'
 interface ScoreBoardProps {
   friendScore: ScoreData
   enemyScore: ScoreData
-  onRoundSelect?: (round: number) => void
+  onEndSelect: (endIndex: number) => void
   customColors?: {
     headerBg?: string
     selectedBorder?: string
@@ -79,17 +79,17 @@ const ScoreRow: FC<ScoreData & {
 const ScoreBoard: FC<ScoreBoardProps> = ({
   friendScore, 
   enemyScore, 
-  onRoundSelect,
+  onEndSelect,
   customColors = {}
 }) => {
   const [selectedRound, setSelectedRound] = useState<number>(0)
   const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length) - 1  // 先攻/後攻の要素を除く
-  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
+  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 
   const handleRoundSelect = (round: number) => {
     setSelectedRound(round)
-    onRoundSelect?.(round)
+    onEndSelect(round)
   }
 
   const {
@@ -113,8 +113,8 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
               <motion.th
                 key={`header-${header}`} 
                 className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
-                  ${selectedRound + 1 === header ? `${selectedBorder} border-2` : `${hoverBg}`}`}
-                onClick={() => handleRoundSelect(header - 1)}
+                  ${selectedRound === header ? `${selectedBorder} border-2` : `${hoverBg}`}`}
+                onClick={() => handleRoundSelect(header)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={`Select round ${header}`}

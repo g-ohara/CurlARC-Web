@@ -56,7 +56,7 @@ export const getTeamDetailsByTeamId = cache(async (teamId: string): Promise<getT
   //     { key: 'division', value: 'N/A' }
   //   ]
   // }
- const res = await apiClient.get<getTeamDetailsResponse>(`/auth/teams/${teamId}/details`)
+  const res = await apiClient.get<getTeamDetailsResponse>(`/auth/teams/${teamId}/details`)
 
   return res
 })

@@ -4,28 +4,32 @@ import React, { FC, useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
 
+interface CustomColors {
+  headerBg?: string
+  selectedBorder?: string
+  hoverBg?: string
+}
+
 interface ScoreBoardProps {
   friendScore: ScoreData
   enemyScore: ScoreData
   onEndSelect: (endIndex: number) => void
-  customColors?: {
-    headerBg?: string
-    selectedBorder?: string
-    hoverBg?: string
-  }
+  customColors?: CustomColors
 }
 
-const ScoreCell: FC<{
+interface ScoreCellProps {
   score: number | string
-  isHeader: boolean
-  isSelected: boolean
+  isHeader?: boolean
+  isSelected?: boolean
   onClick?: () => void
   ariaLabel: string
-}> = ({ score, isHeader, isSelected, onClick, ariaLabel }) => (
+}
+
+const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = false, onClick, ariaLabel }) => (
   <motion.td 
     className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base
       ${isHeader ? 'cursor-pointer' : ''}
-      ${isSelected ? 'border-yellow-300 border-2' : ''}`}
+      ${isSelected ? 'bg-yellow-300' : ''}`}
     onClick={onClick}
     whileHover={isHeader ? { scale: 1.05 } : {}}
     whileTap={isHeader ? { scale: 0.95 } : {}}
@@ -50,10 +54,12 @@ const FirstStoneCell: FC<{ isFirstStone: boolean }> = ({ isFirstStone }) => (
   </td>
 )
 
-const ScoreRow: FC<ScoreData & {
+interface ScoreRowProps extends ScoreData {
   selectedRound: number | null
   onRoundSelect: (round: number) => void
-}> = ({ teamName, color, scores, total, selectedRound, onRoundSelect }) => {
+}
+
+const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRound, onRoundSelect }) => {
   const isFirstStone = scores[0] === -1
   const displayScores = scores.slice(1)  // 2番目の要素から表示
 
@@ -65,8 +71,7 @@ const ScoreRow: FC<ScoreData & {
         <ScoreCell
           key={`${teamName}-${index}`}
           score={score}
-          isHeader={false}
-          isSelected={selectedRound === index}
+          isSelected={selectedRound === index + 1}
           onClick={() => onRoundSelect(index)}
           ariaLabel={`${teamName} score for round ${index + 1}: ${score}`}
         />
@@ -84,7 +89,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
 }) => {
   const [selectedRound, setSelectedRound] = useState<number>(0)
   const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length) - 1  // 先攻/後攻の要素を除く
-  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i), [roundCount])
+  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 
   const handleRoundSelect = (round: number) => {
@@ -92,17 +97,18 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
     onEndSelect(round)
   }
 
-  const {
-    headerBg = 'bg-gray-100',
-    selectedBorder = 'border-yellow-300',
-    hoverBg = 'hover:bg-gray-200'
-  } = customColors
+  // デフォルトカラーのメモ化
+  const colors = useMemo(() => ({
+    headerBg: customColors.headerBg || 'bg-gray-100',
+    selectedBorder: customColors.selectedBorder || 'bg-yellow-300',
+    hoverBg: customColors.hoverBg || 'hover:bg-gray-200'
+  }), [customColors])
 
   return (
     <div className="overflow-x-auto shadow-lg rounded-lg">
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className={headerBg}>
+          <tr className={colors.headerBg}>
             <th className="border-b border-muted px-2 py-1 text-left text-xs sm:text-sm md:text-base">
               <div className="max-w-[100px] md:max-w-[150px] overflow-hidden">TEAM</div>
             </th>
@@ -113,7 +119,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
               <motion.th
                 key={`header-${header}`} 
                 className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
-                  ${selectedRound === header ? `${selectedBorder} border-2` : `${hoverBg}`}`}
+                  ${selectedRound === header ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`}`}
                 onClick={() => handleRoundSelect(header)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

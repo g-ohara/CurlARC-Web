@@ -23,21 +23,15 @@ export function extractTeamsScoreData(record: RecordDetail): TeamScore {
     })
   }
 
-  // Fill with 0 if there are less than 10 ends
-  while (myTeamScores.length < 11) {
-    myTeamScores.push(0)
-    opponentTeamScores.push(0)
-  }
-
   return {
     friend: {
-      team: '',
+      teamName: '',
       color: 'red',
       scores: myTeamScores,
       total: myTeamTotal
     },
     enemy: {
-      team: opponentTeamName,
+      teamName: opponentTeamName,
       color: 'blue',
       scores: opponentTeamScores,
       total: opponentTeamTotal

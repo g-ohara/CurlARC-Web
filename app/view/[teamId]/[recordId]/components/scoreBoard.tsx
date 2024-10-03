@@ -1,7 +1,6 @@
 'use client'
 
 import React, { FC, useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
 
 interface CustomColors {
@@ -26,18 +25,16 @@ interface ScoreCellProps {
 }
 
 const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = false, onClick, ariaLabel }) => (
-  <motion.td 
+  <td
     className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base
       ${isHeader ? 'cursor-pointer' : ''}
       ${isSelected ? 'bg-yellow-300' : ''}`}
     onClick={onClick}
-    whileHover={isHeader ? { scale: 1.05 } : {}}
-    whileTap={isHeader ? { scale: 0.95 } : {}}
     aria-label={ariaLabel}
-    role={isHeader ? 'button' : undefined}
+    role="button"
   >
     {score}
-  </motion.td>
+  </td>
 )
 
 const TeamNameCell: FC<{ teamName: string; color: string }> = ({ teamName, color }) => (
@@ -60,19 +57,18 @@ interface ScoreRowProps extends ScoreData {
 }
 
 const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRound, onRoundSelect }) => {
-  const isFirstStone = scores[0] === -1
-  const displayScores = scores.slice(1)  // 2番目の要素から表示
+  const isFirstStone = true
 
   return (
     <tr>
       <TeamNameCell teamName={teamName} color={color} />
       <FirstStoneCell isFirstStone={isFirstStone} />
-      {displayScores.map((score, index) => (
+      {scores.map((score, index) => (
         <ScoreCell
           key={`${teamName}-${index}`}
           score={score}
           isSelected={selectedRound === index + 1}
-          onClick={() => onRoundSelect(index)}
+          onClick={() => onRoundSelect(index + 1)}
           ariaLabel={`${teamName} score for round ${index + 1}: ${score}`}
         />
       ))}
@@ -88,7 +84,8 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
   customColors = {}
 }) => {
   const [selectedRound, setSelectedRound] = useState<number>(0)
-  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length) - 1  // 先攻/後攻の要素を除く
+  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)  // 先攻/後攻の要素を除く
+  console.log('roundCount', roundCount)
   const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 
@@ -116,18 +113,16 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
               1st
             </th>
             {headers.map((header) => (
-              <motion.th
+              <th
                 key={`header-${header}`} 
                 className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
                   ${selectedRound === header ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`}`}
                 onClick={() => handleRoundSelect(header)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 aria-label={`Select round ${header}`}
                 role="button"
               >
                 {isMobile ? header : `${header}`}
-              </motion.th>
+              </th>
             ))}
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">TOTAL</th>
           </tr>

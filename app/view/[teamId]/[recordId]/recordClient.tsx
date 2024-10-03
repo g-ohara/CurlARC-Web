@@ -35,7 +35,7 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
   const selectedShotData = shotsData[shot] ?? null
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full mx-4 my-4">
       <RecordHeader
         friendTeamName={teamRes.team.name}
         enemyTeamName={recordRes.record.enemy_team_name}

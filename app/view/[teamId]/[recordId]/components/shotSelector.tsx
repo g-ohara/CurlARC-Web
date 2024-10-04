@@ -15,7 +15,7 @@ export const ShotSelector: React.FC<ShotSelectorProps> = ({ shots, selectedShotI
       className="border border-gray-300 rounded-md p-2"
     >
       {shots.map((shot, index) => ( // indexを取得
-        <option key={index+1} value={index+1}> 
+        <option key={index} value={index}> 
           {index+1} - {shot.type}: {shot.shooter}
         </option>
       ))}

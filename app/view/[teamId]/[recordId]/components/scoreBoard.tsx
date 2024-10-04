@@ -90,7 +90,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
 
   const handleRoundSelect = (round: number) => {
     setSelectedRound(round)
-    onEndSelect(round)
+    onEndSelect(round-1)
   }
 
   // デフォルトカラーのメモ化

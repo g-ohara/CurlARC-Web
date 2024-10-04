@@ -53,7 +53,7 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
           </Suspense>
         </div>
         
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 h-[100vh]">
           <Suspense fallback={<LoadingSpinner />}>
             <StonePositionsSection selectedShotData={selectedShotData} />
           </Suspense>

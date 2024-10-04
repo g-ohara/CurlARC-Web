@@ -3,29 +3,21 @@ import { SheetContainer } from './sheetContainer'
 import React from 'react'
 
 type Props = {
-  selectedShotData: Shot | null // selectedShotDataがnullの場合に対応
+  selectedShotData: Shot
 }
 
 export default function StonePositionsSection({ selectedShotData }: Props) {
-  // selectedShotDataのnullチェック
-  if (!selectedShotData) {
-    return <div>No shot data available</div>
-  }
-
-  const { stones } = selectedShotData
-
-  // stonesのnullチェック
-  if (!stones || !stones.friend_stones || !stones.enemy_stones) {
-    return <div>Stone data is incomplete</div>
-  }
 
   return (
-    <section>
+    <section className='w-full h-full'>
       <h2 className="text-lg font-medium mb-4">Stone Positions</h2>
-      <SheetContainer
-        friendStones={stones.friend_stones}
-        enemyStones={stones.enemy_stones}
-      />
+      <div className="h-full">
+        <SheetContainer
+          friendStones={selectedShotData?.stones?.friend_stones}
+          enemyStones={selectedShotData?.stones?.enemy_stones}
+        />
+      </div>
+
     </section>
   )
 }

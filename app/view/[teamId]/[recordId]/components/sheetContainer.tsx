@@ -10,13 +10,14 @@ type props = {
 };
 
 export const SheetContainer = ({friendStones, enemyStones} : props) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <Sheet
-    canvasRef={canvasRef}
-    width={400}
-    height={800}
+    // canvasRef={canvasRef}
+    // width={400}
+    // height={800}
+    className="h-full w-full"
     friendStones={friendStones}
     enemyStones={enemyStones}
     friendIsRed={true}

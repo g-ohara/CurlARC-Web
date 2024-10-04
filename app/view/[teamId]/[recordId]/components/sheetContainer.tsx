@@ -14,9 +14,6 @@ export const SheetContainer = ({friendStones, enemyStones} : props) => {
 
   return (
     <Sheet
-    // canvasRef={canvasRef}
-    // width={400}
-    // height={800}
     className="h-full w-full"
     friendStones={friendStones}
     enemyStones={enemyStones}

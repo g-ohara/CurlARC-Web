@@ -35,14 +35,14 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
   const selectedShotData = shotsData[shot] ?? null
 
   return (
-    <div className="w-full mx-4 my-4">
+    <div className="w-full h-full overflow-hidden mx-4 my-4">
       <RecordHeader
         friendTeamName={teamRes.team.name}
         enemyTeamName={recordRes.record.enemy_team_name}
         recordId={recordId}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
         <div className="lg:col-span-3 space-y-8">
           <Suspense fallback={<LoadingSpinner />}>
             <ScoreBoardSection recordDetails={recordRes.record} teamName={teamRes.team.name} onEndSelect={onEndSelect} />
@@ -53,7 +53,7 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
           </Suspense>
         </div>
         
-        <div className="lg:col-span-2 h-[100vh]">
+        <div className="lg:col-span-2 h-full">
           <Suspense fallback={<LoadingSpinner />}>
             <StonePositionsSection selectedShotData={selectedShotData} />
           </Suspense>

@@ -7,9 +7,9 @@ type Dimensions = { width: number; height: number };
 
 // Constants
 const SHEET_CONSTANTS = {
-  ASPECT_RATIO: 9.62,
+  ASPECT_RATIO: (6.40 + 1.83) / 4.75,
   MIN_WIDTH: 100,
-  MIN_HEIGHT: 100 / 9.62,
+  MIN_HEIGHT: 100 / (6.40 + 1.83),
   HOUSE_WIDTH_RATIO: 20, // ハウスの直径がシートの幅の1/20
   MIN_HOUSE_RADIUS: 5,
   STONE_HOUSE_RATIO: 0.15, // ストーンの直径がハウスの直径の15%
@@ -48,10 +48,13 @@ const calculateDimensions = (parentSize: Dimensions): Dimensions => {
   let { width, height } = parentSize;
   const aspectRatio = SHEET_CONSTANTS.ASPECT_RATIO;
 
-  if (width / height > aspectRatio) {
-    width = height * aspectRatio;
+  // アスペクト比に基づいてwidthまたはheightを調整
+  if (height / width > aspectRatio) {
+    // 幅が高さに対して大きすぎる場合は、アスペクト比に合わせて幅を調整
+    height = width * aspectRatio;
   } else {
-    height = width / aspectRatio;
+    // 高さが幅に対して大きすぎる場合は、アスペクト比に合わせて高さを調整
+    width = height / aspectRatio;
   }
 
   return {
@@ -59,6 +62,7 @@ const calculateDimensions = (parentSize: Dimensions): Dimensions => {
     height: Math.max(height, SHEET_CONSTANTS.MIN_HEIGHT),
   };
 };
+
 
 function fillCircle(
   ctx: Canvas2D, x: number, y: number, r: number, color: string
@@ -85,7 +89,9 @@ function drawHouse(ctx: Canvas2D, x: number, y: number, r: number) {
   fillCircle(ctx, x, y, 15.2 * ratio, "white");
 }
 
-function drawIce(ctx: Canvas2D, x: number, y: number, ratio: number) {
+function drawIce(ctx: Canvas2D, ratio: number) {
+  const x = 0; // 開始位置を (0, 0) に固定
+  const y = 0;
 
   const sheet = {
     x: x,
@@ -100,20 +106,41 @@ function drawIce(ctx: Canvas2D, x: number, y: number, ratio: number) {
     r: 182.9 * ratio,
   };
 
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear the canvas
+  // キャンバス全体をクリア
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  // シートの描画
   ctx.beginPath();
-  ctx.rect(sheet.x, sheet.y, sheet.width, sheet.height);
+  ctx.rect(sheet.x, sheet.y, ctx.canvas.width, ctx.canvas.height); // キャンバス全体に合わせて描画
   ctx.fillStyle = "white";
   ctx.fill();
-  ctx.stroke();
+
+  // 線幅を設定して境界線を描画
+  const borderOffset = 0.5;  // 境界線が内側に描かれるようにオフセット
+  ctx.lineWidth = 1;  // 線幅を1に設定
+  ctx.strokeStyle = "black"; // 境界線の色を黒に設定
+  ctx.strokeRect(
+    borderOffset, 
+    borderOffset, 
+    ctx.canvas.width - borderOffset * 4, 
+    ctx.canvas.height - borderOffset * 4
+  );  // キャンバスの内側に境界線を描画
+
+  // ハウスを描画
   drawHouse(ctx, house.x, house.y, house.r);
+
+  // ハウス横線の描画
   ctx.moveTo(sheet.x, sheet.y + house.r);
   ctx.lineTo(sheet.x + sheet.width, sheet.y + house.r);
   ctx.stroke();
+
+  // 縦線の描画
   ctx.moveTo(sheet.x + sheet.width / 2, sheet.y);
   ctx.lineTo(sheet.x + sheet.width / 2, sheet.y + sheet.height);
   ctx.stroke();
 }
+
+
 
 function drawStone(
   ctx: Canvas2D,
@@ -132,8 +159,6 @@ function drawStone(
 
 function drawSheet(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  x: number,
-  y: number,
   ratio: number,
   friendStones: Coordinate[],
   enemyStones: Coordinate[],
@@ -144,21 +169,20 @@ function drawSheet(
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Failed to get context");
 
-    // Draw ice and house
-    drawIce(ctx, x, y, ratio);
+    drawIce(ctx, ratio);
 
     // Draw stones
     friendStones.forEach((stone) => {
       const { r, theta } = stone;
-      const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
-      const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
+      const stone_x = (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
+      const stone_y = (sheetConst.radius - r * Math.sin(theta)) * ratio;
       drawStone(ctx, stone_x, stone_y, ratio, friendIsRed, stone.index);
     });
 
     enemyStones.forEach((stone) => {
       const { r, theta } = stone;
-      const stone_x = x + (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
-      const stone_y = y + (sheetConst.radius - r * Math.sin(theta)) * ratio;
+      const stone_x = (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
+      const stone_y = (sheetConst.radius - r * Math.sin(theta)) * ratio;
       drawStone(ctx, stone_x, stone_y, ratio, !friendIsRed, stone.index);
     });
   }
@@ -186,7 +210,9 @@ export function Sheet({
   });
 
   useEffect(() => {
+    // アスペクト比を考慮したdimensionsをセット
     setDimensions(calculateDimensions(parentSize));
+    console.log("dimensions", dimensions);
   }, [parentSize]);
 
   useEffect(() => {
@@ -194,19 +220,19 @@ export function Sheet({
     if (!canvas) return;
 
     const ratio = dimensions.width / sheetConst.width;
-    drawSheet(canvasRef, 10, 10, ratio, friendStones, enemyStones, friendIsRed);
+    drawSheet(canvasRef, ratio, friendStones, enemyStones, friendIsRed);
   }, [dimensions, friendStones, enemyStones, friendIsRed]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden ${className || ""}`}
+      className={`relative flex items-start w-full h-full overflow-hidden ${className || ""}`}
     >
       <canvas
         ref={canvasRef}
-        width={parentSize.width}
-        height={parentSize.height}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full max-h-full"
+        width={dimensions.width}
+        height={dimensions.height}
+        className="max-w-full max-h-full p-2"
       />
     </div>
   );

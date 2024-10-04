@@ -2,7 +2,6 @@
 
 import { Sheet } from "@/components/sheet";
 import { Coordinate } from "@/types/model";
-import { useRef } from "react";
 
 type props = {
   friendStones: Coordinate[];
@@ -10,7 +9,6 @@ type props = {
 };
 
 export const SheetContainer = ({friendStones, enemyStones} : props) => {
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <Sheet

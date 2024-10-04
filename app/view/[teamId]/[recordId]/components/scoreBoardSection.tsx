@@ -12,7 +12,6 @@ type Props = {
 export default function ScoreBoardSection({ recordDetails, teamName, onEndSelect }: Props) {
   const teamScoreData = extractTeamsScoreData(recordDetails)
   teamScoreData.friend.teamName = teamName
-  console.log('teamScoreData', teamScoreData)
   return (
     <section>
       <h2 className="text-lg font-medium mb-4">Score</h2>

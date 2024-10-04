@@ -15,24 +15,22 @@ type Props = {
 }
 
 export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
-  const [end, setEnd] = useState(1)
-  const [shot, setShot] = useState(1)
+  const [selectedEndIndex, setSelectedEndIndex] = useState(0)
+  const [selectedShotIndex, setSelectedShotIndex] = useState(0)
 
-  const onEndSelect = (end: number) => {
-    console.log('end', end)
-    setEnd(end)
+  const onEndSelect = (endIndex: number) => {
+    console.log('endIndex', endIndex)
+    setSelectedEndIndex(endIndex)
   }
 
-  const onShotSelect = (shot: number) => {
-    console.log('shot', shot)
-    setShot(shot)
+  const onShotSelect = (shotIndex: number) => {
+    console.log('shotIndex', shotIndex)
+    setSelectedShotIndex(shotIndex)
   }
 
   // ends_dataが存在しない場合のデフォルトの安全な処理
   const endsData = recordRes.record.ends_data ?? []
-  const selectedEndData = endsData[end] ?? null
-  const shotsData = selectedEndData?.shots ?? []
-  const selectedShotData = shotsData[shot] ?? null
+  const selectedEndData = endsData[selectedEndIndex] ?? null
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
@@ -55,7 +53,7 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
         
         <div className="lg:col-span-2 h-full">
           <Suspense fallback={<LoadingSpinner />}>
-            <StonePositionsSection selectedShotData={selectedShotData} />
+            <StonePositionsSection shots={endsData[selectedEndIndex]?.shots} selectedShotIndex={selectedShotIndex} onShotSelect={onShotSelect}/>
           </Suspense>
         </div>
       </div>

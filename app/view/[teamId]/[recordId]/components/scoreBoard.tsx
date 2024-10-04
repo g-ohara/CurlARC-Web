@@ -68,7 +68,7 @@ const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedR
           key={`${teamName}-${index}`}
           score={score}
           isSelected={selectedRound === index + 1}
-          onClick={() => onRoundSelect(index + 1)}
+          onClick={() => onRoundSelect(index)}
           ariaLabel={`${teamName} score for round ${index + 1}: ${score}`}
         />
       ))}
@@ -85,7 +85,6 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
 }) => {
   const [selectedRound, setSelectedRound] = useState<number>(0)
   const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)  // 先攻/後攻の要素を除く
-  console.log('roundCount', roundCount)
   const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 

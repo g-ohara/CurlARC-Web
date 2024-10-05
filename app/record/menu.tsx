@@ -235,6 +235,10 @@ export default function Menu(
     <div className="grid">
       <div>
         <form className="grid gap-4">
+          <TeamDropdownMenu
+              teams={props.teams}
+              onSelect={(id: string) => { setTeamId(id); }}
+            />
           <RotationMenu />
           <Accordion title="Advanced Options">
             <ShotTypeMenu />
@@ -244,10 +248,6 @@ export default function Menu(
           </Accordion>
           <SaveButton />
           <Accordion title="Game Info">
-            <TeamDropdownMenu
-              teams={props.teams}
-              onSelect={(id: string) => { setTeamId(id); }}
-            />
             <Place />
             <Date />
           </Accordion>

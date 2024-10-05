@@ -1,0 +1,16 @@
+export const SHEET_CONSTANTS = {
+  ASPECT_RATIO: (6.40 + 1.83) / 4.75,
+  MIN_WIDTH: 100,
+  MIN_HEIGHT: 100 / ((6.40 + 1.83) / 4.75),
+  HOUSE_WIDTH_RATIO: 20,
+  MIN_HOUSE_RADIUS: 5,
+  STONE_HOUSE_RATIO: 0.15,
+  SHEET_WIDTH: 475.0,
+  SHEET_HEIGHT: 823.0,
+  HOUSE_RADIUS: 182.9,
+  STONE_RADIUS: 14.55,
+  HOUSE_CIRCLES: [182.9, 121.9, 61.0, 15.2],
+  BORDER_OFFSET: 0.5,
+} as const;
+
+export const HOUSE_COLORS = ["blue", "white", "red", "white"] as const;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Sheet } from "@/components/sheet";
+import { Sheet } from "@/components/sheet/sheet";
 import { Coordinate } from "@/types/model";
 
 type props = {
@@ -15,7 +15,7 @@ export const SheetContainer = ({friendStones, enemyStones} : props) => {
     friendStones={friendStones}
     enemyStones={enemyStones}
     friendIsRed={true}
-    interactive={false}
+    interactive={true}
   />
   )
 }

@@ -30,7 +30,6 @@ export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
 
   // ends_dataが存在しない場合のデフォルトの安全な処理
   const endsData = recordRes.record.ends_data ?? []
-  const selectedEndData = endsData[selectedEndIndex] ?? null
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">

@@ -190,6 +190,7 @@ function drawSheet(
 
 // Main Component
 interface SheetProps {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
   friendStones?: Coordinate[];
   enemyStones?: Coordinate[];
   friendIsRed: boolean;
@@ -197,12 +198,12 @@ interface SheetProps {
 }
 
 export function Sheet({
+  canvasRef,
   friendStones = [],
   enemyStones = [],
   friendIsRed,
   className,
 }: SheetProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: SHEET_CONSTANTS.MIN_WIDTH,
@@ -212,7 +213,6 @@ export function Sheet({
   useEffect(() => {
     // アスペクト比を考慮したdimensionsをセット
     setDimensions(calculateDimensions(parentSize));
-    console.log("dimensions", dimensions);
   }, [parentSize]);
 
   useEffect(() => {
@@ -221,7 +221,7 @@ export function Sheet({
 
     const ratio = dimensions.width / sheetConst.width;
     drawSheet(canvasRef, ratio, friendStones, enemyStones, friendIsRed);
-  }, [dimensions, friendStones, enemyStones, friendIsRed]);
+  }, [canvasRef, dimensions, friendStones, enemyStones, friendIsRed]);
 
   return (
     <div
@@ -237,3 +237,4 @@ export function Sheet({
     </div>
   );
 }
+

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import RecordSheet from './sheet';
-import Menu from './menu';
 import { SubmitButton } from './components/submitButton'; // SubmitButton コンポーネントをインポート
 import { DataPerEnd } from '@/types/model';
+import Menu from './components/menu';
+import RecordSheet from './components/sheet';
 
 type SubpageProps = {
   teams: {

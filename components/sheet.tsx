@@ -50,10 +50,8 @@ const calculateDimensions = (parentSize: Dimensions): Dimensions => {
 
   // アスペクト比に基づいてwidthまたはheightを調整
   if (height / width > aspectRatio) {
-    // 幅が高さに対して大きすぎる場合は、アスペクト比に合わせて幅を調整
     height = width * aspectRatio;
   } else {
-    // 高さが幅に対して大きすぎる場合は、アスペクト比に合わせて高さを調整
     width = height / aspectRatio;
   }
 
@@ -62,7 +60,6 @@ const calculateDimensions = (parentSize: Dimensions): Dimensions => {
     height: Math.max(height, SHEET_CONSTANTS.MIN_HEIGHT),
   };
 };
-
 
 function fillCircle(
   ctx: Canvas2D, x: number, y: number, r: number, color: string
@@ -90,7 +87,7 @@ function drawHouse(ctx: Canvas2D, x: number, y: number, r: number) {
 }
 
 function drawIce(ctx: Canvas2D, ratio: number) {
-  const x = 0; // 開始位置を (0, 0) に固定
+  const x = 0;
   const y = 0;
 
   const sheet = {
@@ -106,41 +103,33 @@ function drawIce(ctx: Canvas2D, ratio: number) {
     r: 182.9 * ratio,
   };
 
-  // キャンバス全体をクリア
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  // シートの描画
   ctx.beginPath();
-  ctx.rect(sheet.x, sheet.y, ctx.canvas.width, ctx.canvas.height); // キャンバス全体に合わせて描画
+  ctx.rect(sheet.x, sheet.y, ctx.canvas.width, ctx.canvas.height);
   ctx.fillStyle = "white";
   ctx.fill();
 
-  // 線幅を設定して境界線を描画
-  const borderOffset = 0.5;  // 境界線が内側に描かれるようにオフセット
-  ctx.lineWidth = 1;  // 線幅を1に設定
-  ctx.strokeStyle = "black"; // 境界線の色を黒に設定
+  const borderOffset = 0.5;
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "black";
   ctx.strokeRect(
     borderOffset, 
     borderOffset, 
     ctx.canvas.width - borderOffset * 4, 
     ctx.canvas.height - borderOffset * 4
-  );  // キャンバスの内側に境界線を描画
+  );
 
-  // ハウスを描画
   drawHouse(ctx, house.x, house.y, house.r);
 
-  // ハウス横線の描画
   ctx.moveTo(sheet.x, sheet.y + house.r);
   ctx.lineTo(sheet.x + sheet.width, sheet.y + house.r);
   ctx.stroke();
 
-  // 縦線の描画
   ctx.moveTo(sheet.x + sheet.width / 2, sheet.y);
   ctx.lineTo(sheet.x + sheet.width / 2, sheet.y + sheet.height);
   ctx.stroke();
 }
-
-
 
 function drawStone(
   ctx: Canvas2D,
@@ -171,7 +160,6 @@ function drawSheet(
 
     drawIce(ctx, ratio);
 
-    // Draw stones
     friendStones.forEach((stone) => {
       const { r, theta } = stone;
       const stone_x = (r * Math.cos(theta) + sheetConst.width / 2) * ratio;
@@ -190,28 +178,32 @@ function drawSheet(
 
 // Main Component
 interface SheetProps {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  // canvasRef: React.RefObject<HTMLCanvasElement>;
   friendStones?: Coordinate[];
   enemyStones?: Coordinate[];
   friendIsRed: boolean;
   className?: string;
+  interactive?: boolean; // 操作を有効にするかどうか
 }
 
 export function Sheet({
-  canvasRef,
+  // canvasRef,
   friendStones = [],
   enemyStones = [],
   friendIsRed,
   className,
+  interactive = false, // デフォルトは操作不可
 }: SheetProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: SHEET_CONSTANTS.MIN_WIDTH,
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
+  const [stones, setStones] = useState<Coordinate[]>([]); // 新しく追加される石の状態
+  const [dragging, setDragging] = useState<number | null>(null); // ドラッグ中の石のID
 
   useEffect(() => {
-    // アスペクト比を考慮したdimensionsをセット
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
 
@@ -223,18 +215,30 @@ export function Sheet({
     drawSheet(canvasRef, ratio, friendStones, enemyStones, friendIsRed);
   }, [canvasRef, dimensions, friendStones, enemyStones, friendIsRed]);
 
+  // クリックによる石の追加
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!interactive) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const r = Math.sqrt((x - canvas.width / 2) ** 2 + (y - canvas.height / 2) ** 2);
+    const theta = Math.atan2(canvas.height / 2 - y, x - canvas.width / 2);
+
+    setStones([...stones, { r, theta, index: stones.length + 1 }]);
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className={`relative flex items-start w-full h-full overflow-hidden ${className || ""}`}
-    >
+    <div ref={containerRef} className={className}>
       <canvas
         ref={canvasRef}
         width={dimensions.width}
         height={dimensions.height}
-        className="max-w-full max-h-full p-2"
+        onClick={handleCanvasClick}
       />
     </div>
   );
 }
-

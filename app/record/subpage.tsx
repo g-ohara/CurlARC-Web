@@ -20,27 +20,10 @@ export default function Subpage(props: SubpageProps) {
   const [ends_data, setEndsData] = useState<DataPerEnd[]>([]);
   const [shotSaved, setShotSaved] = useState(false);
   const [putStone, setPutStone] = useState(false);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-
-  // リサイズロジック
-  useEffect(() => {
-    const resize = () => {
-      setWidth(window.innerWidth / 3);
-      setHeight(window.innerHeight - 200);
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-
-    return () => window.removeEventListener('resize', resize);
-  }, []);
 
   return (
     <div className="z-0 grid w-full p-7 md:grid-cols-2">
       <RecordSheet
-        width={width}
-        height={height}
         putStone={putStone}
         setPutStone={setPutStone}
         setEndsData={setEndsData}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
-import { calculateDimensions } from "./utils";
+import { calculateDimensions, cartesianToPolar } from "./utils";
 import { drawSheet, drawAllStones } from "./renderer";
 
 function useParentSize() {
@@ -45,26 +45,34 @@ export function Sheet({
   });
   const [stones, setStones] = useState<Coordinate[]>([]);
 
+  // parentSizeが変更されたときに、dimensionsを再計算する
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
 
+  // dimensionsが変更されたときに、canvasを再描画する
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
     const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
-    
-    // drawSheet関数を呼び出し、canvasオブジェクトを渡す
-    drawSheet(canvas, ratio);
-    
-    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2 * ratio;
-    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS * ratio;
-    
-    drawAllStones(ctx, friendStones, friendIsRed, ratio, centerX, centerY);
-    drawAllStones(ctx, enemyStones, !friendIsRed, ratio, centerX, centerY);
-    drawAllStones(ctx, stones, friendIsRed, ratio, centerX, centerY);
+
+    // Canvas全体にスケーリングを適用
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 前の描画をクリア
+    ctx.save(); // 現在の状態を保存
+    ctx.scale(ratio, ratio); // スケーリングを適用
+
+    // 描画
+    drawSheet(canvas, 1); // シートを描画、スケール済みなので 1 を渡す
+    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
+    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
+
+    drawAllStones(ctx, friendStones, friendIsRed, centerX, centerY);
+    drawAllStones(ctx, enemyStones, !friendIsRed, centerX, centerY);
+    drawAllStones(ctx, stones, friendIsRed, centerX, centerY);
+
+    ctx.restore(); // 状態を元に戻す
   }, [dimensions, friendStones, enemyStones, friendIsRed, stones]);
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -74,12 +82,14 @@ export function Sheet({
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    console.log(x, y);
 
-    const r = Math.sqrt((x - canvas.width / 2) ** 2 + (y - canvas.height / 2) ** 2);
-    const theta = Math.atan2(canvas.height / 2 - y, x - canvas.width / 2);
-    
-    setStones(prev => [...prev, { r, theta, index: prev.length + 1 }]);
+    const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
+    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2 * ratio;
+    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS * ratio;
+
+    const { r, theta } = cartesianToPolar(x / ratio, y / ratio, centerX / ratio, centerY / ratio); // 論理座標系に変換
+
+    setStones((prev) => [...prev, { r, theta, index: prev.length + 1 }]);
   };
 
   return (

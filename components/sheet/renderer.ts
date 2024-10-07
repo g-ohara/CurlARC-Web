@@ -60,9 +60,15 @@ export function drawStone(
   fillCircle(ctx, x, y, stoneRadius, "grey");
   fillCircle(ctx, x, y, stoneRadius * 0.7, isRed ? "red" : "yellow");
 
-  // 数字を石の中央に描画
+  // 数字のフォントと位置を調整
+  const fontSize = stoneRadius * 1.1;  // 石のサイズに応じたフォントサイズ
+  ctx.font = `${fontSize}px Arial Bold`;    // フォントスタイルを指定
+  ctx.textAlign = "center";            // 中央揃え
+  ctx.textBaseline = "middle";         // 垂直方向の中央揃え
   ctx.fillStyle = "black";
-  ctx.fillText(String(count), x - stoneRadius * 0.28, y + stoneRadius * 0.36);
+
+  // 数字を石の中央に描画
+  ctx.fillText(String(count), x, y);
 }
 
 export function drawAllStones(

@@ -38,6 +38,6 @@ export function fillCircle(ctx: Canvas2D, x: number, y: number, r: number, color
   ctx.arc(x, y, r, 0, Math.PI * 2.0, false);
   ctx.fillStyle = color;
   ctx.fill();
-  ctx.lineWidth = 0.6;
+  ctx.lineWidth = 0.9;
   ctx.stroke();
 }

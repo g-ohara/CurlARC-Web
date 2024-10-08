@@ -1,8 +1,68 @@
 import React, { useEffect, useRef, useState } from "react";
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
-import { calculateDimensions, cartesianToPolar } from "./utils";
-import { drawSheet, drawAllStones } from "./renderer";
+import { calculateDimensions, cartesianToPolar, polarToCartesian } from "./utils";
+import { drawSheet } from "./renderer";
+import { Button } from "../ui/button";
+
+interface ExtendedCoordinate extends Coordinate {
+  key: string;
+}
+
+interface DraggableStoneProps {
+  stone: ExtendedCoordinate;
+  index: number;
+  color: string;
+  onStop: (stoneKey: string, x: number, y: number) => void;
+  ratio: number;
+}
+
+const INITIAL_STONE_POSITION = {
+  r: SHEET_CONSTANTS.HOUSE_RADIUS,
+  theta: -Math.PI/2,
+};
+
+const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onStop, ratio }) => {
+  const { x, y } = polarToCartesian(
+    stone.r,
+    stone.theta,
+    SHEET_CONSTANTS.SHEET_WIDTH / 2,
+    SHEET_CONSTANTS.HOUSE_RADIUS
+  );
+
+  return (
+    <Draggable
+      position={{
+        x: x * ratio - SHEET_CONSTANTS.STONE_RADIUS * ratio,
+        y: y * ratio - SHEET_CONSTANTS.STONE_RADIUS * ratio
+      }}
+      onStop={(_e: DraggableEvent, data: DraggableData) => {
+        onStop(stone.key, data.x / ratio + SHEET_CONSTANTS.STONE_RADIUS, data.y / ratio + SHEET_CONSTANTS.STONE_RADIUS);
+      }}
+      bounds="parent"
+    >
+      <div
+        style={{
+          width: SHEET_CONSTANTS.STONE_RADIUS * 2 * ratio,
+          height: SHEET_CONSTANTS.STONE_RADIUS * 2 * ratio,
+          backgroundColor: color,
+          borderRadius: '50%',
+          cursor: 'grab',
+          touchAction: 'none',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: color === 'yellow' ? 'black' : 'white',
+          fontWeight: 'bold',
+          fontSize: `${14 * ratio}px`,
+        }}
+      >
+        {index + 1}
+      </div>
+    </Draggable>
+  );
+};
 
 function useParentSize() {
   const [parentSize, setParentSize] = useState<Dimensions>({
@@ -30,6 +90,11 @@ function useParentSize() {
   return { containerRef, parentSize };
 }
 
+let nextKey = 0;
+function generateKey() {
+  return `stone-${nextKey++}`;
+}
+
 export function Sheet({
   friendStones = [],
   enemyStones = [],
@@ -43,63 +108,129 @@ export function Sheet({
     width: SHEET_CONSTANTS.MIN_WIDTH,
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
-  const [stones, setStones] = useState<Coordinate[]>([]);
+  
+  const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>(
+    friendStones.map(stone => ({
+      ...stone,
+      key: generateKey(),
+    }))
+  );
+  const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>(
+    enemyStones.map(stone => ({
+      ...stone,
+      key: generateKey(),
+    }))
+  );
 
-  // parentSizeが変更されたときに、dimensionsを再計算する
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
 
-  // dimensionsが変更されたときに、canvasを再描画する
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
     const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.scale(ratio, ratio);
+    drawSheet(canvas, 1);
+    ctx.restore();
+  }, [dimensions]);
 
-    // Canvas全体にスケーリングを適用
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // 前の描画をクリア
-    ctx.save(); // 現在の状態を保存
-    ctx.scale(ratio, ratio); // スケーリングを適用
-
-    // 描画
-    drawSheet(canvas, 1); // シートを描画、スケール済みなので 1 を渡す
+  const handleDragStop = (stoneKey: string, x: number, y: number, isFriendStone: boolean) => {
     const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
     const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
+    const { r, theta } = cartesianToPolar(x, y, centerX, centerY);
 
-    drawAllStones(ctx, friendStones, friendIsRed, centerX, centerY);
-    drawAllStones(ctx, enemyStones, !friendIsRed, centerX, centerY);
-    drawAllStones(ctx, stones, friendIsRed, centerX, centerY);
-
-    ctx.restore(); // 状態を元に戻す
-  }, [dimensions, friendStones, enemyStones, friendIsRed, stones]);
-
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!interactive || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
-    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2 * ratio;
-    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS * ratio;
-
-    const { r, theta } = cartesianToPolar(x / ratio, y / ratio, centerX / ratio, centerY / ratio); // 論理座標系に変換
-
-    setStones((prev) => [...prev, { r, theta, index: prev.length + 1 }]);
+    if (isFriendStone) {
+      const newFriendStones = localFriendStones.map(stone =>
+        stone.key === stoneKey ? { ...stone, r, theta } : stone
+      );
+      setLocalFriendStones(newFriendStones);
+    } else {
+      const newEnemyStones = localEnemyStones.map(stone =>
+        stone.key === stoneKey ? { ...stone, r, theta } : stone
+      );
+      setLocalEnemyStones(newEnemyStones);
+    }
   };
+
+  const addFriendStone = () => {
+    if (localFriendStones.length < 8) {
+      const newStone: ExtendedCoordinate = {
+        index: localFriendStones.length,
+        ...INITIAL_STONE_POSITION,
+        key: generateKey(),
+      };
+      const newFriendStones = [...localFriendStones, newStone];
+      setLocalFriendStones(newFriendStones);
+    }
+  };
+
+  const addEnemyStone = () => {
+    if (localEnemyStones.length < 8) {
+      const newStone: ExtendedCoordinate = {
+        index: localEnemyStones.length,
+        ...INITIAL_STONE_POSITION,
+        key: generateKey(),
+      };
+      const newEnemyStones = [...localEnemyStones, newStone];
+      setLocalEnemyStones(newEnemyStones);
+    }
+  };
+
+  const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
 
   return (
     <div className={className} ref={containerRef}>
-      <canvas
-        ref={canvasRef}
-        width={dimensions.width}
-        height={dimensions.height}
-        onClick={handleCanvasClick}
-      />
+      <div className="flex gap-2 mb-2">
+        <Button 
+          onClick={addFriendStone}
+          disabled={localFriendStones.length >= 8}
+        >
+          味方の石を追加
+        </Button>
+        <Button 
+          onClick={addEnemyStone}
+          disabled={localEnemyStones.length >= 8}
+        >
+          相手の石を追加
+        </Button>
+      </div>
+      <div className="mb-2">
+        <span className="mr-4">味方の石: {localFriendStones.length}/8</span>
+        <span>相手の石: {localEnemyStones.length}/8</span>
+      </div>
+      <div style={{ position: 'relative', width: dimensions.width, height: dimensions.height }}>
+        <canvas
+          ref={canvasRef}
+          width={dimensions.width}
+          height={dimensions.height}
+          style={{ position: 'absolute' }}
+        />
+        {localFriendStones.map((stone, index) => (
+          <DraggableStone
+            key={stone.key}
+            stone={stone}
+            index={index}
+            color={friendIsRed ? 'red' : 'yellow'}
+            onStop={(stoneKey, x, y) => handleDragStop(stoneKey, x, y, true)}
+            ratio={ratio}
+          />
+        ))}
+        {localEnemyStones.map((stone, index) => (
+          <DraggableStone
+            key={stone.key}
+            stone={stone}
+            index={index}
+            color={friendIsRed ? 'yellow' : 'red'}
+            onStop={(stoneKey, x, y) => handleDragStop(stoneKey, x, y, false)}
+            ratio={ratio}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -109,18 +109,23 @@ export function Sheet({
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
   
-  const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>(
-    friendStones.map(stone => ({
+  const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>([]);
+  const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>([]);
+
+  // Update local stones when props change
+  useEffect(() => {
+    setLocalFriendStones(friendStones.map(stone => ({
       ...stone,
       key: generateKey(),
-    }))
-  );
-  const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>(
-    enemyStones.map(stone => ({
+    })));
+  }, [friendStones]);
+
+  useEffect(() => {
+    setLocalEnemyStones(enemyStones.map(stone => ({
       ...stone,
       key: generateKey(),
-    }))
-  );
+    })));
+  }, [enemyStones]);
 
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
@@ -164,8 +169,7 @@ export function Sheet({
         ...INITIAL_STONE_POSITION,
         key: generateKey(),
       };
-      const newFriendStones = [...localFriendStones, newStone];
-      setLocalFriendStones(newFriendStones);
+      setLocalFriendStones([...localFriendStones, newStone]);
     }
   };
 
@@ -176,8 +180,7 @@ export function Sheet({
         ...INITIAL_STONE_POSITION,
         key: generateKey(),
       };
-      const newEnemyStones = [...localEnemyStones, newStone];
-      setLocalEnemyStones(newEnemyStones);
+      setLocalEnemyStones([...localEnemyStones, newStone]);
     }
   };
 

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { SHEET_CONSTANTS } from "./constants";
 import { Canvas2D, Dimensions, Point } from "./types";
 
@@ -40,4 +41,30 @@ export function fillCircle(ctx: Canvas2D, x: number, y: number, r: number, color
   ctx.fill();
   ctx.lineWidth = 0.9;
   ctx.stroke();
+}
+
+export function useParentSize() {
+  const [parentSize, setParentSize] = useState<Dimensions>({
+    width: SHEET_CONSTANTS.MIN_WIDTH,
+    height: SHEET_CONSTANTS.MIN_HEIGHT,
+  });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const { width, height } = container.getBoundingClientRect();
+      setParentSize({
+        width: Math.max(width, SHEET_CONSTANTS.MIN_WIDTH),
+        height: Math.max(height, SHEET_CONSTANTS.MIN_HEIGHT),
+      });
+    });
+
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  return { containerRef, parentSize };
 }

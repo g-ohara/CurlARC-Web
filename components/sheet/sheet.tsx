@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
-import { calculateDimensions, cartesianToPolar, polarToCartesian } from "./utils";
+import { calculateDimensions, cartesianToPolar, polarToCartesian, useParentSize } from "./utils";
 import { drawSheet } from "./renderer";
 import { Button } from "../ui/button";
 
@@ -14,8 +14,7 @@ interface DraggableStoneProps {
   stone: ExtendedCoordinate;
   index: number;
   color: string;
-  onStop: (stoneKey: string, x: number, y: number) => void;
-  ratio: number;
+  onDragEnd: (stoneKey: string, x: number, y: number) => void;
 }
 
 const INITIAL_STONE_POSITION = {
@@ -23,77 +22,148 @@ const INITIAL_STONE_POSITION = {
   theta: -Math.PI/2,
 };
 
-const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onStop, ratio }) => {
-  const { x, y } = polarToCartesian(
-    stone.r,
-    stone.theta,
-    SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS
-  );
+class KeyGenerator {
+  private nextKey = 0;
+
+  generateKey(prefix: string): string {
+    return `${prefix}-${this.nextKey++}`;
+  }
+
+  reset(): void {
+    this.nextKey = 0;
+  }
+}
+
+const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onDragEnd }) => {
+  const stoneRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState(() => {
+    const { x, y } = polarToCartesian(
+      stone.r,
+      stone.theta,
+      SHEET_CONSTANTS.SHEET_WIDTH / 2,
+      SHEET_CONSTANTS.HOUSE_RADIUS
+    );
+    return { x: x - SHEET_CONSTANTS.STONE_RADIUS, y: y - SHEET_CONSTANTS.STONE_RADIUS };
+  });
+  const dragStartPosition = useRef({ x: 0, y: 0 });
+  const initialStonePosition = useRef({ x: 0, y: 0 });
+
+  const handleDragStart = (clientX: number, clientY: number) => {
+    if (!stoneRef.current) return;
+    
+    setIsDragging(true);
+    dragStartPosition.current = { x: clientX, y: clientY };
+    initialStonePosition.current = { ...position };
+    
+    // カーソルスタイルを変更
+    stoneRef.current.style.cursor = 'grabbing';
+  };
+
+  const handleDrag = (clientX: number, clientY: number) => {
+    if (!isDragging) return;
+
+    const deltaX = clientX - dragStartPosition.current.x;
+    const deltaY = clientY - dragStartPosition.current.y;
+    
+    setPosition({
+      x: initialStonePosition.current.x + deltaX,
+      y: initialStonePosition.current.y + deltaY,
+    });
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    
+    setIsDragging(false);
+    if (stoneRef.current) {
+      stoneRef.current.style.cursor = 'grab';
+    }
+    
+    // ドラッグ終了時にコールバックを呼び出し
+    onDragEnd(
+      stone.key,
+      position.x + SHEET_CONSTANTS.STONE_RADIUS,
+      position.y + SHEET_CONSTANTS.STONE_RADIUS
+    );
+  };
+
+  // マウスイベントハンドラ
+  const handleMouseDown = (e: React.MouseEvent) => {
+    handleDragStart(e.clientX, e.clientY);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    handleDrag(e.clientX, e.clientY);
+  };
+
+  const handleMouseUp = () => {
+    handleDragEnd();
+  };
+
+  // タッチイベントハンドラ
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    handleDragStart(touch.clientX, touch.clientY);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    const touch = e.touches[0];
+    handleDrag(touch.clientX, touch.clientY);
+  };
+
+  const handleTouchEnd = () => {
+    handleDragEnd();
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging]);
 
   return (
-    <Draggable
-      position={{
-        x: x * ratio - SHEET_CONSTANTS.STONE_RADIUS * ratio,
-        y: y * ratio - SHEET_CONSTANTS.STONE_RADIUS * ratio
+    <div
+      ref={stoneRef}
+      style={{
+        position: 'absolute',
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        width: SHEET_CONSTANTS.STONE_RADIUS * 2,
+        height: SHEET_CONSTANTS.STONE_RADIUS * 2,
+        backgroundColor: color,
+        borderRadius: '50%',
+        cursor: isDragging ? 'grabbing' : 'grab',
+        touchAction: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: color === 'yellow' ? 'black' : 'white',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        userSelect: 'none',
+        transform: isDragging ? 'scale(1.05)' : 'scale(1)',
+        transition: 'transform 0.1s',
       }}
-      onStop={(_e: DraggableEvent, data: DraggableData) => {
-        onStop(stone.key, data.x / ratio + SHEET_CONSTANTS.STONE_RADIUS, data.y / ratio + SHEET_CONSTANTS.STONE_RADIUS);
-      }}
-      bounds="parent"
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
     >
-      <div
-        style={{
-          width: SHEET_CONSTANTS.STONE_RADIUS * 2 * ratio,
-          height: SHEET_CONSTANTS.STONE_RADIUS * 2 * ratio,
-          backgroundColor: color,
-          borderRadius: '50%',
-          cursor: 'grab',
-          touchAction: 'none',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: color === 'yellow' ? 'black' : 'white',
-          fontWeight: 'bold',
-          fontSize: `${14 * ratio}px`,
-        }}
-      >
-        {index + 1}
-      </div>
-    </Draggable>
+      {index + 1}
+    </div>
   );
 };
 
-function useParentSize() {
-  const [parentSize, setParentSize] = useState<Dimensions>({
-    width: SHEET_CONSTANTS.MIN_WIDTH,
-    height: SHEET_CONSTANTS.MIN_HEIGHT,
-  });
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      const { width, height } = container.getBoundingClientRect();
-      setParentSize({
-        width: Math.max(width, SHEET_CONSTANTS.MIN_WIDTH),
-        height: Math.max(height, SHEET_CONSTANTS.MIN_HEIGHT),
-      });
-    });
-
-    resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  return { containerRef, parentSize };
-}
-
-let nextKey = 0;
-function generateKey() {
-  return `stone-${nextKey++}`;
-}
 
 export function Sheet({
   friendStones = [],
@@ -109,21 +179,26 @@ export function Sheet({
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
   
+  const friendKeyGenerator = useRef(new KeyGenerator());
+  const enemyKeyGenerator = useRef(new KeyGenerator());
+  
   const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>([]);
   const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>([]);
 
   // Update local stones when props change
   useEffect(() => {
+    friendKeyGenerator.current.reset();
     setLocalFriendStones(friendStones.map(stone => ({
       ...stone,
-      key: generateKey(),
+      key: friendKeyGenerator.current.generateKey('friend'),
     })));
   }, [friendStones]);
 
   useEffect(() => {
+    enemyKeyGenerator.current.reset();
     setLocalEnemyStones(enemyStones.map(stone => ({
       ...stone,
-      key: generateKey(),
+      key: enemyKeyGenerator.current.generateKey('enemy'),
     })));
   }, [enemyStones]);
 
@@ -167,7 +242,7 @@ export function Sheet({
       const newStone: ExtendedCoordinate = {
         index: localFriendStones.length,
         ...INITIAL_STONE_POSITION,
-        key: generateKey(),
+        key: friendKeyGenerator.current.generateKey('friend'),
       };
       setLocalFriendStones([...localFriendStones, newStone]);
     }
@@ -178,13 +253,28 @@ export function Sheet({
       const newStone: ExtendedCoordinate = {
         index: localEnemyStones.length,
         ...INITIAL_STONE_POSITION,
-        key: generateKey(),
+        key: enemyKeyGenerator.current.generateKey('enemy'),
       };
       setLocalEnemyStones([...localEnemyStones, newStone]);
     }
   };
 
-  const ratio = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
+  // handleDragStopをhandleDragEndにリネーム
+  const handleDragEnd = (stoneKey: string, x: number, y: number, isFriendStone: boolean) => {
+    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
+    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
+    const { r, theta } = cartesianToPolar(x, y, centerX, centerY);
+
+    if (isFriendStone) {
+      setLocalFriendStones(stones => 
+        stones.map(stone => stone.key === stoneKey ? { ...stone, r, theta } : stone)
+      );
+    } else {
+      setLocalEnemyStones(stones => 
+        stones.map(stone => stone.key === stoneKey ? { ...stone, r, theta } : stone)
+      );
+    }
+  };
 
   return (
     <div className={className} ref={containerRef}>
@@ -219,8 +309,7 @@ export function Sheet({
             stone={stone}
             index={index}
             color={friendIsRed ? 'red' : 'yellow'}
-            onStop={(stoneKey, x, y) => handleDragStop(stoneKey, x, y, true)}
-            ratio={ratio}
+            onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, true)}
           />
         ))}
         {localEnemyStones.map((stone, index) => (
@@ -229,8 +318,7 @@ export function Sheet({
             stone={stone}
             index={index}
             color={friendIsRed ? 'yellow' : 'red'}
-            onStop={(stoneKey, x, y) => handleDragStop(stoneKey, x, y, false)}
-            ratio={ratio}
+            onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, false)}
           />
         ))}
       </div>

@@ -15,7 +15,7 @@ export const SheetContainer = ({friendStones, enemyStones} : props) => {
     friendStones={friendStones}
     enemyStones={enemyStones}
     friendIsRed={true}
-    interactive={true}
+    interactive={false}
   />
   )
 }

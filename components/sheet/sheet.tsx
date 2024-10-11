@@ -14,6 +14,7 @@ interface DraggableStoneProps {
   index: number;
   color: string;
   onDragEnd: (stoneKey: string, x: number, y: number) => void;
+  interactive: boolean;
 }
 
 const INITIAL_STONE_POSITION = {
@@ -33,7 +34,7 @@ class KeyGenerator {
   }
 }
 
-const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onDragEnd }) => {
+const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onDragEnd, interactive }) => {
   const stoneRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState(() => {
@@ -49,18 +50,17 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
   const initialStonePosition = useRef({ x: 0, y: 0 });
 
   const handleDragStart = (clientX: number, clientY: number) => {
-    if (!stoneRef.current) return;
+    if (!interactive || !stoneRef.current) return;
     
     setIsDragging(true);
     dragStartPosition.current = { x: clientX, y: clientY };
     initialStonePosition.current = { ...position };
     
-    // カーソルスタイルを変更
     stoneRef.current.style.cursor = 'grabbing';
   };
 
   const handleDrag = (clientX: number, clientY: number) => {
-    if (!isDragging) return;
+    if (!interactive || !isDragging) return;
 
     const deltaX = clientX - dragStartPosition.current.x;
     const deltaY = clientY - dragStartPosition.current.y;
@@ -72,14 +72,13 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
   };
 
   const handleDragEnd = () => {
-    if (!isDragging) return;
+    if (!interactive || !isDragging) return;
     
     setIsDragging(false);
     if (stoneRef.current) {
-      stoneRef.current.style.cursor = 'grab';
+      stoneRef.current.style.cursor = interactive ? 'grab' : 'default';
     }
     
-    // ドラッグ終了時にコールバックを呼び出し
     onDragEnd(
       stone.key,
       position.x + SHEET_CONSTANTS.STONE_RADIUS,
@@ -142,7 +141,7 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
         height: SHEET_CONSTANTS.STONE_RADIUS * 2,
         backgroundColor: color,
         borderRadius: '50%',
-        cursor: isDragging ? 'grabbing' : 'grab',
+        cursor: interactive ? (isDragging ? 'grabbing' : 'grab') : 'default',
         touchAction: 'none',
         display: 'flex',
         justifyContent: 'center',
@@ -154,17 +153,15 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
         transform: isDragging ? 'scale(1.05)' : 'scale(1)',
         transition: 'transform 0.1s',
       }}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
+      onMouseDown={interactive ? handleMouseDown : undefined}
+      onTouchStart={interactive ? handleTouchStart : undefined}
     >
       {index + 1}
     </div>
   );
 };
 
-
-
-export function Sheet({
+export function Sheet({ 
   friendStones = [],
   enemyStones = [],
   friendIsRed,
@@ -184,7 +181,6 @@ export function Sheet({
   const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>([]);
   const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>([]);
 
-  // Update local stones when props change
   useEffect(() => {
     friendKeyGenerator.current.reset();
     setLocalFriendStones(friendStones.map(stone => ({
@@ -218,48 +214,9 @@ export function Sheet({
     ctx.restore();
   }, [dimensions]);
 
-  const handleDragStop = (stoneKey: string, x: number, y: number, isFriendStone: boolean) => {
-    const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
-    const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
-    const { r, theta } = cartesianToPolar(x, y, centerX, centerY);
-
-    if (isFriendStone) {
-      const newFriendStones = localFriendStones.map(stone =>
-        stone.key === stoneKey ? { ...stone, r, theta } : stone
-      );
-      setLocalFriendStones(newFriendStones);
-    } else {
-      const newEnemyStones = localEnemyStones.map(stone =>
-        stone.key === stoneKey ? { ...stone, r, theta } : stone
-      );
-      setLocalEnemyStones(newEnemyStones);
-    }
-  };
-
-  const addFriendStone = () => {
-    if (localFriendStones.length < 8) {
-      const newStone: ExtendedCoordinate = {
-        index: localFriendStones.length,
-        ...INITIAL_STONE_POSITION,
-        key: friendKeyGenerator.current.generateKey('friend'),
-      };
-      setLocalFriendStones([...localFriendStones, newStone]);
-    }
-  };
-
-  const addEnemyStone = () => {
-    if (localEnemyStones.length < 8) {
-      const newStone: ExtendedCoordinate = {
-        index: localEnemyStones.length,
-        ...INITIAL_STONE_POSITION,
-        key: enemyKeyGenerator.current.generateKey('enemy'),
-      };
-      setLocalEnemyStones([...localEnemyStones, newStone]);
-    }
-  };
-
-  // handleDragStopをhandleDragEndにリネーム
   const handleDragEnd = (stoneKey: string, x: number, y: number, isFriendStone: boolean) => {
+    if (!interactive) return;
+
     const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
     const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
     const { r, theta } = cartesianToPolar(x, y, centerX, centerY);
@@ -275,26 +232,52 @@ export function Sheet({
     }
   };
 
+  const addFriendStone = () => {
+    if (!interactive || localFriendStones.length >= 8) return;
+    
+    const newStone: ExtendedCoordinate = {
+      index: localFriendStones.length,
+      ...INITIAL_STONE_POSITION,
+      key: friendKeyGenerator.current.generateKey('friend'),
+    };
+    setLocalFriendStones([...localFriendStones, newStone]);
+  };
+
+  const addEnemyStone = () => {
+    if (!interactive || localEnemyStones.length >= 8) return;
+    
+    const newStone: ExtendedCoordinate = {
+      index: localEnemyStones.length,
+      ...INITIAL_STONE_POSITION,
+      key: enemyKeyGenerator.current.generateKey('enemy'),
+    };
+    setLocalEnemyStones([...localEnemyStones, newStone]);
+  };
+
   return (
     <div className={className} ref={containerRef}>
-      <div className="flex gap-2 mb-2">
-        <Button 
-          onClick={addFriendStone}
-          disabled={localFriendStones.length >= 8}
-        >
-          味方の石を追加
-        </Button>
-        <Button 
-          onClick={addEnemyStone}
-          disabled={localEnemyStones.length >= 8}
-        >
-          相手の石を追加
-        </Button>
-      </div>
-      <div className="mb-2">
-        <span className="mr-4">味方の石: {localFriendStones.length}/8</span>
-        <span>相手の石: {localEnemyStones.length}/8</span>
-      </div>
+      {interactive && (
+        <>
+          <div className="flex gap-2 mb-2">
+            <Button 
+              onClick={addFriendStone}
+              disabled={localFriendStones.length >= 8}
+            >
+              味方の石を追加
+            </Button>
+            <Button 
+              onClick={addEnemyStone}
+              disabled={localEnemyStones.length >= 8}
+            >
+              相手の石を追加
+            </Button>
+          </div>
+          <div className="mb-2">
+            <span className="mr-4">味方の石: {localFriendStones.length}/8</span>
+            <span>相手の石: {localEnemyStones.length}/8</span>
+          </div>
+        </>
+      )}
       <div style={{ position: 'relative', width: dimensions.width, height: dimensions.height }}>
         <canvas
           ref={canvasRef}
@@ -309,6 +292,7 @@ export function Sheet({
             index={index}
             color={friendIsRed ? 'red' : 'yellow'}
             onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, true)}
+            interactive={interactive}
           />
         ))}
         {localEnemyStones.map((stone, index) => (
@@ -318,6 +302,7 @@ export function Sheet({
             index={index}
             color={friendIsRed ? 'yellow' : 'red'}
             onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, false)}
+            interactive={interactive}
           />
         ))}
       </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, cartesianToPolar, polarToCartesian, useParentSize } from "./utils";

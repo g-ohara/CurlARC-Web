@@ -6,6 +6,7 @@ import { drawSheet } from "./renderer";
 import { Button } from "../ui/button";
 
 interface DraggableStoneProps {
+  key: string;
   stone: Coordinate;
   index: number;
   color: string;
@@ -15,11 +16,12 @@ interface DraggableStoneProps {
 }
 
 const INITIAL_STONE_POSITION = {
-  r: SHEET_CONSTANTS.HOUSE_RADIUS,
+  r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
   theta: -Math.PI/2,
 };
 
 const DraggableStone: React.FC<DraggableStoneProps> = ({ 
+  key,
   stone, 
   index, 
   color, 

@@ -8,7 +8,7 @@ type Props = {
   selectedEndIndex: number; 
   selectedShotIndex: number; 
   onShotSelect: (shot: number) => void; 
-  onStonePositionChange: (endIndex: number, shotIndex: number, isEnemyStone: boolean, newPosition: Coordinate) => void;
+  onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newPosition: Coordinate) => void;
   isEditMode: boolean;
 };
 

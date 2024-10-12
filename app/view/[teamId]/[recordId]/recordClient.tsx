@@ -36,13 +36,13 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   const handleStonePositionChange = (
     endIndex: number, 
     shotIndex: number, 
-    isEnemyStone: boolean, 
+    isFriendStone: boolean, 
     newPosition: Coordinate
   ) => {
     setEditedRecord(prevRecord => {
       const newEndsData = [...prevRecord.ends_data];
       const targetShot = newEndsData[endIndex].shots[shotIndex];
-      const stoneKey = isEnemyStone ? 'enemy_stones' : 'friend_stones';
+      const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
       const newStones = [...targetShot.stones[stoneKey]];
       const stoneIndex = newStones.findIndex(stone => stone.index === newPosition.index);
       
@@ -55,7 +55,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       targetShot.stones[stoneKey] = newStones;
       return { ...prevRecord, ends_data: newEndsData };
     });
-    console.log("endIndex", endIndex, "shotIndex", shotIndex, "isEnemyStone", isEnemyStone, "newPosition", newPosition);
   };
 
   const handleSave = () => {

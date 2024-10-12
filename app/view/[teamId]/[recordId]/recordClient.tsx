@@ -1,61 +1,113 @@
-'use client'
+'use client';
 
-import React, { Suspense, useState } from 'react'
-import RecordHeader from './components/recordHeader'
-import ScoreBoardSection from './components/scoreBoardSection'
-import MatchDetailsSection from './components/matchDetailsSection'
-import StonePositionsSection from './components/stonePositionsSection'
-import LoadingSpinner from './components/loadingSpinner'
-import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/types/response'
+import React, { useState } from 'react';
+import RecordHeader from './components/recordHeader';
+import ScoreBoardSection from './components/scoreBoardSection';
+import MatchDetailsSection from './components/matchDetailsSection';
+import StonePositionsSection from './components/stonePositionsSection';
+import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/types/response';
+import { Button } from '@/components/ui/button';
+import { Coordinate, RecordDetail } from '@/types/model';
 
 type Props = {
-  recordRes: getRecordDetailsByRecordIdResponse
-  teamRes: getTeamDetailsResponse
-  recordId: string
-}
+  recordRes: getRecordDetailsByRecordIdResponse;
+  teamRes: getTeamDetailsResponse;
+  recordId: string;
+};
 
-export default function RecordClient({ recordRes, teamRes, recordId }: Props) {
-  const [selectedEndIndex, setSelectedEndIndex] = useState(0)
-  const [selectedShotIndex, setSelectedShotIndex] = useState(0)
+export default function EditableRecordClient({ recordRes, teamRes, recordId }: Props) {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedEndIndex, setSelectedEndIndex] = useState(0);
+  const [selectedShotIndex, setSelectedShotIndex] = useState(0);
+  const [editedRecord, setEditedRecord] = useState<RecordDetail>(recordRes.record);
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
 
   const onEndSelect = (endIndex: number) => {
-    console.log('endIndex', endIndex)
-    setSelectedEndIndex(endIndex)
-  }
+    setSelectedEndIndex(endIndex);
+    setSelectedShotIndex(0);
+  };
 
   const onShotSelect = (shotIndex: number) => {
-    console.log('shotIndex', shotIndex)
-    setSelectedShotIndex(shotIndex)
-  }
+    setSelectedShotIndex(shotIndex);
+  };
 
-  // ends_dataが存在しない場合のデフォルトの安全な処理
+  const handleStonePositionChange = (endIndex: number, shotIndex: number, isEnemyStone: boolean, newPosition: Coordinate) => {
+    setEditedRecord(prevRecord => {
+      const newEndsData = [...prevRecord.ends_data];
+      const targetShot = newEndsData[endIndex].shots[shotIndex];
+      const stoneKey = isEnemyStone ? 'enemy_stones' : 'friend_stones';
+      const newStones = [...targetShot.stones[stoneKey]];
+      const stoneIndex = newStones.findIndex(stone => stone.index === newPosition.index);
+      
+      if (stoneIndex !== -1) {
+        newStones[stoneIndex] = newPosition;
+      } else {
+        newStones.push(newPosition);
+      }
+
+      targetShot.stones[stoneKey] = newStones;
+      return { ...prevRecord, ends_data: newEndsData };
+    });
+  };
+
+  const handleSave = () => {
+    // TODO: Implement API call to save changes
+    console.log('Saving changes:', editedRecord);
+    setIsEditMode(false);
+  };
+
+  const handleCancel = () => {
+    setEditedRecord(recordRes.record);
+    setIsEditMode(false);
+  };
+
   const endsData = recordRes.record.ends_data ?? []
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
-      <RecordHeader
-        friendTeamName={teamRes.team.name}
-        enemyTeamName={recordRes.record.enemy_team_name}
-        recordId={recordId}
-      />
-
+      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
+      <div className="my-4">
+        <Button onClick={toggleEditMode}>
+          {isEditMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
+        </Button>
+      </div>
+      {isEditMode && (
+        <div className="my-4">
+          <Button onClick={handleSave} className="mr-2">Save Changes</Button>
+          <Button onClick={handleCancel} variant="outline">Cancel</Button>
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
         <div className="lg:col-span-3 space-y-8">
-          <Suspense fallback={<LoadingSpinner />}>
-            <ScoreBoardSection recordDetails={recordRes.record} teamName={teamRes.team.name} onEndSelect={onEndSelect} />
-          </Suspense>
-          
-          <Suspense fallback={<LoadingSpinner />}>
-            <MatchDetailsSection recordDetails={recordRes.record} />
-          </Suspense>
+          <ScoreBoardSection
+          record={editedRecord}
+          friendTeamName={teamRes.team.name}
+          onEndSelect={onEndSelect}
+          selectedEndIndex={selectedEndIndex}
+          isEditMode={isEditMode}
+          />
+          <MatchDetailsSection
+            record={editedRecord}
+            isEditMode={isEditMode}
+          />
         </div>
-        
-        <div className="lg:col-span-2 h-full">
-          <Suspense fallback={<LoadingSpinner />}>
-            <StonePositionsSection shots={endsData[selectedEndIndex]?.shots} selectedShotIndex={selectedShotIndex} onShotSelect={onShotSelect}/>
-          </Suspense>
+        <div className='lg:col-span-2 h-full'>
+          <StonePositionsSection
+          record={editedRecord}
+          shots={endsData[selectedEndIndex]?.shots ?? []}
+          selectedEndIndex={selectedEndIndex}
+          selectedShotIndex={selectedShotIndex}
+          onShotSelect={onShotSelect}
+          isEditMode={isEditMode}
+          onStonePositionChange={handleStonePositionChange}
+          />
         </div>
       </div>
+
+
     </div>
-  )
+  );
 }

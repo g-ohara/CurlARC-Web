@@ -4,14 +4,16 @@ import { RecordDetail } from '../../../../../types/model'
 import React from 'react'
 
 type Props = {
-  recordDetails: RecordDetail
-  teamName: string
+  record: RecordDetail
+  friendTeamName: string
   onEndSelect: (endIndex: number) => void
+  selectedEndIndex: number
+  isEditMode: boolean
 }
 
-export default function ScoreBoardSection({ recordDetails, teamName, onEndSelect }: Props) {
-  const teamScoreData = extractTeamsScoreData(recordDetails)
-  teamScoreData.friend.teamName = teamName
+export default function ScoreBoardSection({ record, friendTeamName, onEndSelect }: Props) {
+  const teamScoreData = extractTeamsScoreData(record)
+  teamScoreData.friend.teamName = friendTeamName
   return (
     <section>
       <h2 className="text-lg font-medium mb-4">Score</h2>

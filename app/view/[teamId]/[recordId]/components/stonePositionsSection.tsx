@@ -1,12 +1,16 @@
-import { Shot } from '@/types/model';
+import { Coordinate, RecordDetail, Shot } from '@/types/model';
 import { SheetContainer } from './sheetContainer';
 import React from 'react';
 import { ShotSelector } from './shotSelector';
 
 type Props = {
-  shots: Shot[]; // ショットのリスト
-  selectedShotIndex: number; // 選択されたショットのインデックス
-  onShotSelect: (shot: number) => void; // ショット選択時のコールバック
+  record: RecordDetail; 
+  shots: Shot[];
+  selectedEndIndex: number; 
+  selectedShotIndex: number; 
+  onShotSelect: (shot: number) => void; 
+  onStonePositionChange: (endIndex: number, shotIndex: number, isEnemyStone: boolean, newPosition: Coordinate) => void;
+  isEditMode: boolean;
 };
 
 export default function StonePositionsSection({ shots, selectedShotIndex, onShotSelect }: Props) {

@@ -6,7 +6,6 @@ import { drawSheet } from "./renderer";
 import { Button } from "../ui/button";
 
 interface DraggableStoneProps {
-  key: string;
   stone: Coordinate;
   index: number;
   color: string;
@@ -21,7 +20,6 @@ const INITIAL_STONE_POSITION = {
 };
 
 const DraggableStone: React.FC<DraggableStoneProps> = ({ 
-  key,
   stone, 
   index, 
   color, 
@@ -152,9 +150,9 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({
         alignItems: 'center',
         color: color === 'yellow' ? 'black' : 'white',
         fontWeight: 'bold',
-        fontSize: '14px',
+        fontSize: '18px',
         userSelect: 'none',
-        transform: isDragging ? 'scale(1.05)' : 'scale(1)',
+        transform: isDragging ? 'scale(1.2)' : 'scale(1)',
         transition: 'transform 0.1s',
       }}
       onMouseDown={interactive ? handleMouseDown : undefined}
@@ -259,7 +257,6 @@ export function Sheet({
         />
         {friendStones.map((stone, index) => (
           <DraggableStone
-            key={`friend-${index}`}
             stone={stone}
             index={index}
             color={friendIsRed ? 'red' : 'yellow'}
@@ -270,7 +267,6 @@ export function Sheet({
         ))}
         {enemyStones.map((stone, index) => (
           <DraggableStone
-            key={`enemy-${index}`}
             stone={stone}
             index={index}
             color={friendIsRed ? 'yellow' : 'red'}

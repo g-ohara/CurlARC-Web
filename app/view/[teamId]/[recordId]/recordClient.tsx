@@ -47,7 +47,14 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       const stoneIndex = newStones.findIndex(stone => stone.index === newPosition.index);
       
       if (stoneIndex !== -1) { // 既に存在する石の場合
-        newStones[stoneIndex] = newPosition;
+        newStones.map((stone, index) => {
+          if (index === stoneIndex) {
+            return newPosition;
+          } else {
+            return stone;
+          }
+        }
+        );
       } else {
         newStones.push(newPosition);
       }

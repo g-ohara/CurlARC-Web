@@ -32,7 +32,7 @@ export const DeleteRecordButton = ({ recordId, className }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={className}>Delete Record</Button>
+        <Button variant="destructive" className={className}>Delete Record</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

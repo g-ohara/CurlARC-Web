@@ -68,18 +68,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
-      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
-      <div className="my-4">
-        <Button onClick={toggleEditMode}>
-          {isEditMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
-        </Button>
-      </div>
-      {isEditMode && (
-        <div className="my-4">
-          <Button onClick={handleSave} className="mr-2">Save Changes</Button>
-          <Button onClick={handleCancel} variant="outline">Cancel</Button>
-        </div>
-      )}
+      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleCancel={handleCancel} handleSave={handleSave} />
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
         <div className="lg:col-span-3 space-y-8">
           <ScoreBoardSection

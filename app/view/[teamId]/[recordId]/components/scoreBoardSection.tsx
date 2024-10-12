@@ -11,13 +11,18 @@ type Props = {
   isEditMode: boolean
 }
 
-export default function ScoreBoardSection({ record, friendTeamName, onEndSelect }: Props) {
+export default function ScoreBoardSection({ record, friendTeamName, onEndSelect, selectedEndIndex }: Props) {
   const teamScoreData = extractTeamsScoreData(record)
   teamScoreData.friend.teamName = friendTeamName
   return (
     <section>
       <h2 className="text-lg font-medium mb-4">Score</h2>
-      <ScoreBoard friendScore={teamScoreData.friend} enemyScore={teamScoreData.enemy} onEndSelect={onEndSelect}/>
+      <ScoreBoard 
+        friendScore={teamScoreData.friend} 
+        enemyScore={teamScoreData.enemy} 
+        onEndSelect={onEndSelect}
+        selectedEndIndex={selectedEndIndex}
+      />
     </section>
   )
 }

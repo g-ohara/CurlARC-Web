@@ -13,6 +13,7 @@ interface ScoreBoardProps {
   friendScore: ScoreData
   enemyScore: ScoreData
   onEndSelect: (endIndex: number) => void
+  selectedEndIndex: number
   customColors?: CustomColors
 }
 
@@ -52,11 +53,11 @@ const FirstStoneCell: FC<{ isFirstStone: boolean }> = ({ isFirstStone }) => (
 )
 
 interface ScoreRowProps extends ScoreData {
-  selectedRound: number | null
-  onRoundSelect: (round: number) => void
+  selectedRoundIndex: number
+  onEndSelect: (round: number) => void
 }
 
-const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRound, onRoundSelect }) => {
+const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRoundIndex, onEndSelect }) => {
   const isFirstStone = true
 
   return (
@@ -67,8 +68,8 @@ const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedR
         <ScoreCell
           key={`${teamName}-${index}`}
           score={score}
-          isSelected={selectedRound === index + 1}
-          onClick={() => onRoundSelect(index)}
+          isSelected={selectedRoundIndex === index}
+          onClick={() => onEndSelect(index)}
           ariaLabel={`${teamName} score for round ${index + 1}: ${score}`}
         />
       ))}
@@ -78,22 +79,16 @@ const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedR
 }
 
 const ScoreBoard: FC<ScoreBoardProps> = ({
-  friendScore, 
-  enemyScore, 
+  friendScore,
+  enemyScore,
   onEndSelect,
+  selectedEndIndex,
   customColors = {}
 }) => {
-  const [selectedRound, setSelectedRound] = useState<number>(0)
-  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)  // 先攻/後攻の要素を除く
+  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)
   const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
   const isMobile = useMediaQuery({ maxWidth: 640 })
 
-  const handleRoundSelect = (round: number) => {
-    setSelectedRound(round)
-    onEndSelect(round-1)
-  }
-
-  // デフォルトカラーのメモ化
   const colors = useMemo(() => ({
     headerBg: customColors.headerBg || 'bg-gray-100',
     selectedBorder: customColors.selectedBorder || 'bg-yellow-300',
@@ -111,12 +106,12 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
               1st
             </th>
-            {headers.map((header) => (
+            {headers.map((header, index) => (
               <th
-                key={`header-${header}`} 
+                key={`header-${header}`}
                 className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
-                  ${selectedRound === header ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`}`}
-                onClick={() => handleRoundSelect(header)}
+                  ${selectedEndIndex === index ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`}`}
+                onClick={() => onEndSelect(index)}
                 aria-label={`Select round ${header}`}
                 role="button"
               >
@@ -127,17 +122,17 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
           </tr>
         </thead>
         <tbody>
-          <ScoreRow 
-            key={`team-${friendScore.teamName}`} 
-            {...friendScore} 
-            selectedRound={selectedRound}
-            onRoundSelect={handleRoundSelect}
+          <ScoreRow
+            key={`team-${friendScore.teamName}`}
+            {...friendScore}
+            selectedRoundIndex={selectedEndIndex}
+            onEndSelect={onEndSelect}
           />
-          <ScoreRow 
-            key={`team-${enemyScore.teamName}`} 
-            {...enemyScore} 
-            selectedRound={selectedRound}
-            onRoundSelect={handleRoundSelect}
+          <ScoreRow
+            key={`team-${enemyScore.teamName}`}
+            {...enemyScore}
+            selectedRoundIndex={selectedEndIndex}
+            onEndSelect={onEndSelect}
           />
         </tbody>
       </table>

@@ -6,7 +6,6 @@ import ScoreBoardSection from './components/scoreBoardSection';
 import MatchDetailsSection from './components/matchDetailsSection';
 import StonePositionsSection from './components/stonePositionsSection';
 import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/types/response';
-import { Button } from '@/components/ui/button';
 import { Coordinate, RecordDetail } from '@/types/model';
 
 type Props = {
@@ -34,7 +33,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setSelectedShotIndex(shotIndex);
   };
 
-  const handleStonePositionChange = (endIndex: number, shotIndex: number, isEnemyStone: boolean, newPosition: Coordinate) => {
+  const handleStonePositionChange = (
+    endIndex: number, 
+    shotIndex: number, 
+    isEnemyStone: boolean, 
+    newPosition: Coordinate
+  ) => {
     setEditedRecord(prevRecord => {
       const newEndsData = [...prevRecord.ends_data];
       const targetShot = newEndsData[endIndex].shots[shotIndex];
@@ -42,7 +46,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       const newStones = [...targetShot.stones[stoneKey]];
       const stoneIndex = newStones.findIndex(stone => stone.index === newPosition.index);
       
-      if (stoneIndex !== -1) {
+      if (stoneIndex !== -1) { // 既に存在する石の場合
         newStones[stoneIndex] = newPosition;
       } else {
         newStones.push(newPosition);
@@ -51,6 +55,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       targetShot.stones[stoneKey] = newStones;
       return { ...prevRecord, ends_data: newEndsData };
     });
+    console.log("endIndex", endIndex, "shotIndex", shotIndex, "isEnemyStone", isEnemyStone, "newPosition", newPosition);
   };
 
   const handleSave = () => {
@@ -63,8 +68,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setEditedRecord(recordRes.record);
     setIsEditMode(false);
   };
-
-  const endsData = recordRes.record.ends_data ?? []
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
@@ -86,7 +89,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
         <div className='lg:col-span-2 h-full'>
           <StonePositionsSection
           record={editedRecord}
-          shots={endsData[selectedEndIndex]?.shots ?? []}
           selectedEndIndex={selectedEndIndex}
           selectedShotIndex={selectedShotIndex}
           onShotSelect={onShotSelect}

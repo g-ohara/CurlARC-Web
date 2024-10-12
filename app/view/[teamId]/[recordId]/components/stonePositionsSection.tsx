@@ -1,11 +1,10 @@
 import { Coordinate, RecordDetail, Shot } from '@/types/model';
-import { SheetContainer } from './sheetContainer';
 import React from 'react';
 import { ShotSelector } from './shotSelector';
+import { Sheet } from '@/components/sheet/sheet';
 
 type Props = {
   record: RecordDetail; 
-  shots: Shot[];
   selectedEndIndex: number; 
   selectedShotIndex: number; 
   onShotSelect: (shot: number) => void; 
@@ -13,22 +12,28 @@ type Props = {
   isEditMode: boolean;
 };
 
-export default function StonePositionsSection({ shots, selectedShotIndex, onShotSelect }: Props) {
-  const selectedShotData = shots[selectedShotIndex];
+export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, onStonePositionChange, isEditMode }: Props) {
+
+  const selectedShotData = record.ends_data[selectedEndIndex]?.shots[selectedShotIndex];
 
   return (
     <section className="w-full h-full">
       <h2 className="text-lg font-medium mb-4">Stone Positions</h2>
-      {/* Shot selector dropdown menu */}
       <ShotSelector
-        shots={shots}
+        shots={record.ends_data[selectedEndIndex].shots}
         selectedShotIndex={selectedShotIndex}
-        onShotSelect={onShotSelect} // ショット選択時のコールバックを渡す
+        onShotSelect={onShotSelect}
       />
       <div className="h-full mt-4">
-        <SheetContainer
-          friendStones={selectedShotData?.stones?.friend_stones}
-          enemyStones={selectedShotData?.stones?.enemy_stones}
+        <Sheet
+          className="h-full w-full"
+          friendStones={selectedShotData?.stones.friend_stones}
+          enemyStones={selectedShotData?.stones.enemy_stones}
+          friendIsRed={true}
+          interactive={isEditMode}
+          selectedEndIndex={selectedEndIndex}
+          selectedShotIndex={selectedShotIndex}
+          onStonePositionChange={onStonePositionChange}
         />
       </div>
     </section>

@@ -3,7 +3,7 @@
 
 import { getRecordDetailsByRecordId } from '@/lib/api/record'
 import { getTeamDetailsByTeamId } from '@/lib/api/team'
-import RecordClient from './recordClient';
+import EditableRecordClient from './recordClient';
 
 
 export default async function RecordPage({ params }: { params: { teamId: string; recordId: string } }) {
@@ -12,5 +12,5 @@ export default async function RecordPage({ params }: { params: { teamId: string;
     getTeamDetailsByTeamId(params.teamId)
   ])
 
-  return <RecordClient recordRes={recordRes} teamRes={teamRes} recordId={params.recordId}/>
+  return <EditableRecordClient recordRes={recordRes} teamRes={teamRes} recordId={params.recordId}/>
 }

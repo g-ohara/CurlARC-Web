@@ -29,4 +29,7 @@ export interface SheetProps {
   friendIsRed: boolean;
   className?: string;
   interactive?: boolean;
+  onStonePositionChange: (endIndex: number, shotIndex: number, isEnemyStone: boolean, newPosition: Coordinate) => void;
+  selectedEndIndex: number;
+  selectedShotIndex: number;
 }

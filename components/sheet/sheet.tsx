@@ -5,16 +5,13 @@ import { calculateDimensions, cartesianToPolar, polarToCartesian, useParentSize 
 import { drawSheet } from "./renderer";
 import { Button } from "../ui/button";
 
-interface ExtendedCoordinate extends Coordinate {
-  key: string;
-}
-
 interface DraggableStoneProps {
-  stone: ExtendedCoordinate;
+  stone: Coordinate;
   index: number;
   color: string;
-  onDragEnd: (stoneKey: string, x: number, y: number) => void;
+  onDragEnd: (index: number, x: number, y: number) => void;
   interactive: boolean;
+  containerDimensions: Dimensions;
 }
 
 const INITIAL_STONE_POSITION = {
@@ -22,19 +19,14 @@ const INITIAL_STONE_POSITION = {
   theta: -Math.PI/2,
 };
 
-class KeyGenerator {
-  private nextKey = 0;
-
-  generateKey(prefix: string): string {
-    return `${prefix}-${this.nextKey++}`;
-  }
-
-  reset(): void {
-    this.nextKey = 0;
-  }
-}
-
-const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, onDragEnd, interactive }) => {
+const DraggableStone: React.FC<DraggableStoneProps> = ({ 
+  stone, 
+  index, 
+  color, 
+  onDragEnd, 
+  interactive, 
+  containerDimensions 
+}) => {
   const stoneRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState(() => {
@@ -65,10 +57,10 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
     const deltaX = clientX - dragStartPosition.current.x;
     const deltaY = clientY - dragStartPosition.current.y;
     
-    setPosition({
-      x: initialStonePosition.current.x + deltaX,
-      y: initialStonePosition.current.y + deltaY,
-    });
+    const newX = Math.max(0, Math.min(initialStonePosition.current.x + deltaX, containerDimensions.width - SHEET_CONSTANTS.STONE_RADIUS * 2));
+    const newY = Math.max(0, Math.min(initialStonePosition.current.y + deltaY, containerDimensions.height - SHEET_CONSTANTS.STONE_RADIUS * 2));
+    
+    setPosition({ x: newX, y: newY });
   };
 
   const handleDragEnd = () => {
@@ -80,13 +72,13 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
     }
     
     onDragEnd(
-      stone.key,
+      index,
       position.x + SHEET_CONSTANTS.STONE_RADIUS,
       position.y + SHEET_CONSTANTS.STONE_RADIUS
     );
   };
 
-  // マウスイベントハンドラ
+  // Mouse event handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     handleDragStart(e.clientX, e.clientY);
   };
@@ -99,7 +91,7 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
     handleDragEnd();
   };
 
-  // タッチイベントハンドラ
+  // Touch event handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     handleDragStart(touch.clientX, touch.clientY);
@@ -129,6 +121,16 @@ const DraggableStone: React.FC<DraggableStoneProps> = ({ stone, index, color, on
       window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging]);
+
+  useEffect(() => {
+    const { x, y } = polarToCartesian(
+      stone.r,
+      stone.theta,
+      SHEET_CONSTANTS.SHEET_WIDTH / 2,
+      SHEET_CONSTANTS.HOUSE_RADIUS
+    );
+    setPosition({ x: x - SHEET_CONSTANTS.STONE_RADIUS, y: y - SHEET_CONSTANTS.STONE_RADIUS });
+  }, [stone.r, stone.theta]);
 
   return (
     <div
@@ -167,6 +169,9 @@ export function Sheet({
   friendIsRed,
   className,
   interactive = false,
+  onStonePositionChange,
+  selectedEndIndex,
+  selectedShotIndex,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -174,28 +179,6 @@ export function Sheet({
     width: SHEET_CONSTANTS.MIN_WIDTH,
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
-  
-  const friendKeyGenerator = useRef(new KeyGenerator());
-  const enemyKeyGenerator = useRef(new KeyGenerator());
-  
-  const [localFriendStones, setLocalFriendStones] = useState<ExtendedCoordinate[]>([]);
-  const [localEnemyStones, setLocalEnemyStones] = useState<ExtendedCoordinate[]>([]);
-
-  useEffect(() => {
-    friendKeyGenerator.current.reset();
-    setLocalFriendStones(friendStones.map(stone => ({
-      ...stone,
-      key: friendKeyGenerator.current.generateKey('friend'),
-    })));
-  }, [friendStones]);
-
-  useEffect(() => {
-    enemyKeyGenerator.current.reset();
-    setLocalEnemyStones(enemyStones.map(stone => ({
-      ...stone,
-      key: enemyKeyGenerator.current.generateKey('enemy'),
-    })));
-  }, [enemyStones]);
 
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
@@ -214,44 +197,31 @@ export function Sheet({
     ctx.restore();
   }, [dimensions]);
 
-  const handleDragEnd = (stoneKey: string, x: number, y: number, isFriendStone: boolean) => {
-    if (!interactive) return;
+  const handleDragEnd = (index: number, x: number, y: number, isFriendStone: boolean) => {
+    if (!interactive || !onStonePositionChange) return;
 
     const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
     const centerY = SHEET_CONSTANTS.HOUSE_RADIUS;
     const { r, theta } = cartesianToPolar(x, y, centerX, centerY);
 
     if (isFriendStone) {
-      setLocalFriendStones(stones => 
-        stones.map(stone => stone.key === stoneKey ? { ...stone, r, theta } : stone)
-      );
+      onStonePositionChange(selectedEndIndex, selectedShotIndex, true, { r, theta, index });
     } else {
-      setLocalEnemyStones(stones => 
-        stones.map(stone => stone.key === stoneKey ? { ...stone, r, theta } : stone)
-      );
+      onStonePositionChange(selectedEndIndex, selectedShotIndex, false, { r, theta, index});
     }
   };
 
-  const addFriendStone = () => {
-    if (!interactive || localFriendStones.length >= 8) return;
+  const addStone = (isFriendStone: boolean) => {
+    if (!interactive || !onStonePositionChange) return;
     
-    const newStone: ExtendedCoordinate = {
-      index: localFriendStones.length,
-      ...INITIAL_STONE_POSITION,
-      key: friendKeyGenerator.current.generateKey('friend'),
-    };
-    setLocalFriendStones([...localFriendStones, newStone]);
-  };
+    const stones = isFriendStone ? friendStones : enemyStones;
+    if (stones.length >= 8) return;
 
-  const addEnemyStone = () => {
-    if (!interactive || localEnemyStones.length >= 8) return;
-    
-    const newStone: ExtendedCoordinate = {
-      index: localEnemyStones.length,
+    const newStone: Coordinate = {
+      index: stones.length,
       ...INITIAL_STONE_POSITION,
-      key: enemyKeyGenerator.current.generateKey('enemy'),
     };
-    setLocalEnemyStones([...localEnemyStones, newStone]);
+    onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, newStone);
   };
 
   return (
@@ -260,21 +230,21 @@ export function Sheet({
         <>
           <div className="flex gap-2 mb-2">
             <Button 
-              onClick={addFriendStone}
-              disabled={localFriendStones.length >= 8}
+              onClick={() => addStone(true)}
+              disabled={friendStones.length >= 8}
             >
-              味方の石を追加
+              Add Friend Stone
             </Button>
             <Button 
-              onClick={addEnemyStone}
-              disabled={localEnemyStones.length >= 8}
+              onClick={() => addStone(false)}
+              disabled={enemyStones.length >= 8}
             >
-              相手の石を追加
+              Add Enemy Stone
             </Button>
           </div>
           <div className="mb-2">
-            <span className="mr-4">味方の石: {localFriendStones.length}/8</span>
-            <span>相手の石: {localEnemyStones.length}/8</span>
+            <span className="mr-4">Friend Stones: {friendStones.length}/8</span>
+            <span>Enemy Stones: {enemyStones.length}/8</span>
           </div>
         </>
       )}
@@ -285,24 +255,26 @@ export function Sheet({
           height={dimensions.height}
           style={{ position: 'absolute' }}
         />
-        {localFriendStones.map((stone, index) => (
+        {friendStones.map((stone, index) => (
           <DraggableStone
-            key={stone.key}
+            key={`friend-${index}`}
             stone={stone}
             index={index}
             color={friendIsRed ? 'red' : 'yellow'}
-            onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, true)}
+            onDragEnd={(index, x, y) => handleDragEnd(index, x, y, true)}
             interactive={interactive}
+            containerDimensions={dimensions}
           />
         ))}
-        {localEnemyStones.map((stone, index) => (
+        {enemyStones.map((stone, index) => (
           <DraggableStone
-            key={stone.key}
+            key={`enemy-${index}`}
             stone={stone}
             index={index}
             color={friendIsRed ? 'yellow' : 'red'}
-            onDragEnd={(stoneKey, x, y) => handleDragEnd(stoneKey, x, y, false)}
+            onDragEnd={(index, x, y) => handleDragEnd(index, x, y, false)}
             interactive={interactive}
+            containerDimensions={dimensions}
           />
         ))}
       </div>

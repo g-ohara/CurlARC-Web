@@ -89,6 +89,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
           <MatchDetailsSection
             record={editedRecord}
+            selectedEndIndex={selectedEndIndex}
             isEditMode={isEditMode}
           />
         </div>

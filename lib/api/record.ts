@@ -1,6 +1,6 @@
 
-import { createRecordRequest } from '@/types/request'
-import { createRecordResponse, getRecordDetailsByRecordIdResponse, getRecordIndicesByTeamIdResponse } from '@/types/response'
+import { createRecordRequest, updateRecordRequest } from '@/types/request'
+import { createRecordResponse, getRecordDetailsByRecordIdResponse, getRecordIndicesByTeamIdResponse, updateRecordResponse } from '@/types/response'
 import { apiClient } from '@/utils/api/api'
 import { cache } from 'react'
 
@@ -25,6 +25,11 @@ export const getRecordDetailsByRecordId = cache(
     return res
   }
 )
+
+export const updateRecord = async (recordId: string, record: updateRecordRequest): Promise<updateRecordResponse> => {
+  const res = await apiClient.patch<updateRecordResponse>(`/auth/records/${recordId}`, record)
+  return res
+}
 
 export const deleteRecord = async (recordId: string): Promise<any> => {
   const res = await apiClient.destroy<any>(`/auth/records/${recordId}`)

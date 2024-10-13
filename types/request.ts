@@ -16,3 +16,12 @@ export type createRecordRequest = {
   date: Date
   ends_data: DataPerEnd[]
 }
+
+export type updateRecordRequest = {
+  result : string
+  enemy_team_name: string
+  place: string
+  date: Date
+  ends_data: DataPerEnd[]
+  isPublic: boolean
+}

@@ -46,14 +46,9 @@ export type getRecordDetailsByRecordIdResponse = {
 }
 
 export type createRecordResponse = {
-  id: string
-  team_id: string
-  team: {
-    id: string
-    name: string
-  }
-  place: string
-  date: Date
-  ends_data: JSON
-  is_public: boolean
+  record: RecordDetail
+}
+
+export type updateRecordResponse = {
+  record: RecordDetail
 }

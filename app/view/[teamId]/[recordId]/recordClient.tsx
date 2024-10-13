@@ -7,6 +7,8 @@ import MatchDetailsSection from './components/matchDetailsSection';
 import StonePositionsSection from './components/stonePositionsSection';
 import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/types/response';
 import { Coordinate, RecordDetail } from '@/types/model';
+import { updateRecord } from '@/lib/api/record';
+import { updateRecordRequest } from '@/types/request';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;
@@ -40,6 +42,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     newPosition: Coordinate
   ) => {
     setEditedRecord(prevRecord => {
+      console.log("newPosition", newPosition);
       const newEndsData = [...prevRecord.ends_data];
       const targetShot = newEndsData[endIndex].shots[shotIndex];
       const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
@@ -94,6 +97,15 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   const handleSave = () => {
     // TODO: Implement API call to save changes
     console.log('Saving changes:', editedRecord);
+    const req : updateRecordRequest = {
+      result: editedRecord.result,
+      enemy_team_name: editedRecord.enemy_team_name,
+      place: editedRecord.place,
+      date: editedRecord.date,
+      ends_data: editedRecord.ends_data,
+      isPublic: editedRecord.is_public
+    }
+    updateRecord(recordId, req);
     setIsEditMode(false);
   };
 

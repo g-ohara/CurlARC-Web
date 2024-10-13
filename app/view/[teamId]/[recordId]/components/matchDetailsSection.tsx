@@ -1,5 +1,5 @@
 import { RecordDetail } from '../../../../../types/model'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Table,
   TableHeader,
@@ -8,11 +8,21 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table'
+import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { ChevronDown } from 'lucide-react'
 
 type Props = {
   record: RecordDetail
   selectedEndIndex: number
   isEditMode: boolean
+  onShotsDetailsChange: (endIndex: number, shotIndex: number, field: string, value: string | number) => void
 }
 
 const getSuccessRateColor = (rate: number): string => {
@@ -26,8 +36,15 @@ const formatSuccessRate = (rate: number): string => {
   return `${(rate).toFixed(1)}%`
 }
 
-export default function MatchDetailsSection({ record, selectedEndIndex, isEditMode }: Props) {
+const shotTypes = ['Draw', 'Guard', 'Takeout', 'Freeze']
+const successRates = Array.from({length: 11}, (_, i) => i * 10)
+
+export default function MatchDetailsSection({ record, selectedEndIndex, isEditMode, onShotsDetailsChange }: Props) {
   const selectedShotsData = record.ends_data[selectedEndIndex].shots ?? []
+
+  const handleChange = (shotIndex: number, field: string, value: string | number) => {
+    onShotsDetailsChange(selectedEndIndex, shotIndex, field, value)
+  }
 
   return (
     <section className="space-y-8">
@@ -46,10 +63,62 @@ export default function MatchDetailsSection({ record, selectedEndIndex, isEditMo
             {selectedShotsData.map((shot, index) => (
               <TableRow key={index}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>{shot.shooter}</TableCell>
-                <TableCell>{shot.type}</TableCell>
+                <TableCell>
+                  {isEditMode ? (
+                    <Input
+                      value={shot.shooter}
+                      onChange={(e) => handleChange(index, 'shooter', e.target.value)}
+                      className="w-full"
+                    />
+                  ) : (
+                    shot.shooter
+                  )}
+                </TableCell>
+                <TableCell>
+                  {isEditMode ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between">
+                          {shot.type} <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        {shotTypes.map((type) => (
+                          <DropdownMenuItem
+                            key={type}
+                            onSelect={() => handleChange(index, 'type', type)}
+                          >
+                            {type}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    shot.type
+                  )}
+                </TableCell>
                 <TableCell className={`text-right ${getSuccessRateColor(shot.success_rate)}`}>
-                  {formatSuccessRate(shot.success_rate)}
+                  {isEditMode ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between">
+                          {formatSuccessRate(shot.success_rate)} <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        {successRates.map((rate) => (
+                          <DropdownMenuItem
+                            key={rate}
+                            onSelect={() => handleChange(index, 'success_rate', rate)}
+                          >
+                            {rate}%
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    formatSuccessRate(shot.success_rate)
+                  )}
                 </TableCell>
               </TableRow>
             ))}

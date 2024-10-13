@@ -44,11 +44,11 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       const targetShot = newEndsData[endIndex].shots[shotIndex];
       const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
       const newStones = [...targetShot.stones[stoneKey]];
-      const stoneIndex = newStones.findIndex(stone => stone.index === newPosition.index);
-      
-      if (stoneIndex !== -1) { // 既に存在する石の場合
+      const stoneExists = newStones.some(stone => stone.index === newPosition.index);
+
+      if (stoneExists) { // 既に存在する石の場合
         newStones.map((stone, index) => {
-          if (index === stoneIndex) {
+          if (index === newPosition.index) {
             return newPosition;
           } else {
             return stone;
@@ -63,6 +63,33 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       return { ...prevRecord, ends_data: newEndsData };
     });
   };
+
+  const handleShotsDetailsChange = (
+    endIndex: number, 
+    shotIndex: number, 
+    field: string, 
+    value: string | number
+  ) => {
+    setEditedRecord(prevRecord => {
+      const newRecord = { ...prevRecord }
+      const newEndsData = [...newRecord.ends_data]
+      const newShots = [...newEndsData[endIndex].shots]
+      
+      newShots[shotIndex] = {
+        ...newShots[shotIndex],
+        [field]: value
+      }
+
+      newEndsData[endIndex] = {
+        ...newEndsData[endIndex],
+        shots: newShots
+      }
+
+      newRecord.ends_data = newEndsData
+
+      return newRecord
+    })
+  }
 
   const handleSave = () => {
     // TODO: Implement API call to save changes
@@ -91,6 +118,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             record={editedRecord}
             selectedEndIndex={selectedEndIndex}
             isEditMode={isEditMode}
+            onShotsDetailsChange={handleShotsDetailsChange}
           />
         </div>
         <div className='lg:col-span-2 h-full'>

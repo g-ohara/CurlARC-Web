@@ -52,7 +52,7 @@ export default async function TeamPage() {
         </div>
         <div className="mt-8">
           <h1 className="text-3xl font-bold">Invited Teams</h1>
-          <TeamCards teams={invitedTeams} />
+          <TeamCards teams={invitedTeams} invited={true} />
         </div>
         <div className="fixed bottom-6 right-6 flex flex-col gap-4">
           <ViewInvitedTeamsButton />

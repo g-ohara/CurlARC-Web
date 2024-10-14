@@ -6,9 +6,10 @@ import { Accordion } from '@/components/ui/accordion'
 
 type TeamCardsProps = {
   teams: Team[]
+  invited: boolean
 }
 
-export default async function TeamCards({ teams }: TeamCardsProps) {
+export default async function TeamCards({ teams, invited }: TeamCardsProps) {
   return (
     <Accordion type="single" collapsible className="mt-3">
       {teams?.map((team) => (
@@ -31,6 +32,7 @@ export default async function TeamCards({ teams }: TeamCardsProps) {
           // ]}
           // teamDetails={team.details}
           lastGameDate={'N/A'}
+          invited={invited}
         />
       ))}
     </Accordion>

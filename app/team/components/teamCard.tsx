@@ -11,9 +11,10 @@ type TeamCardProps = {
   teamId: string
   teamName: string
   lastGameDate: string
+  invited: boolean
 }
 
-export function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
+export function TeamCard({ teamId, teamName, lastGameDate, invited }: TeamCardProps) {
   return (
     <AccordionItem value={teamId}>
       <AccordionTrigger>
@@ -37,7 +38,7 @@ export function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
             </Suspense>
           </div>
         </div>
-        <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} />
+        <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} invited={invited} />
       </AccordionContent>
     </AccordionItem>
   )

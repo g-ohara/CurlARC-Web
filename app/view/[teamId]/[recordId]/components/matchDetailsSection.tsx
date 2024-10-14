@@ -40,7 +40,7 @@ const shotTypes = ['Draw', 'Guard', 'Takeout', 'Freeze']
 const successRates = Array.from({length: 11}, (_, i) => i * 10)
 
 export default function MatchDetailsSection({ record, selectedEndIndex, isEditMode, onShotsDetailsChange }: Props) {
-  const selectedShotsData = record.ends_data[selectedEndIndex].shots ?? []
+  const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? []
 
   const handleChange = (shotIndex: number, field: string, value: string | number) => {
     onShotsDetailsChange(selectedEndIndex, shotIndex, field, value)

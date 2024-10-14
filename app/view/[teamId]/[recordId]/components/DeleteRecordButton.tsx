@@ -14,12 +14,12 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 
-type DeleteRecordButtonProps = {
+type Props = {
   recordId: string
   className?: string
 }
 
-export const DeleteRecordButton = ({ recordId, className }: DeleteRecordButtonProps) => {
+export const DeleteRecordButton = ({ recordId, className }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -32,7 +32,7 @@ export const DeleteRecordButton = ({ recordId, className }: DeleteRecordButtonPr
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={className}>Delete Record</Button>
+        <Button variant="destructive" className={className}>Delete Record</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

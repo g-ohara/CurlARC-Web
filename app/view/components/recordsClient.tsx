@@ -5,15 +5,18 @@ import TeamDropdownMenu from './teamDropdownMenu'
 import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { RecordIndex } from '@/types/model'
+import { Button } from '@/components/ui/button'
+import { CreateRecordButton } from './createRecordButton'
+import { DatePicker } from './datePicker'
 
-type RecordsClientProps = {
+type Props = {
   teams: {
     id: string
     name: string
   }[]
 }
 
-export default function RecordsClient({ teams }: RecordsClientProps) {
+export default function RecordsClient({ teams }: Props) {
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
   const [records, setRecords] = useState<RecordIndex[]>()
 
@@ -30,19 +33,22 @@ export default function RecordsClient({ teams }: RecordsClientProps) {
       </div>
       <div className="grid grid-cols-1 gap-4">
         {records ? (
-            records.map((record) => (
-              <RecordItem
-                key={record.id}
-                recordId={record.id}
-                result={record.result}
-                teamName={teams.find(team => team.id === selectedTeamId)?.name ?? ""}
-                enemyTeamName={record.enemy_team_name}
-                date={record.date.toString()}
-              />
-            ))
+        <>
+        {records.map((record) => (
+          <RecordItem
+            key={record.id}
+            recordId={record.id}
+            result={record.result}
+            teamId={selectedTeamId}
+            enemyTeamName={record.enemy_team_name}
+            date={record.date.toString()}
+          />
+        ))}
+        </>
         ) : (
           <p>No records found for this team.</p>
         )}
+        <CreateRecordButton teamId={selectedTeamId} />
       </div>
     </div>
   )

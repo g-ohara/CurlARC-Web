@@ -38,23 +38,25 @@ export const getTeamsByUserId = cache(async (): Promise<getTeamsResponse> => {
 })
 
 export const getMembersByTeamId = cache(async (teamId: string): Promise<getMembersResponse> => {
-  const res = await apiClient.get<getMembersResponse>(`/auth/teams/${teamId}`)
+  const res = await apiClient.get<getMembersResponse>(`/auth/teams/${teamId}/members`)
   return res
 })
 
-export const getTeamDetails = cache(async (teamId: string): Promise<getTeamDetailsResponse> => {
+export const getTeamDetailsByTeamId = cache(async (teamId: string): Promise<getTeamDetailsResponse> => {
   // ここでチームの詳細情報を取得するAPIリクエストを実装
   // 例: const response = await fetch(`/api/teams/${teamId}`);
   // return response.json();
-  const res: getTeamDetailsResponse = {
-    details: [
-      { key: 'location', value: 'N/A' },
-      { key: 'established', value: 'N/A' },
-      { key: 'homeArena', value: 'N/A' },
-      { key: 'sponsor', value: 'N/A' },
-      { key: 'league', value: 'N/A' },
-      { key: 'division', value: 'N/A' }
-    ]
-  }
+  // const res: getTeamDetailsResponse = {
+  //   details: [
+  //     { key: 'location', value: 'N/A' },
+  //     { key: 'established', value: 'N/A' },
+  //     { key: 'homeArena', value: 'N/A' },
+  //     { key: 'sponsor', value: 'N/A' },
+  //     { key: 'league', value: 'N/A' },
+  //     { key: 'division', value: 'N/A' }
+  //   ]
+  // }
+  const res = await apiClient.get<getTeamDetailsResponse>(`/auth/teams/${teamId}/details`)
+
   return res
 })

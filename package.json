@@ -20,6 +20,7 @@
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.1",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.7",
     "@typescript-eslint/eslint-plugin": "^8.4.0",

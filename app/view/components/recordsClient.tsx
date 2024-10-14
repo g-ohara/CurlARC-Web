@@ -44,11 +44,11 @@ export default function RecordsClient({ teams }: Props) {
             date={record.date.toString()}
           />
         ))}
-        <CreateRecordButton teamId={selectedTeamId} />
         </>
         ) : (
           <p>No records found for this team.</p>
         )}
+        <CreateRecordButton teamId={selectedTeamId} />
       </div>
     </div>
   )

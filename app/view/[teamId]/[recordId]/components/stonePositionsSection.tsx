@@ -11,7 +11,7 @@ type Props = {
   isEditMode: boolean;
 };
 
-export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, onStonePositionChange, isEditMode }: Props) {
+export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onStonePositionChange, isEditMode }: Props) {
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? [];
   const selectedShotData = selectedShotsData[selectedShotIndex];
 

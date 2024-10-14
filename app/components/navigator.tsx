@@ -23,12 +23,23 @@ export default async function Navigator() {
 
   return (
     <nav className="flex w-1/6 flex-col gap-2 bg-slate-100 p-3 shadow-md">
-      {/* <Link href="/home" className={commonStyle + ' ' + getLinkClass('/')}>
-        <HomeIcon className="h-6 w-6" />
-        Home
-      </Link> */}
-      <UsersIcon className="h-6 w-6" />My Teams
+      <div className="flex">
+        <UsersIcon className="h-6 w-6 mr-2" />My Teams
+      </div>
       {teams?.map((team) => (
+        <Link
+          href={`/${team.id}`}
+          key={team.id}
+          className="ml-4"
+        >
+          {team.name}
+        </Link>
+      ))
+      }
+      <div className="flex">
+        <UsersIcon className="h-6 w-6 mr-2" />Invited Teams
+      </div>
+      {invitedTeams?.map((team) => (
         <Link
           href={`/${team.id}`}
           key={team.id}

@@ -6,6 +6,7 @@ import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
 import RecordItem from '@/app/view/components/recordItem'
+
 import { getRecordsByTeamId } from '@/lib/api/record'
 
 type TeamCardProps = {

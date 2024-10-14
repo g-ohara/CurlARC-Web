@@ -81,7 +81,7 @@ export default function Menu({
         />
         <Accordion title="Game Info">
           <Place place={place} setPlace={setPlace} />
-          <DatePicker date={date} setDate={setDate} />
+          {/* <DatePicker date={date} setDate={setDate} /> */}
         </Accordion>
         <ShotHistory />
       </form>

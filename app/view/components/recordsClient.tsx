@@ -5,6 +5,9 @@ import TeamDropdownMenu from './teamDropdownMenu'
 import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { RecordIndex } from '@/types/model'
+import { Button } from '@/components/ui/button'
+import { CreateRecordButton } from './createRecordButton'
+import { DatePicker } from './datePicker'
 
 type Props = {
   teams: {
@@ -30,16 +33,19 @@ export default function RecordsClient({ teams }: Props) {
       </div>
       <div className="grid grid-cols-1 gap-4">
         {records ? (
-            records.map((record) => (
-              <RecordItem
-                key={record.id}
-                recordId={record.id}
-                result={record.result}
-                teamId={selectedTeamId}
-                enemyTeamName={record.enemy_team_name}
-                date={record.date.toString()}
-              />
-            ))
+        <>
+        {records.map((record) => (
+          <RecordItem
+            key={record.id}
+            recordId={record.id}
+            result={record.result}
+            teamId={selectedTeamId}
+            enemyTeamName={record.enemy_team_name}
+            date={record.date.toString()}
+          />
+        ))}
+        <CreateRecordButton teamId={selectedTeamId} />
+        </>
         ) : (
           <p>No records found for this team.</p>
         )}

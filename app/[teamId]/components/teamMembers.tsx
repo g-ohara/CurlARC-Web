@@ -1,3 +1,4 @@
+
 interface TeamMemberProps {
   name: string
   email: string
@@ -27,7 +28,6 @@ interface TeamMembersProps {
 
 export const TeamMembers: React.FC<TeamMembersProps> = ({ members, className }) => (
   <div className={className}>
-    <h4 className="mb-4 text-2xl font-medium">Members</h4>
     <ul className="space-y-2 pl-3 text-xl">
       {members.map((member, index) => (
         <TeamMember key={index} {...member} />

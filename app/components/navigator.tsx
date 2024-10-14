@@ -1,34 +1,57 @@
-'use client'
-
-import { EyeIcon, PlusIcon, UsersIcon } from '@/components/icons'
+import { UsersIcon } from '@/components/icons'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+
+import { getTeamsByUserId } from '@/lib/api/team'
+import { getServerSession } from 'next-auth'
+import { getInvitedTeams } from '@/lib/api/team'
+
+import { Team } from '@/types/model'
 
 type Props = {
   className?: string
 }
 
-export default function Navigator({ className }: Props) {
-  const pathname = usePathname()
+export default async function Navigator({ className }: Props) {
 
-  const getLinkClass = (path: string) => {
-    return pathname === path
-      ? 'font-medium text-bold bg-light-blue scale-105'
-      : 'transition ease-in-out text-muted-foreground hover:bg-light-blue hover:scale-105 hover:duration-300'
+  const session = await getServerSession()
+
+  let teams: Team[] = []
+  let invitedTeams: Team[] = []
+  if (session) {
+    const teamsRes = await getTeamsByUserId()
+    teams = teamsRes.teams
+    const invitedTeamsRes = await getInvitedTeams()
+    invitedTeams = invitedTeamsRes.teams
   }
 
-  const commonStyle = 'flex items-center gap-3 p-2 rounded-lg'
-
   return (
-    <nav className={`${className}`}>
-      <Link href="/team" className={commonStyle + ' ' + getLinkClass('/team')}>
-        <UsersIcon className="h-6 w-6" />
-        My Teams
-      </Link>
-      <Link href="/view" className={commonStyle + ' ' + getLinkClass('/view')}>
-        <EyeIcon className="h-6 w-6" />
-        View Records
-      </Link>
+    <nav className={className}>
+      <div className="flex">
+        <UsersIcon className="h-6 w-6 mr-2" />My Teams
+      </div>
+      {teams?.map((team) => (
+        <Link
+          href={`/${team.id}`}
+          key={team.id}
+          className="ml-4"
+        >
+          {team.name}
+        </Link>
+      ))
+      }
+      <div className="flex">
+        <UsersIcon className="h-6 w-6 mr-2" />Invited Teams
+      </div>
+      {invitedTeams?.map((team) => (
+        <Link
+          href={`/${team.id}`}
+          key={team.id}
+        >
+          {team.name}
+        </Link>
+      ))
+      }
     </nav>
   )
 }
+

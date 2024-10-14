@@ -21,17 +21,9 @@ export default function Navigator({ className }: Props) {
 
   return (
     <nav className={`${className}`}>
-      {/* <Link href="/home" className={commonStyle + ' ' + getLinkClass('/')}>
-        <HomeIcon className="h-6 w-6" />
-        Home
-      </Link> */}
       <Link href="/team" className={commonStyle + ' ' + getLinkClass('/team')}>
         <UsersIcon className="h-6 w-6" />
         My Teams
-      </Link>
-      <Link href="/record" className={commonStyle + ' ' + getLinkClass('/record')}>
-        <PlusIcon className="h-6 w-6" />
-        Create Record
       </Link>
       <Link href="/view" className={commonStyle + ' ' + getLinkClass('/view')}>
         <EyeIcon className="h-6 w-6" />

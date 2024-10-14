@@ -1,6 +1,5 @@
 import { Coordinate, RecordDetail, Shot } from '@/types/model';
 import React from 'react';
-import { ShotSelector } from './shotSelector';
 import { Sheet } from '@/components/sheet/sheet';
 
 type Props = {
@@ -19,11 +18,6 @@ export default function StonePositionsSection({ record, selectedEndIndex, select
   return (
     <section className="w-full h-full">
       <h2 className="text-xl font-medium mb-4">Stone Positions</h2>
-      <ShotSelector
-        shots={selectedShotsData}
-        selectedShotIndex={selectedShotIndex}
-        onShotSelect={onShotSelect}
-      />
       <div className="h-full mt-4">
         <Sheet
           className="h-full w-full"

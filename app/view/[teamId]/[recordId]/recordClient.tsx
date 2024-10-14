@@ -129,6 +129,8 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           <MatchDetailsSection
             record={editedRecord}
             selectedEndIndex={selectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            onShotSelect={onShotSelect}
             isEditMode={isEditMode}
             onShotsDetailsChange={handleShotsDetailsChange}
           />

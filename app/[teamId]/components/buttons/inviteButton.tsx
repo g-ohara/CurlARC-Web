@@ -15,6 +15,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { inviteUsers } from '@/lib/api/team'
 
+import { Plus } from 'lucide-react'
+
 interface InviteButtonProps {
   teamId: string
   teamName: string
@@ -56,8 +58,8 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
       const validEmails = emails.filter((email) => isValidEmail(email))
       // validEmailsが空の場合はエラーメッセージを設定
       if (validEmails.length === 0) {
-      setError('Please enter at least one valid email address.')
-      return
+        setError('Please enter at least one valid email address.')
+        return
       }
       // ユーザー招待APIを呼び出す
       await inviteUsers(teamId, validEmails)
@@ -75,13 +77,13 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen} defaultOpen={false}>
-        <DialogTrigger asChild>
+        <DialogTrigger asChild className="ml-3">
           <Button
             variant="outline"
-            size="default"
-            className="border-blue-600 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
+            size="icon"
+            className="border-blue-600 text-blue-600 hover:bg-blue-100 hover:text-blue-700 h-7 w-7"
           >
-            Invite Users
+            <Plus className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

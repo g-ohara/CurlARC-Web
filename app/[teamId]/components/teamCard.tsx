@@ -1,15 +1,12 @@
 import React, { Suspense } from 'react'
 import { TeamHeader } from './teamHeader'
 import { AsyncTeamMembers } from './asyncTeamMembers'
-import { AsyncTeamStatistics } from './asyncTeamStatistics'
 import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
-import { useState } from 'react'
 import RecordItem from '@/app/view/components/recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
-import { RecordIndex } from '@/types/model'
 
 type TeamCardProps = {
   teamId: string
@@ -26,12 +23,16 @@ export async function TeamCard({ teamId, teamName, lastGameDate, invited }: Team
       <TeamHeader teamName={teamName} />
       <div className="grid grid-cols-2 gap-6 mt-8">
         <div>
-          <Suspense fallback={<LoadingPlaceholder />}>
-            <AsyncTeamMembers teamId={teamId} />
-          </Suspense>
-          <Suspense fallback={<LoadingPlaceholder />}>
-            <AsyncTeamDetails teamId={teamId} />
-          </Suspense>
+          <div>
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <AsyncTeamMembers teamId={teamId} />
+            </Suspense>
+          </div>
+          <div className="mt-8">
+            <Suspense fallback={<LoadingPlaceholder />}>
+              <AsyncTeamDetails teamId={teamId} />
+            </Suspense>
+          </div>
         </div>
         <div>
           <h4 className="text-2xl font-medium">Records</h4>

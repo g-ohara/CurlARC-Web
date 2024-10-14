@@ -1,7 +1,6 @@
 "use client"
 
 import { CalendarIcon } from '@/components/icons'
-import InviteButton from './buttons/inviteButton'
 import LeaveTeamButton from './buttons/leaveTeamButton'
 import DeleteTeamButton from './buttons/deleteTeamButton'
 import AcceptInvitationButton from './buttons/acceptInvitationButton'
@@ -26,7 +25,6 @@ export const TeamFooter: React.FC<TeamFooterProps> = ({ lastGameDate, teamName, 
     else {
       return (
         <div className="ml-auto flex gap-3">
-          <InviteButton teamName={teamName} teamId={teamId} />
           <LeaveTeamButton teamName={teamName} teamId={teamId} />
           <DeleteTeamButton teamName={teamName} teamId={teamId} />
         </div>

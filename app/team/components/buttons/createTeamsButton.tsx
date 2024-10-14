@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
 import { revalidateByTag } from '../../serverActions'
+import { Plus } from "lucide-react"
 
 export default function CreateTeamsButton() {
   const [teamName, setTeamName] = useState('')
@@ -56,8 +57,8 @@ export default function CreateTeamsButton() {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="default">
-            Create Team
+          <Button variant="outline" size="icon" className="w-8 h-8 ml-3">
+            <Plus className="w-4 h-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

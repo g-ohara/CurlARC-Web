@@ -10,9 +10,10 @@ type TeamCardsProps = {
 }
 
 export default async function TeamCards({ teams, invited }: TeamCardsProps) {
+  const message = 'No teams found.'
   return (
-    <Accordion type="single" collapsible className="mt-3">
-      {teams?.map((team) => (
+    <Accordion type="single" collapsible className="mt-3 ml-3">
+      {teams.length == 0 ? <p>{message}</p> : teams.map((team) => (
         <TeamCard
           key={team.id}
           teamId={team.id}

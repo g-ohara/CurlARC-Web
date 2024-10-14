@@ -1,9 +1,11 @@
-import { EyeIcon, HomeIcon, PlusIcon, UsersIcon } from '@/components/icons'
+import { UsersIcon } from '@/components/icons'
 import Link from 'next/link'
 
 import { getTeamsByUserId } from '@/lib/api/team'
 import { getServerSession } from 'next-auth'
 import { getInvitedTeams } from '@/lib/api/team'
+
+import { Team } from '@/types/model'
 
 type Props = {
   className?: string
@@ -13,8 +15,8 @@ export default async function Navigator({ className }: Props) {
 
   const session = await getServerSession()
 
-  let teams = []
-  let invitedTeams = []
+  let teams: Team[] = []
+  let invitedTeams: Team[] = []
   if (session) {
     const teamsRes = await getTeamsByUserId()
     teams = teamsRes.teams

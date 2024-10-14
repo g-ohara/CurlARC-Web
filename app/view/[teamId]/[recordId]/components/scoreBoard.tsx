@@ -115,7 +115,8 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
                 aria-label={`Select round ${header}`}
                 role="button"
               >
-                {isMobile ? header : `${header}`}
+                {header === 11 ? 'Ex' : header}
+                {/* {isMobile ? header : `${header}`} */}
               </th>
             ))}
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">TOTAL</th>

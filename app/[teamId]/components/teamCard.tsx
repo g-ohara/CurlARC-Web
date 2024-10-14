@@ -6,6 +6,8 @@ import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
 import RecordItem from '@/app/view/components/recordItem'
+import { CreateRecordButton } from '@/app/view/components/createRecordButton'
+
 
 import { getRecordsByTeamId } from '@/lib/api/record'
 
@@ -36,21 +38,26 @@ export async function TeamCard({ teamId, teamName, lastGameDate, invited }: Team
           </div>
         </div>
         <div>
-          <h4 className="text-2xl font-medium">Records</h4>
-          {records ? (
-            records.map((record) => (
-              <RecordItem
-                key={record.id}
-                recordId={record.id}
-                result={record.result}
-                teamId={teamId}
-                enemyTeamName={record.enemy_team_name}
-                date={record.date.toString()}
-              />
-            ))
-          ) : (
-            <p>No records found for this team.</p>
-          )}
+          <h4 className="flex items-center text-2xl font-medium gap-4">
+            <p>Records</p>
+            <CreateRecordButton teamId={teamId} />
+          </h4>
+          <div className="max-h-[60vh] overflow-y-auto">
+            {records ? (
+              records.map((record) => (
+                <RecordItem
+                  key={record.id}
+                  recordId={record.id}
+                  result={record.result}
+                  teamId={teamId}
+                  enemyTeamName={record.enemy_team_name}
+                  date={record.date.toString()}
+                />
+              ))
+            ) : (
+              <p>No records found for this team.</p>
+            )}
+          </div>
         </div>
       </div>
       <TeamFooter

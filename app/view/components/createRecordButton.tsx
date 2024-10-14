@@ -1,3 +1,5 @@
+"use client"
+
 import { createRecordRequest } from "@/types/request"
 import { createRecord } from '@/lib/api/record';
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "./datePicker";
 import { Switch } from '@/components/ui/switch';
+
+import { Plus } from 'lucide-react'
 
 type Props = {
   teamId: string
@@ -65,8 +69,12 @@ export const CreateRecordButton = ({ teamId }: Props) => {
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="default">
-            Create a new Record
+          <Button
+            variant="outline"
+            size="icon"
+            className="border-blue-600 text-blue-600 hover:bg-blue-100 hover:text-blue-700 h-7 w-7"
+          >
+            <Plus className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

@@ -8,14 +8,12 @@ export default async function TeamPage(props: { params: { teamId: string } }) {
   const teamRes = await getTeamDetailsByTeamId(props.params.teamId)
   return (
     <main className="flex-1 p-8">
-      <div className="mt-8">
-        <TeamCard
-          teamId={props.params.teamId}
-          teamName={teamRes.team.name}
-          lastGameDate="N/A"
-          invited={false}
-        />
-      </div>
+      <TeamCard
+        teamId={props.params.teamId}
+        teamName={teamRes.team.name}
+        lastGameDate="N/A"
+        invited={false}
+      />
     </main>
   )
 }

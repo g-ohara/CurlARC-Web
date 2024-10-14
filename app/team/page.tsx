@@ -7,6 +7,7 @@ import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
 import { Team } from '@/types/model'
 import { getServerSession } from 'next-auth'
 import { TeamCard } from './components/teamCard'
+import { Accordion } from '@/components/ui/accordion'
 
 const teamDetailsDummy = [
   { key: 'Wins', value: '25' },
@@ -43,7 +44,7 @@ export default async function TeamPage() {
     // }
     return (
       <main className="flex-1 p-8">
-        <div className="grid grid-cols-1 gap-6">
+        <Accordion type="single" collapsible className="grid grid-cols-1 gap-6">
           {teams.map((team) => (
             <TeamCard
               key={team.id}
@@ -67,7 +68,7 @@ export default async function TeamPage() {
               lastGameDate={'N/A'}
             />
           ))}
-        </div>
+        </Accordion>
         <div className="fixed bottom-6 right-6 flex flex-col gap-4">
           <ViewInvitedTeamsButton />
           <CreateTeamsButton />

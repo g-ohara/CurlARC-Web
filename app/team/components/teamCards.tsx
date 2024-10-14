@@ -10,14 +10,13 @@ type TeamCardsProps = {
 
 export default async function TeamCards({ teams }: TeamCardsProps) {
   return (
-    <Accordion type="single" collapsible className="grid grid-cols-1 gap-6">
-      {teams.map((team) => (
+    <Accordion type="single" collapsible className="mt-3">
+      {teams?.map((team) => (
         <TeamCard
           key={team.id}
           teamId={team.id}
           teamName={team.name}
           // memberCount={team.members.length}
-          score={{ red: 0, blue: 0 }}
           // members={team.members.map((member) => ({
           //   name: member.name,
           //   email: member.email

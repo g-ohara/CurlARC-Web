@@ -10,18 +10,14 @@ import { LoadingPlaceholder } from './loadingPlaceholder'
 type TeamCardProps = {
   teamId: string
   teamName: string
-  score: {
-    red: number
-    blue: number
-  }
   lastGameDate: string
 }
 
-export function TeamCard({ teamId, teamName, score, lastGameDate }: TeamCardProps) {
+export function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
   return (
     <AccordionItem value={teamId}>
       <AccordionTrigger>
-        <TeamHeader teamName={teamName} score={score} />
+        <TeamHeader teamName={teamName} />
       </AccordionTrigger>
       <AccordionContent>
         <div className="grid grid-cols-10 gap-6">

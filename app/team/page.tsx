@@ -6,6 +6,7 @@ import CreateTeamsButton from './components/buttons/createTeamsButton'
 import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
 import { getServerSession } from 'next-auth'
 import TeamCards from './components/teamCards'
+import { getInvitedTeams } from '@/lib/api/team'
 
 const teamDetailsDummy = [
   { key: 'Wins', value: '25' },
@@ -20,8 +21,11 @@ export default async function TeamPage() {
   // let teamsWithMembers: Team[] = []
 
   if (session) {
-    const res = await getTeamsByUserId()
-    const teams = res.teams
+    const teamsRes = await getTeamsByUserId()
+    const teams = teamsRes.teams
+
+    const invitedTeamsRes = await getInvitedTeams()
+    const invitedTeams = invitedTeamsRes.teams
 
     // チームの詳細情報とメンバー情報を非同期で取得
     // if (teams) {
@@ -42,7 +46,14 @@ export default async function TeamPage() {
     // }
     return (
       <main className="flex-1 p-8">
-        <TeamCards teams={teams} />
+        <div>
+          <h1 className="text-3xl font-bold">My Teams</h1>
+          <TeamCards teams={teams} />
+        </div>
+        <div className="mt-8">
+          <h1 className="text-3xl font-bold">Invited Teams</h1>
+          <TeamCards teams={invitedTeams} />
+        </div>
         <div className="fixed bottom-6 right-6 flex flex-col gap-4">
           <ViewInvitedTeamsButton />
           <CreateTeamsButton />

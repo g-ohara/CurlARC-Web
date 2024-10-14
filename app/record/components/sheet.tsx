@@ -1,7 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
-import { Sheet, sheetConst } from "@/components/sheet";
+import { Sheet } from "@/components/sheet/sheet";
 import { Coordinate, DataPerEnd, Shot } from "@/types/model";
 
 // Helper functions
@@ -150,7 +150,7 @@ export default function RecordSheet(props: Readonly<{
   //   document.addEventListener("mousemove", handleMouseMove);
   //   document.addEventListener("mouseup", handleMouseUp);
   //   document.addEventListener("click", handleClick);
-    
+
   //   return () => {
   //     document.removeEventListener("mousedown", handleMouseDown);
   //     document.removeEventListener("mousemove", handleMouseMove);

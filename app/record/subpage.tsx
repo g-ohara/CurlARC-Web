@@ -36,7 +36,9 @@ export default function Subpage(props: SubpageProps) {
           setPutStone={setPutStone}
           teams={props.teams}
           setTeamId={setTeamId}
+          date={date}
           setDate={setDate}
+          place={place}
           setPlace={setPlace}
           isSubmitted={false}
           setShotSaved={setShotSaved}

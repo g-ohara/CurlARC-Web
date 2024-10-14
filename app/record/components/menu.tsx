@@ -27,7 +27,9 @@ type MenuProps = {
   setPutStone: Dispatch<SetStateAction<boolean>>;
   teams: { id: string; name: string }[];
   setTeamId: Dispatch<SetStateAction<string>>;
+  date: Date | undefined;
   setDate: Dispatch<SetStateAction<Date | undefined>>;
+  place: string;
   setPlace: Dispatch<SetStateAction<string>>;
   isSubmitted: boolean;
   setShotSaved: Dispatch<SetStateAction<boolean>>;
@@ -38,35 +40,25 @@ export default function Menu({
   setPutStone,
   teams,
   setTeamId,
+  date,
   setDate,
+  place,
   setPlace,
   isSubmitted,
   setShotSaved,
 }: MenuProps) {
-
-  const [teamId, setLocalTeamId] = useState('');
-  const [place, setLocalPlace] = useState('');
-  const [date, setLocalDate] = useState<Date | undefined>(undefined);
 
   const [rotation, setRotation] = useState<boolean | null>(null);
   const [shotType, setShotType] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [difficulty, setDifficulty] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isSubmitted) {
-      setPlace(place);
-      setDate(date);
-      setTeamId(teamId);
-    }
-  }, [isSubmitted]);
-
   return (
     <div className="grid">
       <form className="grid gap-4">
         <TeamDropdownMenu
           teams={teams}
-          onSelect={(id: string) => setLocalTeamId(id)}
+          onSelect={(id: string) => setTeamId(id)}
         />
         <RotationMenu rotation={rotation} setRotation={setRotation} />
         <Accordion title="Advanced Options">
@@ -88,8 +80,8 @@ export default function Menu({
           }}
         />
         <Accordion title="Game Info">
-          <Place place={place} setPlace={setLocalPlace} />
-          <DatePicker date={date} setDate={setLocalDate} />
+          <Place place={place} setPlace={setPlace} />
+          <DatePicker date={date} setDate={setDate} />
         </Accordion>
         <ShotHistory />
       </form>

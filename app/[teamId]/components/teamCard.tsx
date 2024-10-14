@@ -6,6 +6,11 @@ import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
+import { useState } from 'react'
+import RecordItem from '@/app/view/components/recordItem'
+import { getRecordsByTeamId } from '@/lib/api/record'
+import { RecordIndex } from '@/types/model'
+
 type TeamCardProps = {
   teamId: string
   teamName: string
@@ -13,28 +18,45 @@ type TeamCardProps = {
   invited: boolean
 }
 
-export function TeamCard({ teamId, teamName, lastGameDate, invited }: TeamCardProps) {
+export async function TeamCard({ teamId, teamName, lastGameDate, invited }: TeamCardProps) {
+  const res = await getRecordsByTeamId(teamId)
+  const records = res.record_indices
   return (
     <>
       <TeamHeader teamName={teamName} />
-      <div className="grid grid-cols-10 gap-6 mt-8">
-        <div className="col-span-3">
+      <div className="grid grid-cols-2 gap-6 mt-8">
+        <div>
           <Suspense fallback={<LoadingPlaceholder />}>
             <AsyncTeamMembers teamId={teamId} />
           </Suspense>
-        </div>
-        <div className="col-span-4">
-          <Suspense fallback={<LoadingPlaceholder />}>
-            <AsyncTeamStatistics teamId={teamId} />
-          </Suspense>
-        </div>
-        <div className="col-span-3">
           <Suspense fallback={<LoadingPlaceholder />}>
             <AsyncTeamDetails teamId={teamId} />
           </Suspense>
         </div>
+        <div>
+          <h4 className="text-2xl font-medium">Records</h4>
+          {records ? (
+            records.map((record) => (
+              <RecordItem
+                key={record.id}
+                recordId={record.id}
+                result={record.result}
+                teamId={teamId}
+                enemyTeamName={record.enemy_team_name}
+                date={record.date.toString()}
+              />
+            ))
+          ) : (
+            <p>No records found for this team.</p>
+          )}
+        </div>
       </div>
-      <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} invited={invited} />
+      <TeamFooter
+        lastGameDate={lastGameDate}
+        teamId={teamId}
+        teamName={teamName}
+        invited={invited}
+      />
     </>
   )
 }

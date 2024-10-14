@@ -35,7 +35,7 @@ export const TeamFooter: React.FC<TeamFooterProps> = ({ lastGameDate, teamName, 
   }
 
   return (
-    <div className="flex w-full items-center">
+    <div className="flex w-full items-center mt-4">
       <div className="flex text-sm text-muted-foreground">
         <CalendarIcon className="mr-1 inline h-4 w-4" /> Last game: {lastGameDate}
       </div>

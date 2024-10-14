@@ -13,14 +13,14 @@ type Props = {
 };
 
 export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, onStonePositionChange, isEditMode }: Props) {
-
-  const selectedShotData = record.ends_data[selectedEndIndex]?.shots[selectedShotIndex];
+  const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? [];
+  const selectedShotData = selectedShotsData[selectedShotIndex];
 
   return (
     <section className="w-full h-full">
       <h2 className="text-lg font-medium mb-4">Stone Positions</h2>
       <ShotSelector
-        shots={record.ends_data[selectedEndIndex].shots}
+        shots={selectedShotsData}
         selectedShotIndex={selectedShotIndex}
         onShotSelect={onShotSelect}
       />

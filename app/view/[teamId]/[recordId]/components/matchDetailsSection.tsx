@@ -49,11 +49,11 @@ export default function MatchDetailsSection({ record, selectedEndIndex, isEditMo
   return (
     <section className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold mb-4">Shots</h2>
+        <h2 className="text-xl font-medium mb-4">Shots</h2>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Shot</TableHead>
+              <TableHead className="w-1/4">Shot</TableHead>
               <TableHead>Shooter</TableHead>
               <TableHead>Type</TableHead>
               <TableHead className="text-right">Success Rate</TableHead>
@@ -126,7 +126,7 @@ export default function MatchDetailsSection({ record, selectedEndIndex, isEditMo
         </Table>
       </div>
       <div>
-        <h2 className="text-2xl font-bold mb-4">Match Details</h2>
+        <h2 className="text-xl font-medium mb-4">Match Details</h2>
         <Table>
           <TableBody>
             <TableRow>

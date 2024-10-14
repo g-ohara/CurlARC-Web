@@ -179,7 +179,7 @@ export function Sheet({
     width: SHEET_CONSTANTS.MIN_WIDTH,
     height: SHEET_CONSTANTS.MIN_HEIGHT,
   });
-
+  
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
@@ -231,20 +231,20 @@ export function Sheet({
           <div className="flex gap-2 mb-2">
             <Button 
               onClick={() => addStone(true)}
-              disabled={friendStones.length >= 8}
+              disabled={friendStones?.length >= 8}
             >
               Add Friend Stone
             </Button>
             <Button 
               onClick={() => addStone(false)}
-              disabled={enemyStones.length >= 8}
+              disabled={enemyStones?.length >= 8}
             >
               Add Enemy Stone
             </Button>
           </div>
           <div className="mb-2">
-            <span className="mr-4">Friend Stones: {friendStones.length}/8</span>
-            <span>Enemy Stones: {enemyStones.length}/8</span>
+            <span className="mr-4">Friend Stones: {friendStones?.length}/8</span>
+            <span>Enemy Stones: {enemyStones?.length}/8</span>
           </div>
         </>
       )}
@@ -255,7 +255,7 @@ export function Sheet({
           height={dimensions.height}
           style={{ position: 'absolute' }}
         />
-        {friendStones.map((stone, index) => (
+        {friendStones?.map((stone, index) => (
           <DraggableStone
             stone={stone}
             index={index}
@@ -265,7 +265,7 @@ export function Sheet({
             containerDimensions={dimensions}
           />
         ))}
-        {enemyStones.map((stone, index) => (
+        {enemyStones?.map((stone, index) => (
           <DraggableStone
             stone={stone}
             index={index}

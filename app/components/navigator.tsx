@@ -1,14 +1,15 @@
 import { EyeIcon, HomeIcon, PlusIcon, UsersIcon } from '@/components/icons'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 import { getTeamsByUserId } from '@/lib/api/team'
 import { getServerSession } from 'next-auth'
 import { getInvitedTeams } from '@/lib/api/team'
 
-export default async function Navigator() {
+type Props = {
+  className?: string
+}
 
-  const commonStyle = 'flex items-center gap-3 p-2 rounded-lg'
+export default async function Navigator({ className }: Props) {
 
   const session = await getServerSession()
 
@@ -22,7 +23,7 @@ export default async function Navigator() {
   }
 
   return (
-    <nav className="flex w-1/6 flex-col gap-2 bg-slate-100 p-3 shadow-md">
+    <nav className={className}>
       <div className="flex">
         <UsersIcon className="h-6 w-6 mr-2" />My Teams
       </div>

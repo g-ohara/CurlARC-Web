@@ -15,8 +15,8 @@ type Props = {
 export default function RecordHeader({ record, friendTeamName, toggleEditMode, isEditMode, handleCancel, handleSave }: Props) {
   return (
     <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-semibold">
-        {friendTeamName} vs {record.enemy_team_name}
+      <h1 className="text-3xl font-semibold">
+        {friendTeamName} vs {record.enemy_team_name} @ {record.place}
       </h1>
       <div className="flex items-center space-x-4 ml-auto">
         <Button onClick={toggleEditMode}>

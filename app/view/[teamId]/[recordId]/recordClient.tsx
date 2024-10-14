@@ -144,8 +144,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
-
-
     </div>
   );
 }

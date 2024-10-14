@@ -12,6 +12,8 @@ export type signInRequest = {
 }
 
 export type createRecordRequest = {
+  enemy_team_name: string
+  result: string
   place: string
   date: Date
   ends_data: DataPerEnd[]

@@ -9,7 +9,11 @@ import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import AuthDropdownMenu from './authDropdownmenu';
 
-export default function Header() {
+type Props = {
+  className?: string;
+};
+
+export default function Header({ className }: Props) {
   const { data: session } = useSession();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -31,7 +35,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between bg-primary px-6 py-4 text-primary-foreground shadow-md">
+      <header className={`${className}`}>
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <ConeIcon className="h-8 w-8" />

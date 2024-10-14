@@ -1,13 +1,11 @@
 'use server'
 
 import React from 'react'
-import { getMembersByTeamId, getTeamDetailsByTeamId, getTeamsByUserId } from '@/lib/api/team'
+import { getTeamsByUserId } from '@/lib/api/team'
 import CreateTeamsButton from './components/buttons/createTeamsButton'
 import ViewInvitedTeamsButton from './components/buttons/viewInvitedTeamsButton'
-import { Team } from '@/types/model'
 import { getServerSession } from 'next-auth'
-import { TeamCard } from './components/teamCard'
-import { Accordion } from '@/components/ui/accordion'
+import TeamCards from './components/teamCards'
 
 const teamDetailsDummy = [
   { key: 'Wins', value: '25' },
@@ -44,31 +42,7 @@ export default async function TeamPage() {
     // }
     return (
       <main className="flex-1 p-8">
-        <Accordion type="single" collapsible className="grid grid-cols-1 gap-6">
-          {teams.map((team) => (
-            <TeamCard
-              key={team.id}
-              teamId={team.id}
-              teamName={team.name}
-              // memberCount={team.members.length}
-              score={{ red: 0, blue: 0 }}
-              // members={team.members.map((member) => ({
-              //   name: member.name,
-              //   email: member.email
-              // }))}
-              // statisticsData={[
-              //   { key: 'Wins', value: 25 },
-              //   { key: 'Losses', value: 36 },
-              //   { key: 'Ties', value: 26 },
-              //   { key: 'Percentage', value: 6 },
-              //   { key: 'Points', value: 12 },
-              //   { key: 'Points Against', value: 52 }
-              // ]}
-              // teamDetails={team.details}
-              lastGameDate={'N/A'}
-            />
-          ))}
-        </Accordion>
+        <TeamCards teams={teams} />
         <div className="fixed bottom-6 right-6 flex flex-col gap-4">
           <ViewInvitedTeamsButton />
           <CreateTeamsButton />

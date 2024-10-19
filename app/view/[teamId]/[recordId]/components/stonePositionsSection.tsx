@@ -14,7 +14,7 @@ type Props = {
 export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onStonePositionChange, isEditMode }: Props) {
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? [];
   const selectedShotData = selectedShotsData[selectedShotIndex];
-
+  
   return (
     <section className="w-full h-full">
       <h2 className="text-xl font-medium mb-4">Stone Positions</h2>

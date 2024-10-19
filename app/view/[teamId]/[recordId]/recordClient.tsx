@@ -46,12 +46,14 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       const newEndsData = [...prevRecord.ends_data];
       const targetShot = newEndsData[endIndex].shots[shotIndex];
       const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
-      const newStones = [...targetShot.stones[stoneKey]];
-      const stoneExists = newStones.some(stone => stone.index === newPosition.index);
+      const oldStones = [...targetShot.stones[stoneKey]];
+      const stoneExists = oldStones.some(stone => stone.index === newPosition.index);
+
+      let newStones;
 
       if (stoneExists) { // 既に存在する石の場合
-        newStones.map((stone, index) => {
-          if (index === newPosition.index) {
+        newStones = oldStones.map((stone) => {
+          if (stone.index === newPosition.index) {
             return newPosition;
           } else {
             return stone;
@@ -59,7 +61,8 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
         }
         );
       } else {
-        newStones.push(newPosition);
+        console.log("added:")
+        newStones = [...oldStones, newPosition];
       }
 
       targetShot.stones[stoneKey] = newStones;

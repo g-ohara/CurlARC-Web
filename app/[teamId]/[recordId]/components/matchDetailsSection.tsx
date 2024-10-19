@@ -1,4 +1,4 @@
-import { RecordDetail } from '../../../../../types/model'
+import { RecordDetail } from '../../../../types/model'
 import React, { useState } from 'react'
 import {
   Table,

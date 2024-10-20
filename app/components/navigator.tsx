@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import CreateTeamsButton from './createTeamsButton';
+import AcceptInvitationButton from './acceptInvitationButton';
 
 type Props = {
   className?: string
@@ -73,16 +74,13 @@ export default function Navigator({ className }: Props) {
         </div>
         <ul className="ml-4 space-y-2">
           {invitedTeams?.map((team) => (
-            <li key={team.id}>
-              <Link
-                href={`/${team.id}`}
-                className={clsx(
-                  'block px-3 py-2 rounded-md hover:bg-green-100 transition',
-                  currentTeamId === `${team.id}` ? 'bg-green-200 font-bold text-green-600' : 'text-gray-800'
-                )}
-              >
+            <li key={team.id}             >
+              <div className="flex items-center gap-3 px-3 py-2">
                 {team.name}
-              </Link>
+                <AcceptInvitationButton
+                  teamId={team.id}
+                />
+              </div>
             </li>
           ))}
         </ul>

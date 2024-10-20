@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { 
-  DndContext, 
+import {
+  DndContext,
   useDraggable,
   useDroppable,
   DragEndEvent,
@@ -9,11 +9,11 @@ import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const INITIAL_STONE_POSITION = {
   r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
-  theta: -Math.PI/2,
+  theta: -Math.PI / 2,
 };
 
 interface StoneProps {
@@ -64,7 +64,7 @@ function DraggableStone({ id, index, r, theta, isRed, isFriend, scale }: StonePr
   );
 }
 
-export function Sheet({ 
+export function Sheet({
   friendStones = [],
   enemyStones = [],
   friendIsRed,
@@ -86,20 +86,20 @@ export function Sheet({
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     if (!interactive || !onStonePositionChange) return;
     const { active, delta } = event;
-    
+
     const id = active.id as string;
     const isFriendStone = id.startsWith('friend');
     const index = parseInt(id.split('-')[1]);
-    
+
     const stones = isFriendStone ? friendStones : enemyStones;
     const stone = stones[index];
-    
+
     if (!stone) return;
 
     const { x: oldX, y: oldY } = polarToCartesian(
-      stone.r, 
-      stone.theta, 
-      SHEET_CONSTANTS.SHEET_WIDTH / 2, 
+      stone.r,
+      stone.theta,
+      SHEET_CONSTANTS.SHEET_WIDTH / 2,
       SHEET_CONSTANTS.HOUSE_RADIUS
     );
 
@@ -107,9 +107,9 @@ export function Sheet({
     const newY = oldY + delta.y / scale;
 
     const { r, theta } = cartesianToPolar(
-      newX, 
-      newY, 
-      SHEET_CONSTANTS.SHEET_WIDTH / 2, 
+      newX,
+      newY,
+      SHEET_CONSTANTS.SHEET_WIDTH / 2,
       SHEET_CONSTANTS.HOUSE_RADIUS
     );
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
@@ -118,7 +118,7 @@ export function Sheet({
 
   const addStone = useCallback((isFriendStone: boolean) => {
     if (!interactive || !onStonePositionChange) return;
-    
+
     const stones = isFriendStone ? friendStones : enemyStones;
     if (stones.length >= 8) return;
 
@@ -128,7 +128,7 @@ export function Sheet({
     };
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, newStone);
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, friendStones, enemyStones]);
-  
+
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
@@ -147,7 +147,7 @@ export function Sheet({
   });
 
   return (
-    <DndContext 
+    <DndContext
       onDragEnd={handleDragEnd}
       modifiers={[restrictToParentElement]}
     >
@@ -155,13 +155,13 @@ export function Sheet({
         {interactive && (
           <>
             <div className="flex gap-2 mb-2">
-              <Button 
+              <Button
                 onClick={() => addStone(true)}
                 disabled={friendStones?.length >= 8}
               >
                 Add Friend Stone
               </Button>
-              <Button 
+              <Button
                 onClick={() => addStone(false)}
                 disabled={enemyStones?.length >= 8}
               >
@@ -174,7 +174,7 @@ export function Sheet({
             </div>
           </>
         )}
-        <div 
+        <div
           ref={setNodeRef}
           style={{ position: 'relative', width: dimensions.width, height: dimensions.height }}
         >

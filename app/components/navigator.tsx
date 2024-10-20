@@ -8,13 +8,14 @@ import { Team } from '@/types/model'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import CreateTeamsButton from './createTeamsButton';
 
 type Props = {
   className?: string
 }
 
 export default function Navigator({ className }: Props) {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   const currentTeamId = pathname.split('/')[1];
   console.log('currentTeamId:', currentTeamId);
   const { data: session } = useSession();
@@ -61,6 +62,7 @@ export default function Navigator({ className }: Props) {
               </Link>
             </li>
           ))}
+          <CreateTeamsButton />
         </ul>
       </div>
 

@@ -34,15 +34,6 @@ export function cartesianToPolar(x: number, y: number, centerX: number, centerY:
   };
 }
 
-export function fillCircle(ctx: Canvas2D, x: number, y: number, r: number, color: string): void {
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2.0, false);
-  ctx.fillStyle = color;
-  ctx.fill();
-  ctx.lineWidth = 0.9;
-  ctx.stroke();
-}
-
 export function useParentSize() {
   const [parentSize, setParentSize] = useState<Dimensions>({
     width: SHEET_CONSTANTS.MIN_WIDTH,
@@ -67,4 +58,47 @@ export function useParentSize() {
   }, []);
 
   return { containerRef, parentSize };
+}
+
+export function drawSheet(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  const { SHEET_WIDTH, SHEET_HEIGHT, BORDER_OFFSET, HOUSE_RADIUS, HOUSE_CIRCLES, HOUSE_COLORS } = SHEET_CONSTANTS;
+
+  const scale = width / SHEET_WIDTH;
+  ctx.save();
+  ctx.scale(scale, scale);
+
+  // Clear canvas
+  ctx.clearRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT);
+
+  // Draw ice
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT);
+
+  // Draw sheet border
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(
+    BORDER_OFFSET,
+    BORDER_OFFSET,
+    SHEET_WIDTH - BORDER_OFFSET * 2,
+    SHEET_HEIGHT - BORDER_OFFSET * 2
+  );
+
+  // Draw house
+  HOUSE_CIRCLES.forEach((radius, index) => {
+    ctx.beginPath();
+    ctx.arc(SHEET_WIDTH / 2, HOUSE_RADIUS, radius, 0, Math.PI * 2);
+    ctx.fillStyle = HOUSE_COLORS[index];
+    ctx.fill();
+  });
+
+  // Draw center line
+  ctx.beginPath();
+  ctx.moveTo(0, HOUSE_RADIUS);
+  ctx.lineTo(SHEET_WIDTH, HOUSE_RADIUS);
+  ctx.moveTo(SHEET_WIDTH / 2, 0);
+  ctx.lineTo(SHEET_WIDTH / 2, SHEET_HEIGHT);
+  ctx.stroke();
+
+  ctx.restore();
 }

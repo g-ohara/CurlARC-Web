@@ -1,6 +1,6 @@
-import { extractTeamsScoreData } from '../../../../../utils/func/score'
+import { extractTeamsScoreData } from '../../../../utils/func/score'
 import ScoreBoard from './scoreBoard'
-import { RecordDetail } from '../../../../../types/model'
+import { RecordDetail } from '../../../../types/model'
 import React from 'react'
 
 type Props = {

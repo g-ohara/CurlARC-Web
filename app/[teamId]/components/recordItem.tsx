@@ -14,7 +14,7 @@ function RecordItem({ recordId, result, teamId, enemyTeamName, date }: RecordIte
   const isWin = result === 'WIN'
   return (
     <Link
-      href={`/view/${teamId}/${recordId}`}
+      href={`${teamId}/${recordId}`}
       className="flex items-center justify-between rounded-lg bg-muted/10 p-4 hover:bg-muted/20"
     >
       <div className="flex items-center gap-4">

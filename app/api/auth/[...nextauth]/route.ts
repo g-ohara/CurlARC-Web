@@ -12,7 +12,7 @@ const handler = NextAuth({
     }),
   ],
   session: {
-    strategy: "jwt",
+    // strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 1 day
   },
@@ -50,7 +50,7 @@ const handler = NextAuth({
         if (resJSON.data.access_token) {
           session.backendAccessToken = resJSON.data.access_token;
           cookies().set("backend_access_token", resJSON.data.access_token, {
-            maxAge: 30 * 24 * 60 * 60, // 30 days
+            maxAge: 90 * 24 * 60 * 60, // 30 days
           });
         }
       }

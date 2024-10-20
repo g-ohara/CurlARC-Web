@@ -11,6 +11,5 @@ export const SHEET_CONSTANTS = {
   STONE_RADIUS: 14.55,
   HOUSE_CIRCLES: [182.9, 121.9, 61.0, 15.2],
   BORDER_OFFSET: 0.5,
+  HOUSE_COLORS: ["blue", "white", "red", "white"],
 } as const;
-
-export const HOUSE_COLORS = ["blue", "white", "red", "white"] as const;

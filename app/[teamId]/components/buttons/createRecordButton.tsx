@@ -16,10 +16,10 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { DatePicker } from "./datePicker";
 import { Switch } from '@/components/ui/switch';
 
 import { Plus } from 'lucide-react'
+import { DatePicker } from "../datePicker";
 
 type Props = {
   teamId: string
@@ -57,7 +57,7 @@ export const CreateRecordButton = ({ teamId }: Props) => {
       setPlace('')
       setDate(undefined)
       setSuccess('Record created successfully!')
-      router.push(`/view/${teamId}/${res.record.id}`)
+      router.push(`${teamId}/${res.record.id}`)
     } catch (error) {
       setError('Failed to create record. Please try again.')
     } finally {

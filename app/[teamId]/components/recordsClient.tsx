@@ -5,9 +5,7 @@ import TeamDropdownMenu from './teamDropdownMenu'
 import RecordItem from './recordItem'
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { RecordIndex } from '@/types/model'
-import { Button } from '@/components/ui/button'
-import { CreateRecordButton } from './createRecordButton'
-import { DatePicker } from './datePicker'
+import { CreateRecordButton } from './buttons/createRecordButton'
 
 type Props = {
   teams: {

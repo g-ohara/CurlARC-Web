@@ -26,7 +26,7 @@ export const DeleteRecordButton = ({ recordId, className }: Props) => {
   const deleteRecord = async (recordId: string) => {
     await apiClient.destroy<any>(`/auth/records/${recordId}`)
     setOpen(false)
-    router.push('/view')
+    router.back()
   }
 
   return (

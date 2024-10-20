@@ -5,11 +5,11 @@ import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
-import RecordItem from '@/app/view/components/recordItem'
-import { CreateRecordButton } from '@/app/view/components/createRecordButton'
 
 
 import { getRecordsByTeamId } from '@/lib/api/record'
+import { CreateRecordButton } from './buttons/createRecordButton'
+import RecordItem from './recordItem'
 
 type TeamCardProps = {
   teamId: string

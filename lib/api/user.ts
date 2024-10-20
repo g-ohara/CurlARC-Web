@@ -1,4 +1,6 @@
 import { auth } from '@/firebaseConfig'
+import { registerUserRequest, signInRequest } from '@/types/request'
+import { getUserResponse, signInResponse } from '@/types/response'
 import { apiClient } from '@/utils/api/api'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { cache } from 'react'

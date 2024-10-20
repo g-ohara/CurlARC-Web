@@ -36,9 +36,9 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   };
 
   const handleStonePositionChange = (
-    endIndex: number, 
-    shotIndex: number, 
-    isFriendStone: boolean, 
+    endIndex: number,
+    shotIndex: number,
+    isFriendStone: boolean,
     newPosition: Coordinate
   ) => {
     setEditedRecord(prevRecord => {
@@ -51,6 +51,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
       let newStones;
 
+      // Add or move a stone.
       if (stoneExists) { // 既に存在する石の場合
         newStones = oldStones.map((stone) => {
           if (stone.index === newPosition.index) {
@@ -65,22 +66,31 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
         newStones = [...oldStones, newPosition];
       }
 
+      // Update stones in current shot
       targetShot.stones[stoneKey] = newStones;
+
+      // Update stones in next shot
+      const nextShotIndex = shotIndex + 1;
+      if (nextShotIndex < newEndsData[endIndex].shots.length) {
+        const nextShot = newEndsData[endIndex].shots[nextShotIndex];
+        nextShot.stones[stoneKey] = newStones;
+      }
+
       return { ...prevRecord, ends_data: newEndsData };
     });
   };
 
   const handleShotsDetailsChange = (
-    endIndex: number, 
-    shotIndex: number, 
-    field: string, 
+    endIndex: number,
+    shotIndex: number,
+    field: string,
     value: string | number
   ) => {
     setEditedRecord(prevRecord => {
       const newRecord = { ...prevRecord }
       const newEndsData = [...newRecord.ends_data]
       const newShots = [...newEndsData[endIndex].shots]
-      
+
       newShots[shotIndex] = {
         ...newShots[shotIndex],
         [field]: value
@@ -100,7 +110,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   const handleSave = () => {
     // TODO: Implement API call to save changes
     console.log('Saving changes:', editedRecord);
-    const req : updateRecordRequest = {
+    const req: updateRecordRequest = {
       result: editedRecord.result,
       enemy_team_name: editedRecord.enemy_team_name,
       place: editedRecord.place,
@@ -123,11 +133,11 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
         <div className="lg:col-span-3 space-y-8">
           <ScoreBoardSection
-          record={editedRecord}
-          friendTeamName={teamRes.team.name}
-          onEndSelect={onEndSelect}
-          selectedEndIndex={selectedEndIndex}
-          isEditMode={isEditMode}
+            record={editedRecord}
+            friendTeamName={teamRes.team.name}
+            onEndSelect={onEndSelect}
+            selectedEndIndex={selectedEndIndex}
+            isEditMode={isEditMode}
           />
           <MatchDetailsSection
             record={editedRecord}
@@ -140,12 +150,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
         </div>
         <div className='lg:col-span-2 h-full'>
           <StonePositionsSection
-          record={editedRecord}
-          selectedEndIndex={selectedEndIndex}
-          selectedShotIndex={selectedShotIndex}
-          onShotSelect={onShotSelect}
-          isEditMode={isEditMode}
-          onStonePositionChange={handleStonePositionChange}
+            record={editedRecord}
+            selectedEndIndex={selectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            onShotSelect={onShotSelect}
+            isEditMode={isEditMode}
+            onStonePositionChange={handleStonePositionChange}
           />
         </div>
       </div>

@@ -1,26 +1,27 @@
-import { Button } from '@/components/ui/button'
+import { Check } from "lucide-react"
 import { acceptInvitation } from '@/lib/api/team'
-import { revalidateByTag } from '../../serverActions'
+import { revalidateByTag } from '../[teamId]/serverActions'
 
 type AcceptInvitationButtonProps = {
   teamId: string
-  onAccept: () => void
 }
 
-export default function AcceptInvitationButton({ teamId, onAccept }: AcceptInvitationButtonProps) {
+export default function AcceptInvitationButton({ teamId }: AcceptInvitationButtonProps) {
   const handleAcceptInvitation = async () => {
     try {
       await acceptInvitation(teamId)
       revalidateByTag('getTeamsByUserId')
       revalidateByTag('getInvitedTeams')
-      onAccept()
     } catch (error) {
       console.error('Error accepting invitation:', error)
     }
   }
   return (
-    <Button variant="default" size="default" onClick={handleAcceptInvitation}>
-      Accept
-    </Button>
+    <div className="hover:bg-green-100">
+      <Check
+        onClick={handleAcceptInvitation}
+        className="h-6 w-6 text-green-500 cursor-pointer"
+      />
+    </div>
   )
 }

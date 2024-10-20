@@ -23,7 +23,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   const [editedRecord, setEditedRecord] = useState<RecordDetail>(recordRes.record);
 
   // If the record has no shots, create a new one.
-  if (!editedRecord.ends_data) {
+  if (!editedRecord.ends_data || editedRecord.ends_data.length === 0) {
     const record = editedRecord;
     const new_end = {
       score: 0,

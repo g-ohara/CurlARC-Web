@@ -22,6 +22,27 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   const [selectedShotIndex, setSelectedShotIndex] = useState(0);
   const [editedRecord, setEditedRecord] = useState<RecordDetail>(recordRes.record);
 
+  // If the record has no shots, create a new one.
+  if (!editedRecord.ends_data) {
+    const record = editedRecord;
+    const new_end = {
+      score: 0,
+      shots: [
+        {
+          type: '',
+          success_rate: 0,
+          shooter: '',
+          stones: {
+            friend_stones: [],
+            enemy_stones: [],
+          },
+        },
+      ],
+    }
+    record.ends_data = [new_end];
+    setEditedRecord(record);
+  }
+
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
   };

@@ -39,10 +39,17 @@ const formatSuccessRate = (rate: number): string => {
 }
 
 const shotTypes = ['Draw', 'Guard', 'Takeout', 'Freeze']
-const successRates = Array.from({length: 11}, (_, i) => i * 10)
+const successRates = Array.from({ length: 11 }, (_, i) => i * 10)
 
 export default function MatchDetailsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, isEditMode, onShotsDetailsChange }: Props) {
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? []
+
+  // Get only already recorded shots.
+  let validShotsData = []
+  for (let shot of selectedShotsData) {
+    validShotsData.push(shot)
+    if (!shot.shooter) { break }
+  }
 
   const handleChange = (shotIndex: number, field: string, value: string | number) => {
     onShotsDetailsChange(selectedEndIndex, shotIndex, field, value)
@@ -62,8 +69,8 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
             </TableRow>
           </TableHeader>
           <TableBody>
-            {selectedShotsData.map((shot, index) => (
-              <TableRow key={index} data-state={selectedShotIndex===index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
+            {validShotsData.map((shot, index) => (
+              <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
                   {isEditMode ? (

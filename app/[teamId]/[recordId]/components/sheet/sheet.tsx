@@ -10,6 +10,7 @@ import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
 import { Button } from "@/components/ui/button";
+import NextShotButton from "./buttons/nextShotButton";
 
 const INITIAL_STONE_POSITION = {
   r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
@@ -71,9 +72,11 @@ export function Sheet({
   className,
   interactive = false,
   onStonePositionChange,
+  record,
+  setRecord,
   selectedEndIndex,
   selectedShotIndex,
-  createNextShot,
+  setSelectedShotIndex,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -168,12 +171,13 @@ export function Sheet({
               >
                 Add Enemy Stone
               </Button>
-              <Button
-                onClick={createNextShot}
-                disabled={selectedShotIndex >= 16}
-              >
-                Next Shot
-              </Button>
+              <NextShotButton
+                record={record}
+                setRecord={setRecord}
+                selectedEndIndex={selectedEndIndex}
+                selectedShotIndex={selectedShotIndex}
+                setSelectedShotIndex={setSelectedShotIndex}
+              />
             </div>
             <div className="mb-2">
               <span className="mr-4">Friend Stones: {friendStones?.length}/8</span>

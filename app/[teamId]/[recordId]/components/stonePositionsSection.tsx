@@ -4,15 +4,23 @@ import { Sheet } from './sheet/sheet';
 
 type Props = {
   record: RecordDetail;
+  setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;
   selectedShotIndex: number;
-  onShotSelect: (shot: number) => void;
+  setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
   onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newPosition: Coordinate) => void;
   isEditMode: boolean;
-  createNextShot: () => void;
 };
 
-export default function StonePositionsSection({ record, selectedEndIndex, selectedShotIndex, onStonePositionChange, isEditMode, createNextShot }: Props) {
+export default function StonePositionsSection({
+  record,
+  setRecord,
+  selectedEndIndex,
+  selectedShotIndex,
+  setSelectedShotIndex,
+  onStonePositionChange,
+  isEditMode,
+}: Props) {
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? [];
   const selectedShotData = selectedShotsData[selectedShotIndex];
 
@@ -26,10 +34,12 @@ export default function StonePositionsSection({ record, selectedEndIndex, select
           enemyStones={selectedShotData?.stones.enemy_stones ?? []}
           friendIsRed={true}
           interactive={isEditMode}
+          record={record}
+          setRecord={setRecord}
           selectedEndIndex={selectedEndIndex}
           selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
           onStonePositionChange={onStonePositionChange}
-          createNextShot={createNextShot}
         />
       </div>
     </section>

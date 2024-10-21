@@ -6,7 +6,7 @@ import ScoreBoardSection from './components/scoreBoardSection';
 import MatchDetailsSection from './components/matchDetailsSection';
 import StonePositionsSection from './components/stonePositionsSection';
 import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/types/response';
-import { Coordinate, RecordDetail } from '@/types/model';
+import { Coordinate, RecordDetail, Shot } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
 
@@ -90,13 +90,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       // Update stones in current shot
       targetShot.stones[stoneKey] = newStones;
 
-      // Update stones in next shot
-      const nextShotIndex = shotIndex + 1;
-      if (nextShotIndex < newEndsData[endIndex].shots.length) {
-        const nextShot = newEndsData[endIndex].shots[nextShotIndex];
-        nextShot.stones[stoneKey] = newStones;
-      }
-
       return { ...prevRecord, ends_data: newEndsData };
     });
   };
@@ -148,6 +141,44 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setIsEditMode(false);
   };
 
+  // Called when "Next Shot" button is clicked
+  const createNextShot = () => {
+    setEditedRecord(prevRecord => {
+      const prevShots = prevRecord.ends_data?.[selectedEndIndex]?.shots ?? [];
+      if (prevShots.length < 16) {
+        // A new shot has the same stone positions as the previous shot.
+        const newShot: Shot = {
+          type: '',
+          success_rate: 0,
+          shooter: '',
+          stones: prevShots[prevShots.length - 1].stones,
+        }
+        const newShots = [...prevShots, newShot];
+        const newDataPerEnd = {
+          score: prevRecord.ends_data[selectedEndIndex].score,
+          shots: newShots
+        };
+        const newEndsData = [
+          ...prevRecord.ends_data.slice(0, selectedEndIndex), newDataPerEnd
+        ];
+        const newRecord = {
+          id: prevRecord.id,
+          team_id: prevRecord.team_id,
+          result: prevRecord.result,
+          enemy_team_name: prevRecord.enemy_team_name,
+          place: prevRecord.place,
+          date: prevRecord.date,
+          ends_data: newEndsData,
+          is_public: prevRecord.is_public,
+        };
+        return newRecord;
+      }
+      else {
+        return prevRecord;
+      }
+    })
+  };
+
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
       <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleCancel={handleCancel} handleSave={handleSave} />
@@ -177,6 +208,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             onShotSelect={onShotSelect}
             isEditMode={isEditMode}
             onStonePositionChange={handleStonePositionChange}
+            createNextShot={createNextShot}
           />
         </div>
       </div>

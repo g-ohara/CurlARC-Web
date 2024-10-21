@@ -73,6 +73,7 @@ export function Sheet({
   onStonePositionChange,
   selectedEndIndex,
   selectedShotIndex,
+  createNextShot,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -166,6 +167,12 @@ export function Sheet({
                 disabled={enemyStones?.length >= 8}
               >
                 Add Enemy Stone
+              </Button>
+              <Button
+                onClick={createNextShot}
+                disabled={selectedShotIndex >= 16}
+              >
+                Next Shot
               </Button>
             </div>
             <div className="mb-2">

@@ -32,4 +32,5 @@ export interface SheetProps {
   onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newPosition: Coordinate) => void;
   selectedEndIndex: number;
   selectedShotIndex: number;
+  createNextShot: () => void;
 }

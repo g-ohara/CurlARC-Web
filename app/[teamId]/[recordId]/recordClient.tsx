@@ -35,6 +35,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setSelectedShotIndex(shotIndex);
   };
 
+  const handleIsFirstChange = (isFirst: boolean) => {
+    setEditedRecord(prevRecord => {
+      return { ...prevRecord, is_first: isFirst };
+    });
+  }
+
   const handleStonePositionChange = (
     endIndex: number, 
     shotIndex: number, 
@@ -42,7 +48,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     newPosition: Coordinate
   ) => {
     setEditedRecord(prevRecord => {
-      console.log("newPosition", newPosition);
       const newEndsData = [...prevRecord.ends_data];
       const targetShot = newEndsData[endIndex].shots[shotIndex];
       const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
@@ -61,7 +66,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
         }
         );
       } else {
-        console.log("added:")
         newStones = [...oldStones, newPosition];
       }
 
@@ -98,15 +102,14 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   }
 
   const handleSave = () => {
-    // TODO: Implement API call to save changes
-    console.log('Saving changes:', editedRecord);
     const req : updateRecordRequest = {
       result: editedRecord.result,
       enemy_team_name: editedRecord.enemy_team_name,
       place: editedRecord.place,
       date: editedRecord.date,
       ends_data: editedRecord.ends_data,
-      isPublic: editedRecord.is_public
+      is_first: editedRecord.is_first,
+      is_public: editedRecord.is_public
     }
     updateRecord(recordId, req);
     setIsEditMode(false);
@@ -127,6 +130,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           friendTeamName={teamRes.team.name}
           onEndSelect={onEndSelect}
           selectedEndIndex={selectedEndIndex}
+          handleIsFirstChange={handleIsFirstChange}
           isEditMode={isEditMode}
           />
           <MatchDetailsSection

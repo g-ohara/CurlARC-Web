@@ -65,9 +65,6 @@ function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
 }
 
 export function Sheet({
-  friendStones = [],
-  enemyStones = [],
-  friendIsRed,
   className,
   interactive = false,
   record,
@@ -84,6 +81,14 @@ export function Sheet({
   });
 
   const scale = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
+
+  const selectedEnd = record.ends_data[selectedEndIndex];
+  const selectedShot = selectedEnd.shots[selectedShotIndex];
+  const friendStones = selectedShot.stones.friend_stones;
+  const enemyStones = selectedShot.stones.enemy_stones;
+
+  // TODO: Get whether friend color from record
+  const friendIsRed = true;
 
   const onStonePositionChange = (
     endIndex: number,

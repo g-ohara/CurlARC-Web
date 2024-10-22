@@ -26,9 +26,6 @@ export interface HousePosition {
 }
 
 export interface SheetProps {
-  friendStones?: Coordinate[];
-  enemyStones?: Coordinate[];
-  friendIsRed: boolean;
   className?: string;
   interactive?: boolean;
   record: RecordDetail;

@@ -31,7 +31,6 @@ export interface SheetProps {
   friendIsRed: boolean;
   className?: string;
   interactive?: boolean;
-  onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newPosition: Coordinate) => void;
   record: RecordDetail;
   setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;

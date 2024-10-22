@@ -71,7 +71,6 @@ export function Sheet({
   friendIsRed,
   className,
   interactive = false,
-  onStonePositionChange,
   record,
   setRecord,
   selectedEndIndex,
@@ -86,6 +85,42 @@ export function Sheet({
   });
 
   const scale = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
+
+  const onStonePositionChange = (
+    endIndex: number,
+    shotIndex: number,
+    isFriendStone: boolean,
+    newPosition: Coordinate
+  ) => {
+    setRecord(prevRecord => {
+      const newEndsData = [...prevRecord.ends_data];
+      const targetShot = newEndsData[endIndex].shots[shotIndex];
+      const stoneKey = isFriendStone ? 'friend_stones' : 'enemy_stones';
+      const oldStones = [...targetShot.stones[stoneKey]];
+      const stoneExists = oldStones.some(stone => stone.index === newPosition.index);
+
+      let newStones;
+
+      // Add or move a stone.
+      if (stoneExists) { // 既に存在する石の場合
+        newStones = oldStones.map((stone) => {
+          if (stone.index === newPosition.index) {
+            return newPosition;
+          } else {
+            return stone;
+          }
+        }
+        );
+      } else {
+        newStones = [...oldStones, newPosition];
+      }
+
+      // Update stones in current shot
+      targetShot.stones[stoneKey] = newStones;
+
+      return { ...prevRecord, ends_data: newEndsData };
+    });
+  };
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     if (!interactive || !onStonePositionChange) return;

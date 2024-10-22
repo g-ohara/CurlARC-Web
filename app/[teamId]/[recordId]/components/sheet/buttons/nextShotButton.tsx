@@ -22,13 +22,19 @@ export default function NextShotButton({
 }: Props) {
 
   // Add a new stone at the initial position.
-  const addStone = (isFriendStone: boolean) => {
+  const addStone = () => {
 
     const selectedEnd = record.ends_data[selectedEndIndex];
     const selectedShot = selectedEnd.shots[selectedShotIndex];
     const friendStones = selectedShot.stones.friend_stones;
     const enemyStones = selectedShot.stones.enemy_stones;
-    const stones = isFriendStone ? friendStones : enemyStones;
+
+    // TODO: Implement logic to get which team is first in current end.
+    const isFirstInThisEnd = true;
+    const isFirstTurn = selectedShotIndex % 2 === 1;
+    const isFriendTurn = isFirstInThisEnd ? isFirstTurn : !isFirstTurn;
+
+    const stones = isFriendTurn ? friendStones : enemyStones;
     const INITIAL_STONE_POSITION = {
       r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
       theta: -Math.PI / 2,
@@ -40,7 +46,7 @@ export default function NextShotButton({
     onStonePositionChange(
       selectedEndIndex,
       selectedShotIndex + 1,
-      isFriendStone,
+      isFriendTurn,
       newStone,
     );
   };
@@ -88,7 +94,7 @@ export default function NextShotButton({
       })
       setSelectedShotIndex(selectedShotIndex + 1);
 
-      addStone(true);
+      addStone();
     }
     setSelectedShotIndex(selectedShotIndex + 1);
   };

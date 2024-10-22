@@ -18,8 +18,6 @@ type Props = {
 
 export default function EditableRecordClient({ recordRes, teamRes, recordId }: Props) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedEndIndex, setSelectedEndIndex] = useState(0);
-  const [selectedShotIndex, setSelectedShotIndex] = useState(0);
   const [editedRecord, setEditedRecord] = useState<RecordDetail>(recordRes.record);
 
   // If the record has no shots, create a new one.
@@ -42,6 +40,13 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     record.ends_data = [new_end];
     setEditedRecord(record);
   }
+
+  // Select the latest end and shot
+  const latestEndIndex = editedRecord.ends_data.length - 1;
+  const latestEnd = editedRecord.ends_data[latestEndIndex];
+  const latestShotIndex = latestEnd.shots.length - 1;
+  const [selectedEndIndex, setSelectedEndIndex] = useState(latestEndIndex);
+  const [selectedShotIndex, setSelectedShotIndex] = useState(latestShotIndex);
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);

@@ -1,21 +1,8 @@
 'use client'
 
+import { Hammer } from 'lucide-react'
 import React, { FC, useState, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
-
-interface CustomColors {
-  headerBg?: string
-  selectedBorder?: string
-  hoverBg?: string
-}
-
-interface ScoreBoardProps {
-  friendScore: ScoreData
-  enemyScore: ScoreData
-  onEndSelect: (endIndex: number) => void
-  selectedEndIndex: number
-  customColors?: CustomColors
-}
 
 interface ScoreCellProps {
   score: number | string
@@ -46,24 +33,29 @@ const TeamNameCell: FC<{ teamName: string; color: string }> = ({ teamName, color
   </td>
 )
 
-const FirstStoneCell: FC<{ isFirstStone: boolean }> = ({ isFirstStone }) => (
-  <td className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
-    {isFirstStone ? '●' : ''}
+const FirstStoneCell: FC<{ isFirst: boolean, isFriend: boolean, isEditMode: boolean, onIsFirstChange: (isFirst: boolean) => void }> = ({ isFirst, isFriend, isEditMode, onIsFirstChange }) => (
+  <td
+    className={`border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base ${isEditMode ? 'cursor-pointer' : ''}`}
+    onClick={() => isEditMode && onIsFirstChange(isFriend)}
+  >
+    {isFirst ? <Hammer /> : ''}
   </td>
 )
 
 interface ScoreRowProps extends ScoreData {
   selectedRoundIndex: number
+  isFriend: boolean
+  isFirst: boolean
+  isEditMode: boolean
   onEndSelect: (round: number) => void
+  onIsFirstChange: (isFirst: boolean) => void
 }
 
-const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRoundIndex, onEndSelect }) => {
-  const isFirstStone = true
-
+const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRoundIndex, isFirst, onEndSelect, onIsFirstChange, isFriend, isEditMode }) => {
   return (
     <tr>
       <TeamNameCell teamName={teamName} color={color} />
-      <FirstStoneCell isFirstStone={isFirstStone} />
+      <FirstStoneCell isFirst={isFirst} onIsFirstChange={onIsFirstChange} isFriend={isFriend} isEditMode={isEditMode} />
       {scores.map((score, index) => (
         <ScoreCell
           key={`${teamName}-${index}`}
@@ -78,25 +70,36 @@ const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedR
   )
 }
 
+interface ScoreBoardProps {
+  friendScore: ScoreData
+  enemyScore: ScoreData
+  selectedEndIndex: number
+  isFirst: boolean
+  isEditMode: boolean
+  handleIsFirstChange: (isFirst: boolean) => void
+  onEndSelect: (endIndex: number) => void
+}
+
 const ScoreBoard: FC<ScoreBoardProps> = ({
   friendScore,
   enemyScore,
-  onEndSelect,
   selectedEndIndex,
-  customColors = {}
+  isFirst,
+  isEditMode,
+  handleIsFirstChange,
+  onEndSelect,
 }) => {
   const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)
   const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
-  const isMobile = useMediaQuery({ maxWidth: 640 })
 
-  const colors = useMemo(() => ({
-    headerBg: customColors.headerBg || 'bg-gray-100',
-    selectedBorder: customColors.selectedBorder || 'bg-yellow-300',
-    hoverBg: customColors.hoverBg || 'hover:bg-gray-200'
-  }), [customColors])
+  const colors = {
+    headerBg: 'bg-gray-100',
+    selectedBorder: 'bg-yellow-300',
+    hoverBg: 'hover:bg-gray-200'
+  }
 
   return (
-    <div className="overflow-x-auto shadow-lg rounded-lg">
+    <div className="overflow-x-auto ">
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className={colors.headerBg}>
@@ -104,7 +107,6 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
               <div className="max-w-[100px] md:max-w-[150px] overflow-hidden">TEAM</div>
             </th>
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
-              1st
             </th>
             {headers.map((header, index) => (
               <th
@@ -116,7 +118,6 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
                 role="button"
               >
                 {header === 11 ? 'Ex' : header}
-                {/* {isMobile ? header : `${header}`} */}
               </th>
             ))}
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">TOTAL</th>
@@ -127,13 +128,21 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             key={`team-${friendScore.teamName}`}
             {...friendScore}
             selectedRoundIndex={selectedEndIndex}
+            isFirst={isFirst}
+            isFriend={true}
+            isEditMode={isEditMode}
             onEndSelect={onEndSelect}
+            onIsFirstChange={handleIsFirstChange}
           />
           <ScoreRow
             key={`team-${enemyScore.teamName}`}
             {...enemyScore}
             selectedRoundIndex={selectedEndIndex}
+            isFriend={false}
+            isFirst={!isFirst}
+            isEditMode={isEditMode}
             onEndSelect={onEndSelect}
+            onIsFirstChange={handleIsFirstChange}
           />
         </tbody>
       </table>

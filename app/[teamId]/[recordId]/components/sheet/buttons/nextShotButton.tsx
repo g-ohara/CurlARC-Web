@@ -54,7 +54,7 @@ export default function NextShotButton({
           type: '',
           success_rate: 0,
           shooter: '',
-          stones: prevShots[prevShots.length - 1].stones,
+          stones: { ...prevShots[prevShots.length - 1].stones }
         }
         return appendNewShot(prevRecord, newShot);
       })

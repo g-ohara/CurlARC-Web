@@ -9,6 +9,7 @@ import { getRecordDetailsByRecordIdResponse, getTeamDetailsResponse } from '@/ty
 import { RecordDetail } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
+import { SHEET_CONSTANTS } from './components/sheet/constants';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;
@@ -23,6 +24,10 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   // If the record has no shots, create a new one.
   if (!editedRecord.ends_data || editedRecord.ends_data.length === 0) {
     const record = editedRecord;
+    const newStone = {
+      index: 0,
+      ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
+    };
     const new_end = {
       score: 0,
       shots: [
@@ -31,8 +36,8 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           success_rate: 0,
           shooter: '',
           stones: {
-            friend_stones: [],
-            enemy_stones: [],
+            friend_stones: record.is_first ? [newStone] : [],
+            enemy_stones: record.is_first ? [] : [newStone],
           },
         },
       ],

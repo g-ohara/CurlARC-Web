@@ -23,11 +23,10 @@ interface StoneProps {
   r: number;
   theta: number;
   isRed: boolean;
-  isFriend: boolean;
   scale: number;
 }
 
-function DraggableStone({ id, index, r, theta, isRed, isFriend, scale }: StoneProps) {
+function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
   });
@@ -238,7 +237,6 @@ export function Sheet({
               r={stone.r}
               theta={stone.theta}
               isRed={friendIsRed}
-              isFriend={true}
               scale={scale}
             />
           ))}
@@ -250,7 +248,6 @@ export function Sheet({
               r={stone.r}
               theta={stone.theta}
               isRed={!friendIsRed}
-              isFriend={false}
               scale={scale}
             />
           ))}

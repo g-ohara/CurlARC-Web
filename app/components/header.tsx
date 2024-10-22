@@ -1,10 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { BellIcon, ConeIcon, SearchIcon } from '@/components/icons';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import AuthDropdownMenu from './authDropdownmenu';
@@ -15,8 +11,6 @@ type Props = {
 
 export default function Header({ className }: Props) {
   const { data: session } = useSession();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -38,8 +32,7 @@ export default function Header({ className }: Props) {
       <header className={`${className}`}>
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <ConeIcon className="h-8 w-8" />
-            <span className="text-xl font-bold">CurlARC</span>
+            <img src="/assets/full-logo.svg" alt="CurlARC" className="h-10" />
           </Link>
         </div>
         <div className="flex items-center gap-4">

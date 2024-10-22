@@ -26,7 +26,7 @@ export default function Component() {
           transition={{ duration: 0.5 }}
           style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}
         >
-          CurlARC
+          <img src="/assets/full-logo.svg" alt="CurlARC" className="w-60 inline" />
         </motion.h1>
         <motion.p 
           className="text-2xl text-center mb-12 text-blue-800 font-mincho italic"

@@ -11,11 +11,6 @@ import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
 import NextShotButton from "./buttons/nextShotButton";
 
-const INITIAL_STONE_POSITION = {
-  r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
-  theta: -Math.PI / 2,
-};
-
 interface StoneProps {
   id: string;
   index: number;
@@ -157,20 +152,6 @@ export function Sheet({
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, scale, friendStones, enemyStones]);
 
-
-  const addStone = useCallback((isFriendStone: boolean) => {
-    if (!interactive || !onStonePositionChange) return;
-
-    const stones = isFriendStone ? friendStones : enemyStones;
-    if (stones.length >= 8) return;
-
-    const newStone: Coordinate = {
-      index: stones.length,
-      ...INITIAL_STONE_POSITION,
-    };
-    onStonePositionChange(selectedEndIndex, selectedShotIndex + 1, isFriendStone, newStone);
-  }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, friendStones, enemyStones]);
-
   useEffect(() => {
     setDimensions(calculateDimensions(parentSize));
   }, [parentSize]);
@@ -203,7 +184,7 @@ export function Sheet({
                 selectedEndIndex={selectedEndIndex}
                 selectedShotIndex={selectedShotIndex}
                 setSelectedShotIndex={setSelectedShotIndex}
-                addStone={addStone}
+                onStonePositionChange={onStonePositionChange}
               />
             </div>
             <div className="mb-2">

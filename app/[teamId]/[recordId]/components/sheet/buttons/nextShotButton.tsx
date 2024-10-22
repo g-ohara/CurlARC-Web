@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { RecordDetail, Shot } from '@/types/model';
+import { Coordinate } from "../types";
+import { SHEET_CONSTANTS } from "../constants";
 
 type Props = {
   record: RecordDetail;
@@ -7,7 +9,7 @@ type Props = {
   selectedEndIndex: number;
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
-  addStone: (isFriendStone: boolean) => void
+  onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newStone: Coordinate) => void
 };
 
 export default function NextShotButton({
@@ -16,8 +18,32 @@ export default function NextShotButton({
   selectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
-  addStone,
+  onStonePositionChange,
 }: Props) {
+
+  // Add a new stone at the initial position.
+  const addStone = (isFriendStone: boolean) => {
+
+    const selectedEnd = record.ends_data[selectedEndIndex];
+    const selectedShot = selectedEnd.shots[selectedShotIndex];
+    const friendStones = selectedShot.stones.friend_stones;
+    const enemyStones = selectedShot.stones.enemy_stones;
+    const stones = isFriendStone ? friendStones : enemyStones;
+    const INITIAL_STONE_POSITION = {
+      r: SHEET_CONSTANTS.HOUSE_RADIUS * 1.5,
+      theta: -Math.PI / 2,
+    };
+    const newStone: Coordinate = {
+      index: stones.length,
+      ...INITIAL_STONE_POSITION,
+    };
+    onStonePositionChange(
+      selectedEndIndex,
+      selectedShotIndex + 1,
+      isFriendStone,
+      newStone,
+    );
+  };
 
   // Append a new shot to the record
   const appendNewShot = (record: RecordDetail, newShot: Shot): RecordDetail => {
@@ -61,6 +87,7 @@ export default function NextShotButton({
         return appendNewShot(prevRecord, newShot);
       })
       setSelectedShotIndex(selectedShotIndex + 1);
+
       addStone(true);
     }
     setSelectedShotIndex(selectedShotIndex + 1);

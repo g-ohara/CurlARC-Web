@@ -7,6 +7,7 @@ type Props = {
   selectedEndIndex: number;
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
+  addStone: (isFriendStone: boolean) => void
 };
 
 export default function NextShotButton({
@@ -15,6 +16,7 @@ export default function NextShotButton({
   selectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
+  addStone,
 }: Props) {
 
   // Append a new shot to the record
@@ -58,6 +60,8 @@ export default function NextShotButton({
         }
         return appendNewShot(prevRecord, newShot);
       })
+      setSelectedShotIndex(selectedShotIndex + 1);
+      addStone(true);
     }
     setSelectedShotIndex(selectedShotIndex + 1);
   };

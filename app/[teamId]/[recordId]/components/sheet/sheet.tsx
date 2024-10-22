@@ -9,7 +9,6 @@ import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
-import { Button } from "@/components/ui/button";
 import NextShotButton from "./buttons/nextShotButton";
 
 const INITIAL_STONE_POSITION = {
@@ -169,7 +168,7 @@ export function Sheet({
       index: stones.length,
       ...INITIAL_STONE_POSITION,
     };
-    onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, newStone);
+    onStonePositionChange(selectedEndIndex, selectedShotIndex + 1, isFriendStone, newStone);
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, friendStones, enemyStones]);
 
   useEffect(() => {
@@ -198,24 +197,13 @@ export function Sheet({
         {interactive && (
           <>
             <div className="flex gap-2 mb-2">
-              <Button
-                onClick={() => addStone(true)}
-                disabled={friendStones?.length >= 8}
-              >
-                Add Friend Stone
-              </Button>
-              <Button
-                onClick={() => addStone(false)}
-                disabled={enemyStones?.length >= 8}
-              >
-                Add Enemy Stone
-              </Button>
               <NextShotButton
                 record={record}
                 setRecord={setRecord}
                 selectedEndIndex={selectedEndIndex}
                 selectedShotIndex={selectedShotIndex}
                 setSelectedShotIndex={setSelectedShotIndex}
+                addStone={addStone}
               />
             </div>
             <div className="mb-2">

@@ -24,7 +24,7 @@ export default function NextShotButton({
 }: Props) {
 
   // Add a new stone at the initial position.
-  const addStone = () => {
+  const addStone = (nextEnd: boolean) => {
 
     const selectedEnd = record.ends_data[selectedEndIndex];
     const selectedShot = selectedEnd.shots[selectedShotIndex];
@@ -41,12 +41,23 @@ export default function NextShotButton({
       index: stones.length,
       ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
     };
-    onStonePositionChange(
-      selectedEndIndex,
-      selectedShotIndex + 1,
-      isFriendTurn,
-      newStone,
-    );
+
+    if (nextEnd) {
+      onStonePositionChange(
+        selectedEndIndex + 1,
+        0,
+        isFriendTurn,
+        newStone,
+      );
+    }
+    else {
+      onStonePositionChange(
+        selectedEndIndex,
+        selectedShotIndex + 1,
+        isFriendTurn,
+        newStone,
+      );
+    }
   };
 
   // Append a new shot to the record
@@ -120,6 +131,7 @@ export default function NextShotButton({
           return appendNewShot(prevRecord, newShot);
         })
         setSelectedShotIndex(selectedShotIndex + 1);
+        addStone(false);
       }
       else {
         setRecord(prevRecord => {
@@ -127,10 +139,9 @@ export default function NextShotButton({
         })
         setSelectedShotIndex(0);
         setSelectedEndIndex(selectedEndIndex + 1);
+        addStone(true);
       }
-      addStone();
     }
-    setSelectedShotIndex(selectedShotIndex + 1);
   };
 
   return (

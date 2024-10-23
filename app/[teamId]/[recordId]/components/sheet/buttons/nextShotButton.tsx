@@ -7,6 +7,7 @@ type Props = {
   record: RecordDetail;
   setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;
+  setSelectedEndIndex: React.Dispatch<React.SetStateAction<number>>;
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
   onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newStone: Coordinate) => void
@@ -16,6 +17,7 @@ export default function NextShotButton({
   record,
   setRecord,
   selectedEndIndex,
+  setSelectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
   onStonePositionChange,
@@ -69,6 +71,34 @@ export default function NextShotButton({
     return newRecord;
   };
 
+  const appendNewEnd = (record: RecordDetail): RecordDetail => {
+    const emptyShot: Shot = {
+      type: '',
+      success_rate: 0,
+      shooter: '',
+      stones: {
+        friend_stones: [],
+        enemy_stones: [],
+      },
+    }
+    const newDataPerEnd = {
+      score: 0,
+      shots: [emptyShot],
+    };
+    const newRecord = {
+      id: record.id,
+      team_id: record.team_id,
+      result: record.result,
+      enemy_team_name: record.enemy_team_name,
+      place: record.place,
+      date: record.date,
+      ends_data: [...record.ends_data, newDataPerEnd],
+      is_first: record.is_first,
+      is_public: record.is_public,
+    };
+    return newRecord;
+  };
+
   // Called when "Next Shot" button is clicked.
   // If the latest shot is selected, create a new one then select it.
   // Otherwise, select the next shot without changing the record.
@@ -78,18 +108,26 @@ export default function NextShotButton({
     const latestEnd = record?.ends_data?.[latestEndIndex];
     const latestShotIndex = latestEnd?.shots.length - 1;
     if (selectedEndIndex === latestEndIndex && selectedShotIndex === latestShotIndex) {
-      setRecord(prevRecord => {
-        const prevShots = prevRecord.ends_data?.[selectedEndIndex]?.shots ?? [];
-        const newShot: Shot = {
-          type: '',
-          success_rate: 0,
-          shooter: '',
-          stones: { ...prevShots[prevShots.length - 1].stones }
-        }
-        return appendNewShot(prevRecord, newShot);
-      })
-      setSelectedShotIndex(selectedShotIndex + 1);
-
+      if (selectedShotIndex < 15) {
+        setRecord(prevRecord => {
+          const prevShots = prevRecord.ends_data?.[selectedEndIndex]?.shots ?? [];
+          const newShot: Shot = {
+            type: '',
+            success_rate: 0,
+            shooter: '',
+            stones: { ...prevShots[prevShots.length - 1].stones }
+          }
+          return appendNewShot(prevRecord, newShot);
+        })
+        setSelectedShotIndex(selectedShotIndex + 1);
+      }
+      else {
+        setRecord(prevRecord => {
+          return appendNewEnd(prevRecord);
+        })
+        setSelectedShotIndex(0);
+        setSelectedEndIndex(selectedEndIndex + 1);
+      }
       addStone();
     }
     setSelectedShotIndex(selectedShotIndex + 1);

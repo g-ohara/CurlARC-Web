@@ -145,6 +145,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             record={editedRecord}
             setRecord={setEditedRecord}
             selectedEndIndex={selectedEndIndex}
+            setSelectedEndIndex={setSelectedEndIndex}
             selectedShotIndex={selectedShotIndex}
             setSelectedShotIndex={setSelectedShotIndex}
             isEditMode={isEditMode}

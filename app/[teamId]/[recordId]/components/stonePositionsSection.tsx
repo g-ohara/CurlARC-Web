@@ -6,6 +6,7 @@ type Props = {
   record: RecordDetail;
   setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;
+  setSelectedEndIndex: React.Dispatch<React.SetStateAction<number>>;
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
   isEditMode: boolean;
@@ -15,6 +16,7 @@ export default function StonePositionsSection({
   record,
   setRecord,
   selectedEndIndex,
+  setSelectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
   isEditMode,
@@ -30,6 +32,7 @@ export default function StonePositionsSection({
           record={record}
           setRecord={setRecord}
           selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
           selectedShotIndex={selectedShotIndex}
           setSelectedShotIndex={setSelectedShotIndex}
         />

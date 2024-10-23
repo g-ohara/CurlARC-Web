@@ -64,6 +64,7 @@ export function Sheet({
   record,
   setRecord,
   selectedEndIndex,
+  setSelectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
 }: SheetProps) {
@@ -182,6 +183,7 @@ export function Sheet({
                 record={record}
                 setRecord={setRecord}
                 selectedEndIndex={selectedEndIndex}
+                setSelectedEndIndex={setSelectedEndIndex}
                 selectedShotIndex={selectedShotIndex}
                 setSelectedShotIndex={setSelectedShotIndex}
                 onStonePositionChange={onStonePositionChange}

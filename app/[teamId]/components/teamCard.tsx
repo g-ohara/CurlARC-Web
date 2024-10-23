@@ -15,10 +15,9 @@ type TeamCardProps = {
   teamId: string
   teamName: string
   lastGameDate: string
-  invited: boolean
 }
 
-export async function TeamCard({ teamId, teamName, lastGameDate, invited }: TeamCardProps) {
+export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
   const res = await getRecordsByTeamId(teamId)
   const records = res.record_indices
   return (
@@ -64,7 +63,6 @@ export async function TeamCard({ teamId, teamName, lastGameDate, invited }: Team
         lastGameDate={lastGameDate}
         teamId={teamId}
         teamName={teamName}
-        invited={invited}
       />
     </>
   )

@@ -12,7 +12,6 @@ export default async function TeamPage(props: { params: { teamId: string } }) {
         teamId={props.params.teamId}
         teamName={teamRes.team.name}
         lastGameDate="N/A"
-        invited={false}
       />
     </main>
   )

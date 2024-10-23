@@ -96,8 +96,11 @@ export default function NextShotButton({
   };
 
   return (
-    <Button onClick={nextShot} disabled={selectedShotIndex >= 16}>
-      Next Shot
+    <Button
+      onClick={nextShot}
+      disabled={selectedShotIndex >= 15 && selectedEndIndex >= 7}
+    >
+      {selectedShotIndex < 15 ? "Next Shot" : "Next End"}
     </Button>
   );
 }

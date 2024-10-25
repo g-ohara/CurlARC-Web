@@ -42,6 +42,11 @@ export const getMembersByTeamId = cache(async (teamId: string): Promise<getMembe
   return res
 })
 
+export const getInvitedUsersByTeamId = cache(async (teamId: string): Promise<getMembersResponse> => {
+  const res = await apiClient.get<getMembersResponse>(`/auth/teams/${teamId}/invited`)
+  return res
+})
+
 export const getTeamDetailsByTeamId = cache(async (teamId: string): Promise<getTeamDetailsResponse> => {
   const res = await apiClient.get<getTeamDetailsResponse>(`/auth/teams/${teamId}/details`)
   return res

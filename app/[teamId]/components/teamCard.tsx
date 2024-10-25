@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { TeamHeader } from './teamHeader'
 import { AsyncTeamMembers } from './asyncTeamMembers'
-import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
@@ -28,11 +27,6 @@ export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps
           <div>
             <Suspense fallback={<LoadingPlaceholder />}>
               <AsyncTeamMembers teamId={teamId} />
-            </Suspense>
-          </div>
-          <div className="mt-8">
-            <Suspense fallback={<LoadingPlaceholder />}>
-              <AsyncTeamDetails teamId={teamId} />
             </Suspense>
           </div>
         </div>

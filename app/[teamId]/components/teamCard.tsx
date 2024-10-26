@@ -4,8 +4,6 @@ import { AsyncTeamMembers } from './asyncTeamMembers'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
 
-
-
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { CreateRecordButton } from './buttons/createRecordButton'
 import RecordItem from './recordItem'

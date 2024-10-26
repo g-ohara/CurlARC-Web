@@ -18,7 +18,6 @@ type Props = {
 export default function Navigator({ className }: Props) {
   const pathname = usePathname();
   const currentTeamId = pathname.split('/')[1];
-  console.log('currentTeamId:', currentTeamId);
   const { data: session } = useSession();
 
   const [teams, setTeams] = useState<Team[]>([]);

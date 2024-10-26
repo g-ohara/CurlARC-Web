@@ -48,7 +48,7 @@ export default function Navigator({ className }: Props) {
           <UsersIcon className="h-6 w-6 mr-2 text-blue-500" />
           <span className="font-semibold text-lg">My Teams</span>
         </div>
-        <ul className="ml-4 space-y-2">
+        <ul className="space-y-2">
           {teams?.map((team) => (
             <li key={team.id}>
               <Link
@@ -71,7 +71,7 @@ export default function Navigator({ className }: Props) {
           <UsersIcon className="h-6 w-6 mr-2 text-green-500" />
           <span className="font-semibold text-lg">Invited Teams</span>
         </div>
-        <ul className="ml-4 space-y-2">
+        <ul className="space-y-2">
           {invitedTeams?.map((team) => (
             <li key={team.id}             >
               <div className="flex items-center gap-3 px-3 py-2">

@@ -18,7 +18,7 @@ export default function Component() {
 
   return (
     <div className="min-h-screen text-gray-800 bg-gradient-to-br from-gray-100 to-blue-100">
-      <div className="container mx-auto px-4 py-16">
+      <div className="mx-auto px-4 py-16">
         <motion.h1 
           className="text-6xl font-bold text-center mb-4 bg-clip-text font-display"
           initial={{ opacity: 0, y: -50 }}

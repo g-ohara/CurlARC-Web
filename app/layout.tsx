@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/app/components/header'
 import NextAuthProvider from './providers/NextAuth'
-import Navigator from './components/navigator'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,10 +23,6 @@ export default function RootLayout({
           <div className="flex h-screen flex-col bg-background">
             <Header className='z-50 fixed top-0 left-0 w-full h-16 flex items-center justify-between bg-primary px-6 py-4 text-primary-foreground shadow-md' />
             <div className="flex flex-grow w-full">
-              {/* <Navigator className='z-50 fixed top-16 left-0 flex w-1/6 flex-col gap-2 bg-slate-100 p-3 shadow-md h-[calc(100vh-64px)]' />
-              <div className="flex w-5/6 ml-[16.666%]">
-                {children}
-              </div> */}
               {children}
             </div>
           </div>

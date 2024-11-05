@@ -83,19 +83,24 @@ export default function NextShotButton({
   };
 
   const appendNewEnd = (record: RecordDetail): RecordDetail => {
-    const emptyShot: Shot = {
-      type: '',
-      success_rate: 0,
-      shooter: '',
-      stones: {
-        friend_stones: [],
-        enemy_stones: [],
-      },
-    }
+    const newStone = {
+      index: 0,
+      ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
+    };
     const newDataPerEnd = {
       score: 0,
-      shots: [emptyShot],
-    };
+      shots: [
+        {
+          type: '',
+          success_rate: 0,
+          shooter: '',
+          stones: {
+            friend_stones: record.is_first ? [newStone] : [],
+            enemy_stones: record.is_first ? [] : [newStone],
+          },
+        },
+      ],
+    }
     const newRecord = {
       id: record.id,
       team_id: record.team_id,
@@ -139,7 +144,6 @@ export default function NextShotButton({
         })
         setSelectedShotIndex(0);
         setSelectedEndIndex(selectedEndIndex + 1);
-        addStone(true);
       }
     }
   };

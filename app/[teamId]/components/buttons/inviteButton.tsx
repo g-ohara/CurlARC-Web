@@ -66,9 +66,8 @@ export default function InviteButton({ teamId, teamName }: InviteButtonProps) {
       setInvitedUsers('')
       // 成功メッセージ
       setSuccess('Invited users successfully!')
-    } catch (error) {
-      // エラーメッセージ
-      setError('Failed to Invite. Please try again.\n' + error)
+    } catch (error: any) {
+        setError('Failed to Invite. Please try again.\n' + error.error.message)
     } finally {
       setLoading(false)
     }

@@ -105,8 +105,6 @@ export function Sheet({
 
   const selectedEnd = record.ends_data[selectedEndIndex];
   const selectedShot = selectedEnd.shots[selectedShotIndex];
-  console.log("selectedEndIndex", selectedEndIndex);
-  console.log("selectedShotIndex", selectedShotIndex);
   const friendStones = selectedShot.stones.friend_stones;
   const enemyStones = selectedShot.stones.enemy_stones;
 
@@ -158,7 +156,7 @@ export function Sheet({
     const index = parseInt(id.split('-')[1]);
 
     const stones = isFriendStone ? friendStones : enemyStones;
-    const stone = stones[index];
+    const stone = stones.find(stone => stone.index === index);
 
     if (!stone) return;
 
@@ -233,22 +231,22 @@ export function Sheet({
             width={dimensions.width}
             height={dimensions.height}
           />
-          {friendStones.map((stone, index) => (
+          {friendStones.map((stone) => (
             <DraggableStone
-              key={`friend-${index}`}
-              id={`friend-${index}`}
-              index={index}
+              key={`friend-${stone.index}`}
+              id={`friend-${stone.index}`}
+              index={stone.index}
               r={stone.r}
               theta={stone.theta}
               isRed={friendIsRed}
               scale={scale}
             />
           ))}
-          {enemyStones.map((stone, index) => (
+          {enemyStones.map((stone) => (
             <DraggableStone
-              key={`enemy-${index}`}
-              id={`enemy-${index}`}
-              index={index}
+              key={`enemy-${stone.index}`}
+              id={`enemy-${stone.index}`}
+              index={stone.index}
               r={stone.r}
               theta={stone.theta}
               isRed={!friendIsRed}

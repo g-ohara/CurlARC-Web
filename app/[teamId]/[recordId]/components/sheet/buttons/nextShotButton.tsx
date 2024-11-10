@@ -27,19 +27,13 @@ export default function NextShotButton({
   // Add a new stone at the initial position.
   const addStone = (nextEnd: boolean) => {
 
-    const selectedEnd = record.ends_data[selectedEndIndex];
-    const selectedShot = selectedEnd.shots[selectedShotIndex];
-    const friendStones = selectedShot.stones.friend_stones;
-    const enemyStones = selectedShot.stones.enemy_stones;
-
     // TODO: Implement logic to get which team is first in current end.
     const isFirstInThisEnd = record.is_first;
     const isFirstTurn = selectedShotIndex % 2 === 1;
     const isFriendTurn = isFirstInThisEnd ? isFirstTurn : !isFirstTurn;
 
-    const stones = isFriendTurn ? friendStones : enemyStones;
     const newStone: Coordinate = {
-      index: stones.length,
+      index: Math.floor((selectedShotIndex + 1) / 2),
       ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
     };
 

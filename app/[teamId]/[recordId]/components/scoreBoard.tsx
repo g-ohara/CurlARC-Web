@@ -26,7 +26,7 @@ const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = f
 )
 
 const TeamNameCell: FC<{ teamName: string; color: string }> = ({ teamName, color }) => (
-  <td className={`border-b border-muted bg-${color}-500 px-2 py-1 text-xs sm:text-sm md:text-base font-bold text-${color}-50`}>
+  <td className={`border-b border-muted bg-${color}-500 px-2 py-1 text-xs sm:text-sm md:text-base font-bold text-black`}>
     <div className="max-w-[100px] md:max-w-[150px] overflow-x-auto whitespace-nowrap scrollbar-hide">
       {teamName}
     </div>
@@ -52,6 +52,7 @@ interface ScoreRowProps extends ScoreData {
 }
 
 const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRoundIndex, isFirst, onEndSelect, onIsFirstChange, isFriend, isEditMode }) => {
+  console.log(color)
   return (
     <tr>
       <TeamNameCell teamName={teamName} color={color} />
@@ -130,6 +131,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             selectedRoundIndex={selectedEndIndex}
             isFirst={isFirst}
             isFriend={true}
+            color='red'
             isEditMode={isEditMode}
             onEndSelect={onEndSelect}
             onIsFirstChange={handleIsFirstChange}
@@ -140,6 +142,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             selectedRoundIndex={selectedEndIndex}
             isFriend={false}
             isFirst={!isFirst}
+            color='yellow'
             isEditMode={isEditMode}
             onEndSelect={onEndSelect}
             onIsFirstChange={handleIsFirstChange}

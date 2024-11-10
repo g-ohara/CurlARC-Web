@@ -1,8 +1,7 @@
 'use client'
 
 import { Hammer } from 'lucide-react'
-import React, { FC, useState, useMemo } from 'react'
-import { useMediaQuery } from 'react-responsive'
+import React, { FC, useMemo } from 'react'
 
 interface ScoreCellProps {
   score: number | string
@@ -16,7 +15,7 @@ const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = f
   <td
     className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base
       ${isHeader ? 'cursor-pointer' : ''}
-      ${isSelected ? 'bg-yellow-300' : ''}`}
+      ${isSelected ? 'bg-blue-200' : ''}`}
     onClick={onClick}
     aria-label={ariaLabel}
     role="button"
@@ -95,7 +94,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
 
   const colors = {
     headerBg: 'bg-gray-100',
-    selectedBorder: 'bg-yellow-300',
+    selectedBorder: 'bg-blue-200',
     hoverBg: 'hover:bg-gray-200'
   }
 

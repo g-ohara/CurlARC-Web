@@ -21,7 +21,7 @@ interface StoneProps {
 }
 
 // Check whether stone is out of the sheet.
-const stoneIsOut = (r: number, theta: number): boolean => {
+export const stoneIsOut = (r: number, theta: number): boolean => {
   const { x, y } = polarToCartesian(
     r,
     theta,

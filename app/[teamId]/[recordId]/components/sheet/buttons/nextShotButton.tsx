@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { RecordDetail, Shot } from '@/types/model';
 import { Coordinate } from "../types";
 import { SHEET_CONSTANTS } from "../constants";
+import { stoneIsOut } from "../sheet";
 
 type Props = {
   record: RecordDetail;
@@ -127,11 +128,24 @@ export default function NextShotButton({
       if (selectedShotIndex < 15) {
         setRecord(prevRecord => {
           const prevShots = prevRecord.ends_data?.[selectedEndIndex]?.shots ?? [];
+          const prevStones = prevShots[prevShots.length - 1].stones;
+          const friendStones = [...prevStones.friend_stones];
+          const enemyStones = [...prevStones.enemy_stones];
+          const newFriendStones = friendStones.filter(
+            stone => !stoneIsOut(stone.r, stone.theta)
+          )
+          const newEnemyStones = enemyStones.filter(
+            stone => !stoneIsOut(stone.r, stone.theta)
+          );
+          const newStones = {
+            friend_stones: newFriendStones,
+            enemy_stones: newEnemyStones,
+          }
           const newShot: Shot = {
             type: '',
             success_rate: 0,
             shooter: '',
-            stones: { ...prevShots[prevShots.length - 1].stones }
+            stones: newStones,
           }
           return appendNewShot(prevRecord, newShot);
         })

@@ -23,10 +23,7 @@ export default function RecordHeader({ record, friendTeamName, toggleEditMode, i
           {isEditMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
         </Button>
         {isEditMode && (
-          <>
-            <Button onClick={handleSave} className="mr-2">Save Changes</Button>
-            <Button onClick={handleCancel} variant="outline">Cancel</Button>
-          </>
+          <Button onClick={handleSave} className="mr-2">Save Changes</Button>
         )}
         <DeleteRecordButton recordId={record.id} />
       </div>

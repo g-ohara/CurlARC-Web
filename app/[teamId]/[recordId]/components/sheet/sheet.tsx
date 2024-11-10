@@ -64,6 +64,7 @@ export function Sheet({
   record,
   setRecord,
   selectedEndIndex,
+  setSelectedEndIndex,
   selectedShotIndex,
   setSelectedShotIndex,
 }: SheetProps) {
@@ -78,6 +79,8 @@ export function Sheet({
 
   const selectedEnd = record.ends_data[selectedEndIndex];
   const selectedShot = selectedEnd.shots[selectedShotIndex];
+  console.log("selectedEndIndex", selectedEndIndex);
+  console.log("selectedShotIndex", selectedShotIndex);
   const friendStones = selectedShot.stones.friend_stones;
   const enemyStones = selectedShot.stones.enemy_stones;
 
@@ -182,6 +185,7 @@ export function Sheet({
                 record={record}
                 setRecord={setRecord}
                 selectedEndIndex={selectedEndIndex}
+                setSelectedEndIndex={setSelectedEndIndex}
                 selectedShotIndex={selectedShotIndex}
                 setSelectedShotIndex={setSelectedShotIndex}
                 onStonePositionChange={onStonePositionChange}

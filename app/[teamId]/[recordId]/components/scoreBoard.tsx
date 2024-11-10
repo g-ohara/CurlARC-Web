@@ -51,12 +51,15 @@ interface ScoreRowProps extends ScoreData {
 }
 
 const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedRoundIndex, isFirst, onEndSelect, onIsFirstChange, isFriend, isEditMode }) => {
-  console.log(color)
+  const filledScores = scores.map(score => score.toString());
+  while (filledScores.length < 11) {
+    filledScores.push('');
+  }
   return (
     <tr>
       <TeamNameCell teamName={teamName} color={color} />
       <FirstStoneCell isFirst={isFirst} onIsFirstChange={onIsFirstChange} isFriend={isFriend} isEditMode={isEditMode} />
-      {scores.map((score, index) => (
+      {filledScores.map((score, index) => (
         <ScoreCell
           key={`${teamName}-${index}`}
           score={score}
@@ -89,8 +92,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
   handleIsFirstChange,
   onEndSelect,
 }) => {
-  const roundCount = Math.max(friendScore.scores.length, enemyScore.scores.length)
-  const headers = useMemo(() => Array.from({ length: roundCount }, (_, i) => i + 1), [roundCount])
+  const headers = Array.from({ length: 11 }, (_, i) => i + 1);
 
   const colors = {
     headerBg: 'bg-gray-100',

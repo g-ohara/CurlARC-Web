@@ -19,6 +19,7 @@ interface StoneProps {
   theta: number;
   isRed: boolean;
   scale: number;
+  draggable: boolean;
 }
 
 // Check whether stone is out of the sheet.
@@ -42,9 +43,12 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
 };
 
 
-function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
+function DraggableStone(
+  { id, index, r, theta, isRed, scale, draggable }: StoneProps
+) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
+    disabled: !draggable,
   });
 
   const { x, y } = polarToCartesian(r, theta, SHEET_CONSTANTS.SHEET_WIDTH / 2, SHEET_CONSTANTS.HOUSE_RADIUS);
@@ -281,6 +285,7 @@ export function Sheet({
               theta={stone.theta}
               isRed={friendIsRed}
               scale={scale}
+              draggable={interactive}
             />
           ))}
           {enemyStones.map((stone) => (
@@ -292,6 +297,7 @@ export function Sheet({
               theta={stone.theta}
               isRed={!friendIsRed}
               scale={scale}
+              draggable={interactive}
             />
           ))}
         </div>

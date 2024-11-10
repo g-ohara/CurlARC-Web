@@ -20,6 +20,27 @@ interface StoneProps {
   scale: number;
 }
 
+// Check whether stone is out of the sheet.
+const stoneIsOut = (r: number, theta: number): boolean => {
+  const { x, y } = polarToCartesian(
+    r,
+    theta,
+    SHEET_CONSTANTS.SHEET_WIDTH / 2,
+    SHEET_CONSTANTS.HOUSE_RADIUS,
+  );
+
+  // If borderOffset is set to 0,
+  // stones on left and top are not recognized as out of the sheet.
+  const borderOffset = 0.0001 * SHEET_CONSTANTS.SHEET_WIDTH;
+
+  const xOut = x - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
+    x + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_WIDTH;
+  const yOut = y - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
+    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT;
+  return xOut || yOut;
+};
+
+
 function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: id,
@@ -31,6 +52,11 @@ function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
+  const stoneColor = isRed ? 'red' : 'yellow';
+  const outStoneColor = isRed ? '#800000' : '#808000';
+  const backgroundColor = stoneIsOut(r, theta) ? outStoneColor : stoneColor;
+  const border = stoneIsOut(r, theta) ? '4px solid #404040' : '4px solid grey';
+
   return (
     <div
       ref={setNodeRef}
@@ -41,8 +67,8 @@ function DraggableStone({ id, index, r, theta, isRed, scale }: StoneProps) {
         width: SHEET_CONSTANTS.STONE_RADIUS * 2 * scale,
         height: SHEET_CONSTANTS.STONE_RADIUS * 2 * scale,
         borderRadius: '50%',
-        backgroundColor: isRed ? 'red' : 'yellow',
-        border: '4px solid grey',
+        backgroundColor: backgroundColor,
+        border: border,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

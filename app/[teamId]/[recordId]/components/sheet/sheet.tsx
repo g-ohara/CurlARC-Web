@@ -10,6 +10,7 @@ import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
 import NextShotButton from "./buttons/nextShotButton";
+import { Stones } from "@/types/model";
 
 interface StoneProps {
   id: string;
@@ -111,6 +112,34 @@ export function Sheet({
   // TODO: Get whether friend color from record
   const friendIsRed = true;
 
+  const calcScore = (stones: Stones) => {
+    const friendStones = [...stones.friend_stones].sort((a, b) => a.r - b.r);
+    const enemyStones = [...stones.enemy_stones].sort((a, b) => a.r - b.r);
+
+    // A threshold to filter out out-of-the-house stones
+    const maxR = SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS;
+
+    // ex. myMin(1, 2) = 1
+    //     myMin(1, undefined) = 1
+    //     myMin(undefined, 2) = 2
+    //     myMin(undefined, undefined) = undefined
+    const myMin = (a: number, b: number) => a ? b ? Math.min(a, b) : a : b;
+
+    // Count the number of my stones closer than the first opponent stone
+    const calcMyScore = (
+      myStones: Coordinate[],
+      firstOpponentStoneR: number
+    ) => {
+      return myStones.filter(stone => stone.r < firstOpponentStoneR).length;
+    }
+
+    const firstEnemyStoneR = myMin(maxR, enemyStones[0]?.r);
+    const firstFriendStoneR = myMin(maxR, friendStones[0]?.r);
+    const friendScore = calcMyScore(friendStones, firstEnemyStoneR);
+    const enemyScore = calcMyScore(enemyStones, firstFriendStoneR);
+    return friendScore - enemyScore;
+  };
+
   const onStonePositionChange = (
     endIndex: number,
     shotIndex: number,
@@ -142,6 +171,9 @@ export function Sheet({
 
       // Update stones in current shot
       targetShot.stones[stoneKey] = newStones;
+
+      // Update score in current end
+      newEndsData[endIndex].score = calcScore(targetShot.stones);
 
       return { ...prevRecord, ends_data: newEndsData };
     });

@@ -175,7 +175,16 @@ export function Sheet({
       // Update score in current end
       newEndsData[endIndex].score = calcScore(targetShot.stones);
 
-      return { ...prevRecord, ends_data: newEndsData };
+      // Update result in current record
+      const totalScore = newEndsData.reduce((acc, cur) => acc + cur.score, 0);
+      const result = totalScore > 0 ? 'WIN' : totalScore < 0 ? 'LOSE' : 'DRAW';
+      console.log(result);
+
+      return {
+        ...prevRecord,
+        ends_data: newEndsData,
+        result: result,
+      };
     });
   };
 

@@ -109,7 +109,7 @@ export function Sheet({
   const scale = dimensions.width / SHEET_CONSTANTS.SHEET_WIDTH;
 
   const selectedEnd = record.ends_data[selectedEndIndex];
-  const selectedShot = selectedEnd.shots[selectedShotIndex];
+  const selectedShot = selectedEnd ? selectedEnd.shots[selectedShotIndex] || { stones: { friend_stones: [], enemy_stones: [] } } : { stones: { friend_stones: [], enemy_stones: [] } };
   const friendStones = selectedShot.stones.friend_stones;
   const enemyStones = selectedShot.stones.enemy_stones;
 

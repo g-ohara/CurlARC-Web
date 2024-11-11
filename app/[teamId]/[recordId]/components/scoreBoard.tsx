@@ -24,13 +24,15 @@ const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = f
   </td>
 )
 
-const TeamNameCell: FC<{ teamName: string; color: string }> = ({ teamName, color }) => (
-  <td className={`border-b border-muted bg-${color}-500 px-2 py-1 text-xs sm:text-sm md:text-base font-bold text-black`}>
-    <div className="max-w-[100px] md:max-w-[150px] overflow-x-auto whitespace-nowrap scrollbar-hide">
-      {teamName}
-    </div>
-  </td>
-)
+const TeamNameCell: FC<{ teamName: string; color: string }> = ({ teamName, color }) => {
+  return (
+    <td className={`border-b border-muted ${color} px-2 py-1 text-xs sm:text-sm md:text-base font-bold text-black`}>
+      <div className="max-w-[100px] md:max-w-[150px] overflow-x-auto whitespace-nowrap scrollbar-hide">
+        {teamName}
+      </div>
+    </td>
+  )
+}
 
 const FirstStoneCell: FC<{ isFirst: boolean, isFriend: boolean, isEditMode: boolean, onIsFirstChange: (isFirst: boolean) => void }> = ({ isFirst, isFriend, isEditMode, onIsFirstChange }) => (
   <td
@@ -132,7 +134,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             selectedRoundIndex={selectedEndIndex}
             isFirst={isFirst}
             isFriend={true}
-            color='red'
+            color='bg-red-500'
             isEditMode={isEditMode}
             onEndSelect={onEndSelect}
             onIsFirstChange={handleIsFirstChange}
@@ -143,7 +145,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             selectedRoundIndex={selectedEndIndex}
             isFriend={false}
             isFirst={!isFirst}
-            color='yellow'
+            color='bg-yellow-300'
             isEditMode={isEditMode}
             onEndSelect={onEndSelect}
             onIsFirstChange={handleIsFirstChange}

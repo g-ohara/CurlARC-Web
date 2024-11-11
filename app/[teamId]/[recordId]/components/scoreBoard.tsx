@@ -15,7 +15,7 @@ const ScoreCell: FC<ScoreCellProps> = ({ score, isHeader = false, isSelected = f
   <td
     className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base
       ${isHeader ? 'cursor-pointer' : ''}
-      ${isSelected ? 'bg-blue-200' : ''}`}
+      ${isSelected ? 'bg-blue-200' : score === '' ? 'bg-gray-400' : 'bg-white'}`}
     onClick={onClick}
     aria-label={ariaLabel}
     role="button"
@@ -66,7 +66,7 @@ const ScoreRow: FC<ScoreRowProps> = ({ teamName, color, scores, total, selectedR
           key={`${teamName}-${index}`}
           score={score}
           isSelected={selectedRoundIndex === index}
-          onClick={() => onEndSelect(index)}
+          onClick={score !== "" ? () => onEndSelect(index) : undefined}
           ariaLabel={`${teamName} score for round ${index + 1}: ${score}`}
         />
       ))}
@@ -98,6 +98,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
 
   const colors = {
     headerBg: 'bg-gray-100',
+    disabledHeaderBg: 'bg-gray-500',
     selectedBorder: 'bg-blue-200',
     hoverBg: 'hover:bg-gray-200'
   }
@@ -115,9 +116,9 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
             {headers.map((header, index) => (
               <th
                 key={`header-${header}`}
-                className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base cursor-pointer 
-                  ${selectedEndIndex === index ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`}`}
-                onClick={() => onEndSelect(index)}
+                className={`border-b border-muted px-1 py-1 text-center text-xs sm:text-sm md:text-base bg-grey-500
+                  ${header <= friendScore.scores.length ? (selectedEndIndex === index ? `${colors.selectedBorder} border-2` : `${colors.hoverBg}`) : colors.disabledHeaderBg}`}
+                onClick={header <= friendScore.scores.length ? () => onEndSelect(index) : undefined}
                 aria-label={`Select round ${header}`}
                 role="button"
               >

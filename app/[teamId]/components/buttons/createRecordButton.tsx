@@ -16,7 +16,6 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Switch } from '@/components/ui/switch';
 
 import { Plus } from 'lucide-react'
 import { DatePicker } from "../datePicker";
@@ -33,7 +32,6 @@ export const CreateRecordButton = ({ teamId }: Props) => {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [isWin, setIsWin] = useState(true); // State to track if it's a win or not
 
   const router = useRouter()
 
@@ -48,7 +46,7 @@ export const CreateRecordButton = ({ teamId }: Props) => {
       enemy_team_name: enemyTeamName,
       date: date ?? new Date(),
       ends_data: [],
-      result: isWin ? 'WIN' : 'LOSS', // Add the win/loss result to the request
+      result: '', // Add the win/loss result to the request
     }
 
     try {
@@ -93,18 +91,6 @@ export const CreateRecordButton = ({ teamId }: Props) => {
                   placeholder="Enter the enemy team name"
                   required
                 />
-              </div>
-              <div className="mb-4 grid gap-2">
-                <Label htmlFor="win-loss-toggle">Result</Label>
-                <div className="flex items-center gap-2">
-                  <span>Loss</span>
-                  <Switch
-                    id="win-loss-toggle"
-                    checked={isWin}
-                    onCheckedChange={setIsWin}
-                  />
-                  <span>Win</span>
-                </div>
               </div>
               <div className="mb-2 grid gap-2">
                 <Label htmlFor="place">Place</Label>

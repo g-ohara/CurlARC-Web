@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { RecordDetail, Shot } from '@/types/model';
 import { Coordinate } from "../types";
 import { SHEET_CONSTANTS } from "../constants";
+import { stoneIsOut } from "../sheet";
 
 type Props = {
   record: RecordDetail;
@@ -26,19 +27,13 @@ export default function NextShotButton({
   // Add a new stone at the initial position.
   const addStone = (nextEnd: boolean) => {
 
-    const selectedEnd = record.ends_data[selectedEndIndex];
-    const selectedShot = selectedEnd.shots[selectedShotIndex];
-    const friendStones = selectedShot.stones.friend_stones;
-    const enemyStones = selectedShot.stones.enemy_stones;
-
     // TODO: Implement logic to get which team is first in current end.
     const isFirstInThisEnd = record.is_first;
     const isFirstTurn = selectedShotIndex % 2 === 1;
     const isFriendTurn = isFirstInThisEnd ? isFirstTurn : !isFirstTurn;
 
-    const stones = isFriendTurn ? friendStones : enemyStones;
     const newStone: Coordinate = {
-      index: stones.length,
+      index: Math.floor((selectedShotIndex + 1) / 2),
       ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
     };
 
@@ -127,11 +122,24 @@ export default function NextShotButton({
       if (selectedShotIndex < 15) {
         setRecord(prevRecord => {
           const prevShots = prevRecord.ends_data?.[selectedEndIndex]?.shots ?? [];
+          const prevStones = prevShots[prevShots.length - 1].stones;
+          const friendStones = [...prevStones.friend_stones];
+          const enemyStones = [...prevStones.enemy_stones];
+          const newFriendStones = friendStones.filter(
+            stone => !stoneIsOut(stone.r, stone.theta)
+          )
+          const newEnemyStones = enemyStones.filter(
+            stone => !stoneIsOut(stone.r, stone.theta)
+          );
+          const newStones = {
+            friend_stones: newFriendStones,
+            enemy_stones: newEnemyStones,
+          }
           const newShot: Shot = {
             type: '',
             success_rate: 0,
             shooter: '',
-            stones: { ...prevShots[prevShots.length - 1].stones }
+            stones: newStones,
           }
           return appendNewShot(prevRecord, newShot);
         })

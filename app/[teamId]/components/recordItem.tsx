@@ -11,7 +11,19 @@ type RecordItemProps = {
 }
 
 function RecordItem({ recordId, result, teamId, enemyTeamName, date }: RecordItemProps) {
-  const isWin = result === 'WIN'
+
+  let resultColor = '';
+  switch (result) {
+    case 'WIN':
+      resultColor = 'bg-red-500 text-white';
+      break;
+    case 'LOSE':
+      resultColor = 'bg-primary text-primary-foreground';
+      break;
+    case 'DRAW':
+      resultColor = 'bg-yellow-500 text-white';
+      break;
+  }
   return (
     <Link
       href={`${teamId}/${recordId}`}
@@ -19,9 +31,9 @@ function RecordItem({ recordId, result, teamId, enemyTeamName, date }: RecordIte
     >
       <div className="flex items-center gap-4">
         <div
-          className={`w-16 rounded-md px-2 py-1 text-center text-sm font-medium ${isWin ? 'bg-primary text-primary-foreground' : 'bg-red-500 text-white'}`}
+          className={`w-16 rounded-md px-2 py-1 text-center text-sm font-medium ${resultColor}`}
         >
-          {isWin ? 'Win' : 'Loss'}
+          {result}
         </div>
         <div>
           <p className="font-medium">{`vs. ${enemyTeamName}`}</p>

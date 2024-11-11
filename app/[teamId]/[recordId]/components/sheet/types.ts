@@ -1,3 +1,5 @@
+import { RecordDetail } from "@/types/model";
+
 export type Canvas2D = CanvasRenderingContext2D;
 export type Dimensions = { width: number; height: number };
 
@@ -24,12 +26,12 @@ export interface HousePosition {
 }
 
 export interface SheetProps {
-  friendStones?: Coordinate[];
-  enemyStones?: Coordinate[];
-  friendIsRed: boolean;
   className?: string;
   interactive?: boolean;
-  onStonePositionChange: (endIndex: number, shotIndex: number, isFriendStone: boolean, newPosition: Coordinate) => void;
+  record: RecordDetail;
+  setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;
+  setSelectedEndIndex: React.Dispatch<React.SetStateAction<number>>;
   selectedShotIndex: number;
+  setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
 }

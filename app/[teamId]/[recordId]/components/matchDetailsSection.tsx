@@ -1,5 +1,5 @@
 import { RecordDetail } from '../../../../types/model'
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Table,
   TableHeader,
@@ -39,9 +39,10 @@ const formatSuccessRate = (rate: number): string => {
 }
 
 const shotTypes = ['Draw', 'Guard', 'Takeout', 'Freeze']
-const successRates = Array.from({length: 11}, (_, i) => i * 10)
+const successRates = Array.from({ length: 11 }, (_, i) => i * 10)
 
 export default function MatchDetailsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, isEditMode, onShotsDetailsChange }: Props) {
+
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? []
 
   const handleChange = (shotIndex: number, field: string, value: string | number) => {
@@ -63,7 +64,7 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
           </TableHeader>
           <TableBody>
             {selectedShotsData.map((shot, index) => (
-              <TableRow key={index} data-state={selectedShotIndex===index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
+              <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
                   {isEditMode ? (

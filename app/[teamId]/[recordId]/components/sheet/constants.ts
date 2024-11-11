@@ -12,4 +12,8 @@ export const SHEET_CONSTANTS = {
   HOUSE_CIRCLES: [182.9, 121.9, 61.0, 15.2],
   BORDER_OFFSET: 0.5,
   HOUSE_COLORS: ["blue", "white", "red", "white"],
+  INITIAL_STONE_POSITION: {
+    r: 182.9 * 1.5,
+    theta: -Math.PI / 2,
+  },
 } as const;

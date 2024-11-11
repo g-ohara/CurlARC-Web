@@ -22,6 +22,7 @@ export type RecordDetail = {
   place: string
   date: Date
   ends_data: DataPerEnd[]
+  is_first: boolean
   is_public: boolean
 }
 

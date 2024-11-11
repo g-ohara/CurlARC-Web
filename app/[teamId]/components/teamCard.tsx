@@ -1,11 +1,8 @@
 import React, { Suspense } from 'react'
 import { TeamHeader } from './teamHeader'
 import { AsyncTeamMembers } from './asyncTeamMembers'
-import { AsyncTeamDetails } from './asyncTeamDetails'
 import { TeamFooter } from './teamFooter'
 import { LoadingPlaceholder } from './loadingPlaceholder'
-
-
 
 import { getRecordsByTeamId } from '@/lib/api/record'
 import { CreateRecordButton } from './buttons/createRecordButton'
@@ -15,10 +12,9 @@ type TeamCardProps = {
   teamId: string
   teamName: string
   lastGameDate: string
-  invited: boolean
 }
 
-export async function TeamCard({ teamId, teamName, lastGameDate, invited }: TeamCardProps) {
+export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
   const res = await getRecordsByTeamId(teamId)
   const records = res.record_indices
   return (
@@ -29,11 +25,6 @@ export async function TeamCard({ teamId, teamName, lastGameDate, invited }: Team
           <div>
             <Suspense fallback={<LoadingPlaceholder />}>
               <AsyncTeamMembers teamId={teamId} />
-            </Suspense>
-          </div>
-          <div className="mt-8">
-            <Suspense fallback={<LoadingPlaceholder />}>
-              <AsyncTeamDetails teamId={teamId} />
             </Suspense>
           </div>
         </div>
@@ -64,7 +55,6 @@ export async function TeamCard({ teamId, teamName, lastGameDate, invited }: Team
         lastGameDate={lastGameDate}
         teamId={teamId}
         teamName={teamName}
-        invited={invited}
       />
     </>
   )

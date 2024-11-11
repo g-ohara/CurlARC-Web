@@ -25,5 +25,6 @@ export type updateRecordRequest = {
   place: string
   date: Date
   ends_data: DataPerEnd[]
-  isPublic: boolean
+  is_first: boolean
+  is_public: boolean
 }

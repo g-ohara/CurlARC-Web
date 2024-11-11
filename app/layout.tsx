@@ -18,6 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>CurlARC</title>
+        <meta name="google-site-verification" content="ltzC2lfAPsWQrkjLjcrfObIh2DunayQMnk23mHf3H4c" />
+      </head>
       <body className={inter.className}>
         <NextAuthProvider>
           <div className="flex h-screen flex-col bg-background">

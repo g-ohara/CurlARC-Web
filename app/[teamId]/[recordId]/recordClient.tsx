@@ -10,6 +10,7 @@ import { RecordDetail } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
 import { SHEET_CONSTANTS } from './components/sheet/constants';
+import RecordFooter from './components/recordFooter';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;
@@ -121,7 +122,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
       <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleCancel={handleCancel} handleSave={handleSave} />
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8">
         <div className="lg:col-span-3 space-y-8">
           <ScoreBoardSection
             record={editedRecord}
@@ -152,6 +153,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
+      <RecordFooter record={editedRecord} />
     </div>
   );
 }

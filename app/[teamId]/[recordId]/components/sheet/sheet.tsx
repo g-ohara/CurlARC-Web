@@ -46,7 +46,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
 function DraggableStone(
   { id, index, r, theta, isRed, scale, draggable }: StoneProps
 ) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: id,
     disabled: !draggable,
   });
@@ -80,6 +80,8 @@ function DraggableStone(
         cursor: draggable ? 'grab' : 'default',
         fontSize: 16 * scale,
         touchAction: 'none',
+        transform: `scale(${isDragging ? 1.2 : 1})`,
+        transition: isDragging ? "transform 0.1s ease": "transorm 0.3s ease",
         ...style,
       }}
       {...listeners}

@@ -10,6 +10,7 @@ import { RecordDetail } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
 import { SHEET_CONSTANTS } from './components/sheet/constants';
+import RecordFooter from './components/recordFooter';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;
@@ -120,9 +121,9 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
-      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleCancel={handleCancel} handleSave={handleSave} />
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8 h-full">
-        <div className="lg:col-span-3 space-y-8">
+      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-8">
+        <div className="md:col-span-3 space-y-8">
           <ScoreBoardSection
             record={editedRecord}
             friendTeamName={teamRes.team.name}
@@ -131,16 +132,39 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             handleIsFirstChange={handleIsFirstChange}
             isEditMode={isEditMode}
           />
-          <MatchDetailsSection
-            record={editedRecord}
-            selectedEndIndex={selectedEndIndex}
-            selectedShotIndex={selectedShotIndex}
-            onShotSelect={onShotSelect}
-            isEditMode={isEditMode}
-            onShotsDetailsChange={handleShotsDetailsChange}
-          />
+          <div className='hidden md:block'>
+            <MatchDetailsSection
+              record={editedRecord}
+              selectedEndIndex={selectedEndIndex}
+              selectedShotIndex={selectedShotIndex}
+              onShotSelect={onShotSelect}
+              isEditMode={isEditMode}
+              onShotsDetailsChange={handleShotsDetailsChange}
+            />
+          </div>
+          {/*  default */}
+          <div className="block md:hidden space-y-8 w-full aspect-[1/1.9]">
+            <StonePositionsSection
+              record={editedRecord}
+              setRecord={setEditedRecord}
+              selectedEndIndex={selectedEndIndex}
+              setSelectedEndIndex={setSelectedEndIndex}
+              selectedShotIndex={selectedShotIndex}
+              setSelectedShotIndex={setSelectedShotIndex}
+              isEditMode={isEditMode}
+            />
+            <MatchDetailsSection
+              record={editedRecord}
+              selectedEndIndex={selectedEndIndex}
+              selectedShotIndex={selectedShotIndex}
+              onShotSelect={onShotSelect}
+              isEditMode={isEditMode}
+              onShotsDetailsChange={handleShotsDetailsChange}
+            />
+          </div>
         </div>
-        <div className='lg:col-span-2 h-full'>
+        {/*  bigger than medium */}
+        <div className="hidden md:block md:col-span-2 w-full aspect-[1/2]">
           <StonePositionsSection
             record={editedRecord}
             setRecord={setEditedRecord}
@@ -152,6 +176,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
+      <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
     </div>
   );
 }

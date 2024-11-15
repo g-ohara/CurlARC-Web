@@ -46,7 +46,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
 function DraggableStone(
   { id, index, r, theta, isRed, scale, draggable }: StoneProps
 ) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: id,
     disabled: !draggable,
   });
@@ -77,8 +77,11 @@ function DraggableStone(
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        cursor: 'grab',
+        cursor: draggable ? 'grab' : 'default',
         fontSize: 16 * scale,
+        touchAction: 'none',
+        transform: `scale(${isDragging ? 1.2 : 1})`,
+        transition: isDragging ? "transform 0.1s ease": "transorm 0.3s ease",
         ...style,
       }}
       {...listeners}
@@ -192,7 +195,14 @@ export function Sheet({
     });
   };
 
+  const handleDragStart = useCallback(() => {
+    // スクロールを無効化
+    document.body.style.overflow = 'hidden';
+  }, []);
+
   const handleDragEnd = useCallback((event: DragEndEvent) => {
+    // スクロールを有効化
+    document.body.style.overflow = 'auto';
     if (!interactive || !onStonePositionChange) return;
     const { active, delta } = event;
 
@@ -243,6 +253,7 @@ export function Sheet({
 
   return (
     <DndContext
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToParentElement]}
     >

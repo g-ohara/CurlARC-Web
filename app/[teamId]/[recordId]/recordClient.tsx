@@ -121,7 +121,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
   return (
     <div className="w-full h-full overflow-hidden mx-4 my-4">
-      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleCancel={handleCancel} handleSave={handleSave} />
+      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mt-8">
         <div className="lg:col-span-3 space-y-8">
           <ScoreBoardSection
@@ -153,7 +153,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
-      <RecordFooter record={editedRecord} />
+      <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave}/>
     </div>
   );
 }

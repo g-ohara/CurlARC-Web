@@ -21,6 +21,7 @@ export default function RootLayout({
       <head>
         <title>CurlARC</title>
         <meta name="google-site-verification" content="ltzC2lfAPsWQrkjLjcrfObIh2DunayQMnk23mHf3H4c" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className={inter.className}>
         <NextAuthProvider>

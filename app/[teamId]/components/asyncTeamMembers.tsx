@@ -20,7 +20,7 @@ export async function AsyncTeamMembers({ teamId }: { teamId: string }) {
       </h3>
       { 
       invitedUsers.length === 0 ? 
-        <p className='text-muted-foreground'>No invited users</p> : 
+        <p className='pl-4 text-muted-foreground'>No invited users</p> : 
         <UserList className="col-span-3" users={invitedUsers}/>
       }
     </div>

@@ -77,8 +77,9 @@ function DraggableStone(
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        cursor: 'grab',
+        cursor: draggable ? 'grab' : 'default',
         fontSize: 16 * scale,
+        touchAction: 'none',
         ...style,
       }}
       {...listeners}
@@ -192,7 +193,14 @@ export function Sheet({
     });
   };
 
+  const handleDragStart = useCallback(() => {
+    // スクロールを無効化
+    document.body.style.overflow = 'hidden';
+  }, []);
+
   const handleDragEnd = useCallback((event: DragEndEvent) => {
+    // スクロールを有効化
+    document.body.style.overflow = 'auto';
     if (!interactive || !onStonePositionChange) return;
     const { active, delta } = event;
 
@@ -243,6 +251,7 @@ export function Sheet({
 
   return (
     <DndContext
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToParentElement]}
     >

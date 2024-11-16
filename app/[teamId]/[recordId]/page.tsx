@@ -12,5 +12,9 @@ export default async function RecordPage({ params }: { params: { teamId: string;
     getTeamDetailsByTeamId(params.teamId)
   ])
 
-  return <EditableRecordClient recordRes={recordRes} teamRes={teamRes} recordId={params.recordId}/>
+  return (
+    <div className="md:h-[94%] w-[95%] md:w-[90%] mx-auto mt-4 md:my-auto content-center">
+      <EditableRecordClient recordRes={recordRes} teamRes={teamRes} recordId={params.recordId} />
+    </div>
+  );
 }

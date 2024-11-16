@@ -53,80 +53,82 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
     <section className="space-y-8">
       <div>
         <h2 className="text-xl font-medium mb-4">Shots</h2>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4">Shot</TableHead>
-              <TableHead>Shooter</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead className="text-right">Success Rate</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {selectedShotsData.map((shot, index) => (
-              <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
-                <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>
-                  {isEditMode ? (
-                    <Input
-                      value={shot.shooter}
-                      onChange={(e) => handleChange(index, 'shooter', e.target.value)}
-                      className="w-full"
-                    />
-                  ) : (
-                    shot.shooter
-                  )}
-                </TableCell>
-                <TableCell>
-                  {isEditMode ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between">
-                          {shot.type} <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
-                        {shotTypes.map((type) => (
-                          <DropdownMenuItem
-                            key={type}
-                            onSelect={() => handleChange(index, 'type', type)}
-                          >
-                            {type}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    shot.type
-                  )}
-                </TableCell>
-                <TableCell className={`text-right ${getSuccessRateColor(shot.success_rate)}`}>
-                  {isEditMode ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between">
-                          {formatSuccessRate(shot.success_rate)} <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
-                        {successRates.map((rate) => (
-                          <DropdownMenuItem
-                            key={rate}
-                            onSelect={() => handleChange(index, 'success_rate', rate)}
-                          >
-                            {rate}%
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    formatSuccessRate(shot.success_rate)
-                  )}
-                </TableCell>
+        <div className="w-full max-h-[35vh] overflow-y-auto display-block">
+          <Table className="overflow-y-auto">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-1/4">Shot</TableHead>
+                <TableHead>Shooter</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead className="text-right">Success Rate</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {selectedShotsData.map((shot, index) => (
+                <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
+                  <TableCell className="font-medium">{index + 1}</TableCell>
+                  <TableCell>
+                    {isEditMode ? (
+                      <Input
+                        value={shot.shooter}
+                        onChange={(e) => handleChange(index, 'shooter', e.target.value)}
+                        className="w-full"
+                      />
+                    ) : (
+                      shot.shooter
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {isEditMode ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between">
+                            {shot.type} <ChevronDown className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          {shotTypes.map((type) => (
+                            <DropdownMenuItem
+                              key={type}
+                              onSelect={() => handleChange(index, 'type', type)}
+                            >
+                              {type}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      shot.type
+                    )}
+                  </TableCell>
+                  <TableCell className={`text-right ${getSuccessRateColor(shot.success_rate)}`}>
+                    {isEditMode ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between">
+                            {formatSuccessRate(shot.success_rate)} <ChevronDown className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          {successRates.map((rate) => (
+                            <DropdownMenuItem
+                              key={rate}
+                              onSelect={() => handleChange(index, 'success_rate', rate)}
+                            >
+                              {rate}%
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      formatSuccessRate(shot.success_rate)
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
       <div>
         <h2 className="text-xl font-medium mb-4">Match Details</h2>

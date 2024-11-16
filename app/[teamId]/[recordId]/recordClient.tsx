@@ -120,7 +120,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
   };
 
   return (
-    <div className="w-full h-full overflow-hidden mx-4 my-4">
+    <div className="w-full h-full">
       <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
       <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-8">
         <div className="md:col-span-3 space-y-8">
@@ -164,7 +164,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           </div>
         </div>
         {/*  bigger than medium */}
-        <div className="hidden md:block md:col-span-2 w-full aspect-[1/2]">
+        <div className="hidden md:block md:col-span-2 min-w-[400px] max-h-[630px]">
           <StonePositionsSection
             record={editedRecord}
             setRecord={setEditedRecord}
@@ -176,7 +176,9 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
-      <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
+      <div className="fixed bottom-10 right-5 w-full">
+        <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
+      </div>
     </div>
   );
 }

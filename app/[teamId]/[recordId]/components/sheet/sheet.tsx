@@ -9,7 +9,6 @@ import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
-import NextShotButton from "./buttons/nextShotButton";
 import { Stones } from "@/types/model";
 
 interface StoneProps {
@@ -46,7 +45,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
 function DraggableStone(
   { id, index, r, theta, isRed, scale, draggable }: StoneProps
 ) {
-  const { attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: id,
     disabled: !draggable,
   });
@@ -81,7 +80,7 @@ function DraggableStone(
         fontSize: 16 * scale,
         touchAction: 'none',
         transform: `scale(${isDragging ? 1.2 : 1})`,
-        transition: isDragging ? "transform 0.1s ease": "transorm 0.3s ease",
+        transition: isDragging ? "transform 0.1s ease" : "transorm 0.3s ease",
         ...style,
       }}
       {...listeners}
@@ -195,11 +194,6 @@ export function Sheet({
     });
   };
 
-  const handleDragStart = useCallback(() => {
-    // スクロールを無効化
-    document.body.style.overflow = 'hidden';
-  }, []);
-
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     // スクロールを有効化
     document.body.style.overflow = 'auto';
@@ -253,30 +247,10 @@ export function Sheet({
 
   return (
     <DndContext
-      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToParentElement]}
     >
       <div className={className} ref={containerRef}>
-        {interactive && (
-          <>
-            <div className="flex gap-2 mb-2">
-              <NextShotButton
-                record={record}
-                setRecord={setRecord}
-                selectedEndIndex={selectedEndIndex}
-                setSelectedEndIndex={setSelectedEndIndex}
-                selectedShotIndex={selectedShotIndex}
-                setSelectedShotIndex={setSelectedShotIndex}
-                onStonePositionChange={onStonePositionChange}
-              />
-            </div>
-            <div className="mb-2">
-              <span className="mr-4">Friend Stones: {friendStones?.length}/8</span>
-              <span>Enemy Stones: {enemyStones?.length}/8</span>
-            </div>
-          </>
-        )}
         <div
           ref={setNodeRef}
           style={{ position: 'relative', width: dimensions.width, height: dimensions.height }}

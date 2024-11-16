@@ -11,10 +11,9 @@ export function calculateDimensions(parentSize: Dimensions): Dimensions {
   } else {
     width = height / aspectRatio;
   }
-
   return {
-    width: Math.max(width, SHEET_CONSTANTS.MIN_WIDTH),
-    height: Math.max(height, SHEET_CONSTANTS.MIN_HEIGHT),
+    width: width,
+    height: height,
   };
 }
 

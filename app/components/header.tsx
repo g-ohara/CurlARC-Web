@@ -43,11 +43,11 @@ export default function Header({ className }: Props) {
 
   const handleLogout = () => {
     signOut();
-    router.push('/login');
+    router.push('/');
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/');
   };
 
   const goToProfile = () => {

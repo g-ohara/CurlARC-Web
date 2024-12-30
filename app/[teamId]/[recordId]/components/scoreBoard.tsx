@@ -1,7 +1,9 @@
 'use client'
 
 import { Hammer } from 'lucide-react'
-import React, { FC, useMemo } from 'react'
+import React, { FC } from 'react'
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from 'lucide-react'
 
 interface ScoreCellProps {
   score: number | string
@@ -79,8 +81,10 @@ interface ScoreBoardProps {
   friendScore: ScoreData
   enemyScore: ScoreData
   selectedEndIndex: number
+  isRed: boolean
   isFirst: boolean
   isEditMode: boolean
+  handleIsRedChange: (isRed: boolean) => void
   handleIsFirstChange: (isFirst: boolean) => void
   onEndSelect: (endIndex: number) => void
 }
@@ -89,8 +93,10 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
   friendScore,
   enemyScore,
   selectedEndIndex,
+  isRed,
   isFirst,
   isEditMode,
+  handleIsRedChange,
   handleIsFirstChange,
   onEndSelect,
 }) => {
@@ -103,13 +109,55 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
     hoverBg: 'hover:bg-gray-200'
   }
 
+  const FriendRow = () => (
+    <ScoreRow
+      key={`team-${friendScore.teamName}`}
+      {...friendScore}
+      selectedRoundIndex={selectedEndIndex}
+      isFirst={isFirst}
+      isFriend={true}
+      color='bg-red-500'
+      isEditMode={isEditMode}
+      onEndSelect={onEndSelect}
+      onIsFirstChange={handleIsFirstChange}
+    />
+  )
+
+  const EnemyRow = () => (
+    <ScoreRow
+      key={`team-${enemyScore.teamName}`}
+      {...enemyScore}
+      selectedRoundIndex={selectedEndIndex}
+      isFriend={false}
+      isFirst={!isFirst}
+      color='bg-yellow-300'
+      isEditMode={isEditMode}
+      onEndSelect={onEndSelect}
+      onIsFirstChange={handleIsFirstChange}
+    />
+  )
+
   return (
     <div className="overflow-x-auto ">
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className={colors.headerBg}>
             <th className="border-b border-muted px-2 py-1 text-left text-xs sm:text-sm md:text-base">
-              <div className="max-w-[100px] md:max-w-[150px] overflow-hidden">TEAM</div>
+              <div className="max-w-[100px] md:max-w-[150px] overflow-hidden">
+                TEAM
+                {
+                  isEditMode && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleIsRedChange(!isRed)}
+                      className="ml-2 h-6 bg-gray-300 hover:bg-gray-400"
+                    >
+                      <ArrowUpDown className="h-3 w-3" />
+                    </Button>
+                  )
+                }
+              </div>
             </th>
             <th className="border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base">
             </th>
@@ -129,28 +177,11 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
           </tr>
         </thead>
         <tbody>
-          <ScoreRow
-            key={`team-${friendScore.teamName}`}
-            {...friendScore}
-            selectedRoundIndex={selectedEndIndex}
-            isFirst={isFirst}
-            isFriend={true}
-            color='bg-red-500'
-            isEditMode={isEditMode}
-            onEndSelect={onEndSelect}
-            onIsFirstChange={handleIsFirstChange}
-          />
-          <ScoreRow
-            key={`team-${enemyScore.teamName}`}
-            {...enemyScore}
-            selectedRoundIndex={selectedEndIndex}
-            isFriend={false}
-            isFirst={!isFirst}
-            color='bg-yellow-300'
-            isEditMode={isEditMode}
-            onEndSelect={onEndSelect}
-            onIsFirstChange={handleIsFirstChange}
-          />
+          {
+            isRed
+              ? <><FriendRow /><EnemyRow /></>
+              : <><EnemyRow /><FriendRow /></>
+          }
         </tbody>
       </table>
     </div>

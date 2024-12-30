@@ -27,7 +27,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
     r,
     theta,
     SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS,
+    SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2,
   );
 
   // If borderOffset is set to 0,
@@ -37,7 +37,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
   const xOut = x - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
     x + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_WIDTH;
   const yOut = y - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
-    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT;
+    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT + SHEET_CONSTANTS.STONE_RADIUS * 2;
   return xOut || yOut;
 };
 
@@ -50,7 +50,12 @@ function DraggableStone(
     disabled: !draggable,
   });
 
-  const { x, y } = polarToCartesian(r, theta, SHEET_CONSTANTS.SHEET_WIDTH / 2, SHEET_CONSTANTS.HOUSE_RADIUS);
+  const { x, y } = polarToCartesian(
+    r,
+    theta,
+    SHEET_CONSTANTS.SHEET_WIDTH / 2,
+    SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2,
+  );
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -213,7 +218,7 @@ export function Sheet({
       stone.r,
       stone.theta,
       SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
+      SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2
     );
 
     const newX = oldX + delta.x / scale;
@@ -223,7 +228,7 @@ export function Sheet({
       newX,
       newY,
       SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
+      SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2
     );
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, scale, friendStones, enemyStones]);

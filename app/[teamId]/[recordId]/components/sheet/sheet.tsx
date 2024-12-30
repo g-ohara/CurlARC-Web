@@ -23,12 +23,7 @@ interface StoneProps {
 
 // Check whether stone is out of the sheet.
 export const stoneIsOut = (r: number, theta: number): boolean => {
-  const { x, y } = polarToCartesian(
-    r,
-    theta,
-    SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2,
-  );
+  const { x, y } = polarToCartesian(r, theta);
 
   // If borderOffset is set to 0,
   // stones on left and top are not recognized as out of the sheet.
@@ -50,12 +45,7 @@ function DraggableStone(
     disabled: !draggable,
   });
 
-  const { x, y } = polarToCartesian(
-    r,
-    theta,
-    SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2,
-  );
+  const { x, y } = polarToCartesian(r, theta);
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -214,22 +204,12 @@ export function Sheet({
 
     if (!stone) return;
 
-    const { x: oldX, y: oldY } = polarToCartesian(
-      stone.r,
-      stone.theta,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2
-    );
+    const { x: oldX, y: oldY } = polarToCartesian(stone.r, stone.theta);
 
     const newX = oldX + delta.x / scale;
     const newY = oldY + delta.y / scale;
 
-    const { r, theta } = cartesianToPolar(
-      newX,
-      newY,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2
-    );
+    const { r, theta } = cartesianToPolar(newX, newY);
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, scale, friendStones, enemyStones]);
 

@@ -17,14 +17,17 @@ export function calculateDimensions(parentSize: Dimensions): Dimensions {
   };
 }
 
-export function polarToCartesian(r: number, theta: number, centerX: number, centerY: number): Point {
+const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
+const centerY = SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2;
+
+export function polarToCartesian(r: number, theta: number): Point {
   return {
     x: r * Math.cos(theta) + centerX,
     y: centerY - r * Math.sin(theta),
   };
 }
 
-export function cartesianToPolar(x: number, y: number, centerX: number, centerY: number): { r: number; theta: number } {
+export function cartesianToPolar(x: number, y: number): { r: number; theta: number } {
   const dx = x - centerX;
   const dy = centerY - y;
   return {

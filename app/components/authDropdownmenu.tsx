@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { LogInIcon, LogOutIcon, SettingsIcon, UserIcon } from "@/components/icons";
+import { LogOutIcon, SettingsIcon, UserIcon } from "@/components/icons";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { signIn } from "next-auth/react";
+import { SignInWithGoogleLogo } from "./googleLogo";
 
 export type Props = {
   user: {
@@ -53,14 +55,9 @@ return (
       </>
     ) : (
       <>
-        <DropdownMenuItem onClick={handleLogin}>
-          <LogInIcon className="mr-2 h-4 w-4" />
-          Login
+        <DropdownMenuItem onClick={() => signIn('google')}>
+          <SignInWithGoogleLogo />
         </DropdownMenuItem>
-        {/* <DropdownMenuItem onClick={() => setIsRegisterModalOpen(true)}>
-          <UserIcon className="mr-2 h-4 w-4" />
-          Register
-        </DropdownMenuItem> */}
       </>
     )}
   </DropdownMenuContent>

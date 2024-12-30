@@ -10,6 +10,7 @@ import { getTeamsByUserId, getInvitedTeams } from '@/lib/api/team';
 import { Team } from '@/types/model';
 import CreateTeamsButton from './createTeamsButton';
 import AcceptInvitationButton from './acceptInvitationButton';
+import { toast } from 'sonner';
 
 type Props = {
   className?: string;
@@ -42,11 +43,11 @@ export default function Header({ className }: Props) {
 
   const handleLogout = () => {
     signOut();
-    router.push('/login');
+    router.push('/');
   };
 
   const handleLogin = () => {
-    router.push('/login');
+    router.push('/');
   };
 
   const goToProfile = () => {
@@ -74,7 +75,15 @@ export default function Header({ className }: Props) {
         <div className="flex gap-4">
           <button
             className="p-2 hover:bg-gray-300 rounded-lg"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              if (!session) {
+                toast.error('You need to be logged in to view your teams.', {
+                  position: 'top-center',
+                });
+              return;
+              }
+              setIsMenuOpen(!isMenuOpen);
+            }}
             aria-label="Toggle menu"
           >
             <AlignJustify className="h-6 w-6" />
@@ -97,9 +106,9 @@ export default function Header({ className }: Props) {
           />
         </div>
 
-        {/* Mobile Navigation Menu */}
+        {/* Navigation Menu */}
         <div
-          id="mobile-nav"
+          id="nav"
           className={`text-black fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}

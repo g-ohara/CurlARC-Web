@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LogIn, Users, Zap, Target, ChevronDown } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
 
 export default function Component() {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -68,11 +69,9 @@ export default function Component() {
               CurlARCは、カーリングの試合記録を簡単に管理し、チームのパフォーマンスを向上させるための最先端ツールです。
               プロからアマチュアまで、すべてのカーリング愛好家のゲームを次のレベルへ引き上げます。
             </p>
-            <Link href="/login">
-              <Button className="w-full text-lg py-6 bg-blue-600 hover:bg-blue-700 transition-all duration-300 font-display" size="lg">
+              <Button className="w-full text-lg py-6 bg-blue-600 hover:bg-blue-700 transition-all duration-300 font-display" size="lg" onClick={() => signIn('google')}>
                 今すぐ使ってみる
               </Button>
-            </Link>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 50 }}

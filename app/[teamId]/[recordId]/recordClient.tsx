@@ -114,11 +114,6 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setIsEditMode(false);
   };
 
-  const handleCancel = () => {
-    setEditedRecord(recordRes.record);
-    setIsEditMode(false);
-  };
-
   return (
     <div className="w-full h-full">
       <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SHEET_CONSTANTS } from "./constants";
-import { Canvas2D, Dimensions, Point } from "./types";
+import { Dimensions, Point } from "./types";
 
 export function calculateDimensions(parentSize: Dimensions): Dimensions {
   let { width, height } = parentSize;
@@ -62,7 +62,7 @@ export function useParentSize() {
   return { containerRef, parentSize };
 }
 
-export function drawSheet(ctx: CanvasRenderingContext2D, width: number, height: number) {
+export function drawSheet(ctx: CanvasRenderingContext2D, width: number) {
   const {
     SHEET_WIDTH,
     SHEET_HEIGHT,

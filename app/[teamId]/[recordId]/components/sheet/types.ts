@@ -31,7 +31,5 @@ export interface SheetProps {
   record: RecordDetail;
   setRecord: React.Dispatch<React.SetStateAction<RecordDetail>>;
   selectedEndIndex: number;
-  setSelectedEndIndex: React.Dispatch<React.SetStateAction<number>>;
   selectedShotIndex: number;
-  setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
 }

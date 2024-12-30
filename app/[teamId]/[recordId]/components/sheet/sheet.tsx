@@ -92,9 +92,7 @@ export function Sheet({
   record,
   setRecord,
   selectedEndIndex,
-  setSelectedEndIndex,
   selectedShotIndex,
-  setSelectedShotIndex,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -221,7 +219,7 @@ export function Sheet({
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
-        drawSheet(ctx, dimensions.width, dimensions.height);
+        drawSheet(ctx, dimensions.width);
       }
     }
   }, [dimensions]);

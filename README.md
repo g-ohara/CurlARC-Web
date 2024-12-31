@@ -44,7 +44,8 @@ The official frontend repository for **CurlARC**, a web application designed to 
 - CSS Modules / Tailwind CSS / Styled Components
 
 **Hosting**:
-- Vercel
+- Vercel (for frontend)
+- Fly.io (for backend)
 
 ---
 

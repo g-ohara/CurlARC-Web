@@ -23,12 +23,7 @@ interface StoneProps {
 
 // Check whether stone is out of the sheet.
 export const stoneIsOut = (r: number, theta: number): boolean => {
-  const { x, y } = polarToCartesian(
-    r,
-    theta,
-    SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS,
-  );
+  const { x, y } = polarToCartesian(r, theta);
 
   // If borderOffset is set to 0,
   // stones on left and top are not recognized as out of the sheet.
@@ -37,7 +32,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
   const xOut = x - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
     x + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_WIDTH;
   const yOut = y - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
-    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT;
+    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT + SHEET_CONSTANTS.STONE_RADIUS * 2;
   return xOut || yOut;
 };
 
@@ -50,7 +45,7 @@ function DraggableStone(
     disabled: !draggable,
   });
 
-  const { x, y } = polarToCartesian(r, theta, SHEET_CONSTANTS.SHEET_WIDTH / 2, SHEET_CONSTANTS.HOUSE_RADIUS);
+  const { x, y } = polarToCartesian(r, theta);
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -97,9 +92,7 @@ export function Sheet({
   record,
   setRecord,
   selectedEndIndex,
-  setSelectedEndIndex,
   selectedShotIndex,
-  setSelectedShotIndex,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -206,22 +199,12 @@ export function Sheet({
 
     if (!stone) return;
 
-    const { x: oldX, y: oldY } = polarToCartesian(
-      stone.r,
-      stone.theta,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
-    );
+    const { x: oldX, y: oldY } = polarToCartesian(stone.r, stone.theta);
 
     const newX = oldX + delta.x / scale;
     const newY = oldY + delta.y / scale;
 
-    const { r, theta } = cartesianToPolar(
-      newX,
-      newY,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
-    );
+    const { r, theta } = cartesianToPolar(newX, newY);
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, scale, friendStones, enemyStones]);
 
@@ -233,7 +216,7 @@ export function Sheet({
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
-        drawSheet(ctx, dimensions.width, dimensions.height);
+        drawSheet(ctx, dimensions.width);
       }
     }
   }, [dimensions]);

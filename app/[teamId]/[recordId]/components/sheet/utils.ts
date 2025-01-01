@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SHEET_CONSTANTS } from "./constants";
-import { Canvas2D, Dimensions, Point } from "./types";
+import { Dimensions, Point } from "./types";
 
 export function calculateDimensions(parentSize: Dimensions): Dimensions {
   let { width, height } = parentSize;
@@ -17,14 +17,17 @@ export function calculateDimensions(parentSize: Dimensions): Dimensions {
   };
 }
 
-export function polarToCartesian(r: number, theta: number, centerX: number, centerY: number): Point {
+const centerX = SHEET_CONSTANTS.SHEET_WIDTH / 2;
+const centerY = SHEET_CONSTANTS.HOUSE_RADIUS + SHEET_CONSTANTS.STONE_RADIUS * 2;
+
+export function polarToCartesian(r: number, theta: number): Point {
   return {
     x: r * Math.cos(theta) + centerX,
     y: centerY - r * Math.sin(theta),
   };
 }
 
-export function cartesianToPolar(x: number, y: number, centerX: number, centerY: number): { r: number; theta: number } {
+export function cartesianToPolar(x: number, y: number): { r: number; theta: number } {
   const dx = x - centerX;
   const dy = centerY - y;
   return {
@@ -59,26 +62,34 @@ export function useParentSize() {
   return { containerRef, parentSize };
 }
 
-export function drawSheet(ctx: CanvasRenderingContext2D, width: number, height: number) {
-  const { SHEET_WIDTH, SHEET_HEIGHT, BORDER_OFFSET, HOUSE_RADIUS, HOUSE_CIRCLES, HOUSE_COLORS } = SHEET_CONSTANTS;
+export function drawSheet(ctx: CanvasRenderingContext2D, width: number) {
+  const {
+    SHEET_WIDTH,
+    SHEET_HEIGHT,
+    BORDER_OFFSET,
+    HOUSE_RADIUS,
+    HOUSE_CIRCLES,
+    HOUSE_COLORS,
+    STONE_RADIUS,
+  } = SHEET_CONSTANTS;
 
   const scale = width / SHEET_WIDTH;
   ctx.save();
   ctx.scale(scale, scale);
 
   // Clear canvas
-  ctx.clearRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT);
+  ctx.clearRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT + STONE_RADIUS * 4);
 
   // Draw ice
   ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT);
+  ctx.fillRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT + STONE_RADIUS * 4);
 
   // Draw sheet border
   ctx.strokeStyle = "black";
   ctx.lineWidth = 2;
   ctx.strokeRect(
     BORDER_OFFSET,
-    BORDER_OFFSET,
+    BORDER_OFFSET + STONE_RADIUS * 2,
     SHEET_WIDTH - BORDER_OFFSET * 2,
     SHEET_HEIGHT - BORDER_OFFSET * 2
   );
@@ -86,17 +97,17 @@ export function drawSheet(ctx: CanvasRenderingContext2D, width: number, height: 
   // Draw house
   HOUSE_CIRCLES.forEach((radius, index) => {
     ctx.beginPath();
-    ctx.arc(SHEET_WIDTH / 2, HOUSE_RADIUS, radius, 0, Math.PI * 2);
+    ctx.arc(SHEET_WIDTH / 2, HOUSE_RADIUS + STONE_RADIUS * 2, radius, 0, Math.PI * 2);
     ctx.fillStyle = HOUSE_COLORS[index];
     ctx.fill();
   });
 
   // Draw center line
   ctx.beginPath();
-  ctx.moveTo(0, HOUSE_RADIUS);
-  ctx.lineTo(SHEET_WIDTH, HOUSE_RADIUS);
-  ctx.moveTo(SHEET_WIDTH / 2, 0);
-  ctx.lineTo(SHEET_WIDTH / 2, SHEET_HEIGHT);
+  ctx.moveTo(0, HOUSE_RADIUS + STONE_RADIUS * 2);
+  ctx.lineTo(SHEET_WIDTH, HOUSE_RADIUS + STONE_RADIUS * 2);
+  ctx.moveTo(SHEET_WIDTH / 2, STONE_RADIUS * 2);
+  ctx.lineTo(SHEET_WIDTH / 2, SHEET_HEIGHT + STONE_RADIUS * 2);
   ctx.stroke();
 
   ctx.restore();

@@ -136,9 +136,7 @@ export default function StonePositionsSection({
           record={record}
           setRecord={setRecord}
           selectedEndIndex={selectedEndIndex}
-          setSelectedEndIndex={setSelectedEndIndex}
           selectedShotIndex={selectedShotIndex}
-          setSelectedShotIndex={setSelectedShotIndex}
         />
       </div>
     </section>

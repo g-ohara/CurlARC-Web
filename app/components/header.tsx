@@ -22,6 +22,7 @@ export default function Header({ className }: Props) {
   const router = useRouter();
   const [teams, setTeams] = useState<Team[]>([]);
   const [invitedTeams, setInvitedTeams] = useState<Team[]>([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +40,11 @@ export default function Header({ className }: Props) {
     };
 
     fetchData();
-  }, [session]);
+  }, [session, refresh]);
+
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  }
 
   const handleLogout = () => {
     signOut();
@@ -140,7 +145,7 @@ export default function Header({ className }: Props) {
                       </Link>
                     </li>
                   ))}
-                  <CreateTeamsButton />
+                  <CreateTeamsButton handleRefresh={handleRefresh}/>
                 </ul>
               </div>
 

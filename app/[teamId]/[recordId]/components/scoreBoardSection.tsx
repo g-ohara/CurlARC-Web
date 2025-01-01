@@ -9,24 +9,36 @@ type Props = {
   onEndSelect: (endIndex: number) => void
   selectedEndIndex: number
   isEditMode: boolean
+  handleIsRedChange: (isRed: boolean) => void
   handleIsFirstChange: (isFirst: boolean) => void
 }
 
-export default function ScoreBoardSection({ record, friendTeamName, onEndSelect, selectedEndIndex, isEditMode, handleIsFirstChange }: Props) {
+export default function ScoreBoardSection({
+  record,
+  friendTeamName,
+  onEndSelect,
+  selectedEndIndex,
+  isEditMode,
+  handleIsRedChange,
+  handleIsFirstChange
+}: Props) {
   const teamScoreData = extractTeamsScoreData(record)
   teamScoreData.friend.teamName = friendTeamName
   return (
     <section>
       <h2 className="text-xl font-medium mb-4">Score Board</h2>
-      <ScoreBoard 
-        friendScore={teamScoreData.friend} 
+      <ScoreBoard
+        friendScore={teamScoreData.friend}
         enemyScore={teamScoreData.enemy}
+        isRed={record.is_red}
         isFirst={record.is_first}
         onEndSelect={onEndSelect}
         selectedEndIndex={selectedEndIndex}
+        handleIsRedChange={handleIsRedChange}
         handleIsFirstChange={handleIsFirstChange}
         isEditMode={isEditMode}
       />
     </section>
   )
 }
+

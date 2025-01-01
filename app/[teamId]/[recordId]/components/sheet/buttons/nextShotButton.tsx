@@ -64,15 +64,8 @@ export default function NextShotButton({
       shots: [...latestEnd.shots, newShot],
     };
     const newRecord = {
-      id: record.id,
-      team_id: record.team_id,
-      result: record.result,
-      enemy_team_name: record.enemy_team_name,
-      place: record.place,
-      date: record.date,
+      ...record,
       ends_data: [...endsData.slice(0, endsData.length - 1), newDataPerEnd],
-      is_first: record.is_first,
-      is_public: record.is_public,
     };
     return newRecord;
   };
@@ -97,15 +90,8 @@ export default function NextShotButton({
       ],
     }
     const newRecord = {
-      id: record.id,
-      team_id: record.team_id,
-      result: record.result,
-      enemy_team_name: record.enemy_team_name,
-      place: record.place,
-      date: record.date,
+      ...record,
       ends_data: [...record.ends_data, newDataPerEnd],
-      is_first: record.is_first,
-      is_public: record.is_public,
     };
     return newRecord;
   };

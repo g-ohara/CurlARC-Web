@@ -67,6 +67,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setSelectedShotIndex(shotIndex);
   };
 
+  const handleIsRedChange = (isRed: boolean) => {
+    setEditedRecord(prevRecord => {
+      return { ...prevRecord, is_red: isRed };
+    });
+  }
+
   const handleIsFirstChange = (isFirst: boolean) => {
     setEditedRecord(prevRecord => {
       return { ...prevRecord, is_first: isFirst };
@@ -107,6 +113,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       place: editedRecord.place,
       date: editedRecord.date,
       ends_data: editedRecord.ends_data,
+      is_red: editedRecord.is_red,
       is_first: editedRecord.is_first,
       is_public: editedRecord.is_public
     }
@@ -129,6 +136,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             friendTeamName={teamRes.team.name}
             onEndSelect={onEndSelect}
             selectedEndIndex={selectedEndIndex}
+            handleIsRedChange={handleIsRedChange}
             handleIsFirstChange={handleIsFirstChange}
             isEditMode={isEditMode}
           />

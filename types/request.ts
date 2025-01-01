@@ -20,11 +20,12 @@ export type createRecordRequest = {
 }
 
 export type updateRecordRequest = {
-  result : string
+  result: string
   enemy_team_name: string
   place: string
   date: Date
   ends_data: DataPerEnd[]
+  is_red: boolean
   is_first: boolean
   is_public: boolean
 }

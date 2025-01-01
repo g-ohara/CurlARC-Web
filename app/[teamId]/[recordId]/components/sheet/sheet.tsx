@@ -115,9 +115,6 @@ export function Sheet({
   const friendStones = selectedShot.stones.friend_stones;
   const enemyStones = selectedShot.stones.enemy_stones;
 
-  // TODO: Get whether friend color from record
-  const friendIsRed = true;
-
   const calcScore = (stones: Stones) => {
     const friendStones = [...stones.friend_stones].sort((a, b) => a.r - b.r);
     const enemyStones = [...stones.enemy_stones].sort((a, b) => a.r - b.r);
@@ -268,7 +265,7 @@ export function Sheet({
               index={stone.index}
               r={stone.r}
               theta={stone.theta}
-              isRed={friendIsRed}
+              isRed={record.is_red}
               scale={scale}
               draggable={interactive}
             />
@@ -280,7 +277,7 @@ export function Sheet({
               index={stone.index}
               r={stone.r}
               theta={stone.theta}
-              isRed={!friendIsRed}
+              isRed={!record.is_red}
               scale={scale}
               draggable={interactive}
             />

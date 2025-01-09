@@ -23,29 +23,29 @@ export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps
       <div className="grid md:grid-cols-2 gap-6 mt-8">
         <div>
           <Suspense fallback={<LoadingPlaceholder />}>
-          <AsyncTeamMembers teamId={teamId} />
+            <AsyncTeamMembers teamId={teamId} />
           </Suspense>
         </div>
         <div>
           <h4 className="flex items-center text-2xl font-medium gap-4">
-          <p>Records</p>
-          <CreateRecordButton teamId={teamId} />
+            <p>Records</p>
+            <CreateRecordButton teamId={teamId} />
           </h4>
           <div className="max-h-[40vh] overflow-y-auto">
-          {records ? (
-            records.map((record) => (
-            <RecordItem
-              key={record.id}
-              recordId={record.id}
-              result={record.result}
-              teamId={teamId}
-              enemyTeamName={record.enemy_team_name}
-              date={record.date.toString()}
-            />
-            ))
-          ) : (
-            <p>No records found for this team.</p>
-          )}
+            {records ? (
+              records.map((record) => (
+                <RecordItem
+                  key={record.id}
+                  recordId={record.id}
+                  result={record.result}
+                  teamId={teamId}
+                  enemyTeamName={record.enemy_team_name}
+                  date={record.date.toString()}
+                />
+              ))
+            ) : (
+              <p>No records found for this team.</p>
+            )}
           </div>
         </div>
       </div>

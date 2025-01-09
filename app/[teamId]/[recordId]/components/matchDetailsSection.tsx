@@ -1,5 +1,4 @@
 import { RecordDetail } from '../../../../types/model'
-import React from 'react'
 import {
   Table,
   TableHeader,
@@ -8,7 +7,6 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table'
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -38,7 +36,6 @@ const formatSuccessRate = (rate: number): string => {
   return `${(rate).toFixed(1)}%`
 }
 
-const shotTypes = ['Draw', 'Guard', 'Takeout', 'Freeze']
 const successRates = Array.from({ length: 11 }, (_, i) => i * 10)
 
 export default function MatchDetailsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, isEditMode, onShotsDetailsChange }: Props) {
@@ -49,84 +46,75 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
     onShotsDetailsChange(selectedEndIndex, shotIndex, field, value)
   }
 
+  const headerColors = ["bg-red-100", "bg-yellow-100"]
+
+  const SuccessRateCell = ({ shotIndex }: { shotIndex: number }) => {
+    const shot = selectedShotsData[shotIndex]
+    const successRateColor = shot ? getSuccessRateColor(shot.success_rate) : 'bg-white'
+    const selected = selectedShotIndex === shotIndex
+    return (
+      shot &&
+      <TableCell className={`text-right ${successRateColor} hover:bg-muted/50 ${selected && 'bg-muted'}`} onClick={() => onShotSelect(shotIndex)}>
+        {
+          isEditMode ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-between">
+                  {formatSuccessRate(shot.success_rate)} <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                {successRates.map((rate) => (
+                  <DropdownMenuItem
+                    key={rate}
+                    onSelect={() => handleChange(shotIndex, 'success_rate', rate)}
+                  >
+                    {rate}%
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            formatSuccessRate(shot.success_rate)
+          )}
+      </TableCell>
+    );
+  }
+
+  const ShotRow = ({ index }: { index: number }) => {
+    return (
+      <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''}>
+        {index * 2 < selectedShotsData.length &&
+          <TableCell className="font-medium">{index + 1}</TableCell>
+        }
+        {[0, 1].map((i) => (
+          <SuccessRateCell shotIndex={index * 2 + i} />
+        ))}
+      </TableRow>
+    );
+  }
+
   return (
     <section className="space-y-8">
       <div>
         <h2 className="text-xl font-medium mb-4">Shots</h2>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4">Shot</TableHead>
-              <TableHead>Shooter</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead className="text-right">Success Rate</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {selectedShotsData.map((shot, index) => (
-              <TableRow key={index} data-state={selectedShotIndex === index ? 'selected' : ''} onClick={() => onShotSelect(index)}>
-                <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>
-                  {isEditMode ? (
-                    <Input
-                      value={shot.shooter}
-                      onChange={(e) => handleChange(index, 'shooter', e.target.value)}
-                      className="w-full"
-                    />
-                  ) : (
-                    shot.shooter
-                  )}
-                </TableCell>
-                <TableCell>
-                  {isEditMode ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between">
-                          {shot.type} <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
-                        {shotTypes.map((type) => (
-                          <DropdownMenuItem
-                            key={type}
-                            onSelect={() => handleChange(index, 'type', type)}
-                          >
-                            {type}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    shot.type
-                  )}
-                </TableCell>
-                <TableCell className={`text-right ${getSuccessRateColor(shot.success_rate)}`}>
-                  {isEditMode ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between">
-                          {formatSuccessRate(shot.success_rate)} <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
-                        {successRates.map((rate) => (
-                          <DropdownMenuItem
-                            key={rate}
-                            onSelect={() => handleChange(index, 'success_rate', rate)}
-                          >
-                            {rate}%
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    formatSuccessRate(shot.success_rate)
-                  )}
-                </TableCell>
+        <div className="w-full max-h-[35vh] overflow-y-auto display-block">
+          <Table className="overflow-y-auto">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-1/6">No.</TableHead>
+                {(record.is_red && record.is_first || !record.is_red && !record.is_first ? headerColors : headerColors.reverse()).map((color) => (
+                  <TableHead className={`w-1/3 ${color}`}>Success Rate</TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
+                <ShotRow key={index} index={index} />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
       <div>
         <h2 className="text-xl font-medium mb-4">Match Details</h2>

@@ -14,10 +14,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createTeam } from '@/lib/api/team'
-import { revalidateByTag } from '../[teamId]/serverActions'
 import { Plus } from "lucide-react"
 
-export default function CreateTeamsButton() {
+type Props = {
+  handleRefresh: () => void
+}
+
+export default function CreateTeamsButton({handleRefresh}: Props) {
   const [teamName, setTeamName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -41,13 +44,13 @@ export default function CreateTeamsButton() {
     setSuccess(null)
 
     try {
-      await createTeam(teamName) // チームを作成
-      setTeamName('') // フォームのリセット
-      revalidateByTag('getTeamsByUserId') // チーム一覧を再取得
+      await createTeam(teamName)
+      setTeamName('') 
+      handleRefresh()
 
       setSuccess('Team created successfully!')
     } catch (error) {
-      setError('Failed to create team. Please try again.\n' + error) // エラーメッセージ
+      setError('Failed to create team. Please try again.\n' + error)
     } finally {
       setLoading(false)
     }

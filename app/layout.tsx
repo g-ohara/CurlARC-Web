@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/app/components/header'
 import NextAuthProvider from './providers/NextAuth'
+import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <div className="flex flex-grow w-full">
               {children}
             </div>
+            <Toaster />
           </div>
         </NextAuthProvider>
       </body>

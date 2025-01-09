@@ -9,7 +9,6 @@ import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { Coordinate, Dimensions, SheetProps } from "./types";
 import { SHEET_CONSTANTS } from "./constants";
 import { calculateDimensions, useParentSize, polarToCartesian, drawSheet, cartesianToPolar } from "./utils";
-import NextShotButton from "./buttons/nextShotButton";
 import { Stones } from "@/types/model";
 
 interface StoneProps {
@@ -24,12 +23,7 @@ interface StoneProps {
 
 // Check whether stone is out of the sheet.
 export const stoneIsOut = (r: number, theta: number): boolean => {
-  const { x, y } = polarToCartesian(
-    r,
-    theta,
-    SHEET_CONSTANTS.SHEET_WIDTH / 2,
-    SHEET_CONSTANTS.HOUSE_RADIUS,
-  );
+  const { x, y } = polarToCartesian(r, theta);
 
   // If borderOffset is set to 0,
   // stones on left and top are not recognized as out of the sheet.
@@ -38,7 +32,7 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
   const xOut = x - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
     x + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_WIDTH;
   const yOut = y - SHEET_CONSTANTS.STONE_RADIUS <= borderOffset ||
-    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT;
+    y + SHEET_CONSTANTS.STONE_RADIUS >= SHEET_CONSTANTS.SHEET_HEIGHT + SHEET_CONSTANTS.STONE_RADIUS * 2;
   return xOut || yOut;
 };
 
@@ -46,12 +40,12 @@ export const stoneIsOut = (r: number, theta: number): boolean => {
 function DraggableStone(
   { id, index, r, theta, isRed, scale, draggable }: StoneProps
 ) {
-  const { attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: id,
     disabled: !draggable,
   });
 
-  const { x, y } = polarToCartesian(r, theta, SHEET_CONSTANTS.SHEET_WIDTH / 2, SHEET_CONSTANTS.HOUSE_RADIUS);
+  const { x, y } = polarToCartesian(r, theta);
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -81,7 +75,7 @@ function DraggableStone(
         fontSize: 16 * scale,
         touchAction: 'none',
         transform: `scale(${isDragging ? 1.2 : 1})`,
-        transition: isDragging ? "transform 0.1s ease": "transorm 0.3s ease",
+        transition: isDragging ? "transform 0.1s ease" : "transorm 0.3s ease",
         ...style,
       }}
       {...listeners}
@@ -98,9 +92,7 @@ export function Sheet({
   record,
   setRecord,
   selectedEndIndex,
-  setSelectedEndIndex,
   selectedShotIndex,
-  setSelectedShotIndex,
 }: SheetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { containerRef, parentSize } = useParentSize();
@@ -115,9 +107,6 @@ export function Sheet({
   const selectedShot = selectedEnd ? selectedEnd.shots[selectedShotIndex] || { stones: { friend_stones: [], enemy_stones: [] } } : { stones: { friend_stones: [], enemy_stones: [] } };
   const friendStones = selectedShot.stones.friend_stones;
   const enemyStones = selectedShot.stones.enemy_stones;
-
-  // TODO: Get whether friend color from record
-  const friendIsRed = true;
 
   const calcScore = (stones: Stones) => {
     const friendStones = [...stones.friend_stones].sort((a, b) => a.r - b.r);
@@ -195,11 +184,6 @@ export function Sheet({
     });
   };
 
-  const handleDragStart = useCallback(() => {
-    // スクロールを無効化
-    document.body.style.overflow = 'hidden';
-  }, []);
-
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     // スクロールを有効化
     document.body.style.overflow = 'auto';
@@ -215,22 +199,12 @@ export function Sheet({
 
     if (!stone) return;
 
-    const { x: oldX, y: oldY } = polarToCartesian(
-      stone.r,
-      stone.theta,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
-    );
+    const { x: oldX, y: oldY } = polarToCartesian(stone.r, stone.theta);
 
     const newX = oldX + delta.x / scale;
     const newY = oldY + delta.y / scale;
 
-    const { r, theta } = cartesianToPolar(
-      newX,
-      newY,
-      SHEET_CONSTANTS.SHEET_WIDTH / 2,
-      SHEET_CONSTANTS.HOUSE_RADIUS
-    );
+    const { r, theta } = cartesianToPolar(newX, newY);
     onStonePositionChange(selectedEndIndex, selectedShotIndex, isFriendStone, { r, theta, index });
   }, [interactive, onStonePositionChange, selectedEndIndex, selectedShotIndex, scale, friendStones, enemyStones]);
 
@@ -242,7 +216,7 @@ export function Sheet({
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
-        drawSheet(ctx, dimensions.width, dimensions.height);
+        drawSheet(ctx, dimensions.width);
       }
     }
   }, [dimensions]);
@@ -253,30 +227,10 @@ export function Sheet({
 
   return (
     <DndContext
-      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToParentElement]}
     >
       <div className={className} ref={containerRef}>
-        {interactive && (
-          <>
-            <div className="flex gap-2 mb-2">
-              <NextShotButton
-                record={record}
-                setRecord={setRecord}
-                selectedEndIndex={selectedEndIndex}
-                setSelectedEndIndex={setSelectedEndIndex}
-                selectedShotIndex={selectedShotIndex}
-                setSelectedShotIndex={setSelectedShotIndex}
-                onStonePositionChange={onStonePositionChange}
-              />
-            </div>
-            <div className="mb-2">
-              <span className="mr-4">Friend Stones: {friendStones?.length}/8</span>
-              <span>Enemy Stones: {enemyStones?.length}/8</span>
-            </div>
-          </>
-        )}
         <div
           ref={setNodeRef}
           style={{ position: 'relative', width: dimensions.width, height: dimensions.height }}
@@ -294,7 +248,7 @@ export function Sheet({
               index={stone.index}
               r={stone.r}
               theta={stone.theta}
-              isRed={friendIsRed}
+              isRed={record.is_red}
               scale={scale}
               draggable={interactive}
             />
@@ -306,7 +260,7 @@ export function Sheet({
               index={stone.index}
               r={stone.r}
               theta={stone.theta}
-              isRed={!friendIsRed}
+              isRed={!record.is_red}
               scale={scale}
               draggable={interactive}
             />

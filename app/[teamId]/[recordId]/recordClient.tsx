@@ -67,6 +67,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setSelectedShotIndex(shotIndex);
   };
 
+  const handleIsRedChange = (isRed: boolean) => {
+    setEditedRecord(prevRecord => {
+      return { ...prevRecord, is_red: isRed };
+    });
+  }
+
   const handleIsFirstChange = (isFirst: boolean) => {
     setEditedRecord(prevRecord => {
       return { ...prevRecord, is_first: isFirst };
@@ -107,6 +113,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
       place: editedRecord.place,
       date: editedRecord.date,
       ends_data: editedRecord.ends_data,
+      is_red: editedRecord.is_red,
       is_first: editedRecord.is_first,
       is_public: editedRecord.is_public
     }
@@ -114,14 +121,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
     setIsEditMode(false);
   };
 
-  const handleCancel = () => {
-    setEditedRecord(recordRes.record);
-    setIsEditMode(false);
-  };
-
   return (
-    <div className="w-full h-full overflow-hidden mx-4 my-4">
-      <RecordHeader record={editedRecord} friendTeamName={teamRes.team.name} />
+    <div className="w-full h-full">
+      <RecordHeader
+        friendTeam={teamRes.team}
+        record={editedRecord}
+      />
       <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-8">
         <div className="md:col-span-3 space-y-8">
           <ScoreBoardSection
@@ -129,6 +134,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             friendTeamName={teamRes.team.name}
             onEndSelect={onEndSelect}
             selectedEndIndex={selectedEndIndex}
+            handleIsRedChange={handleIsRedChange}
             handleIsFirstChange={handleIsFirstChange}
             isEditMode={isEditMode}
           />
@@ -164,7 +170,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           </div>
         </div>
         {/*  bigger than medium */}
-        <div className="hidden md:block md:col-span-2 w-full aspect-[1/2]">
+        <div className="hidden md:block md:col-span-2 min-w-[400px] max-h-[630px]">
           <StonePositionsSection
             record={editedRecord}
             setRecord={setEditedRecord}
@@ -176,7 +182,9 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
           />
         </div>
       </div>
-      <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
+      <div className="fixed bottom-10 right-5 w-full">
+        <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
+      </div>
     </div>
   );
 }

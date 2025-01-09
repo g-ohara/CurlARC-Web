@@ -1,148 +1,104 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { LogIn, Users, Zap, Target, ChevronDown } from "lucide-react"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { Clock, Users, Layout, Globe, Star, Heart } from 'lucide-react'
+import { signIn } from "next-auth/react"
+import { SignInWithGoogleLogo } from "./components/googleLogo"
 
-export default function Component() {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  const features = [
-    { icon: LogIn, title: "簡単ログイン", description: "Googleアカウントで即座にアクセス", color: "from-blue-300 to-blue-600" },
-    { icon: Users, title: "チーム管理と共有", description: "チームの記録を簡単に管理・共有", color: "from-green-300 to-green-600" },
-    { icon: Zap, title: "直感的なUI", description: "素早く正確な記録入力を実現", color: "from-yellow-300 to-yellow-600" }
-  ]
-
+export default function Home() {
   return (
-    <div className="min-h-screen text-gray-800 bg-gradient-to-br from-gray-100 to-blue-100">
-      <div className="mx-auto px-4 py-16">
-        <motion.h1 
-          className="text-6xl font-bold text-center mb-4 bg-clip-text font-display"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.1)' }}
-        >
-          <img src="/assets/full-logo.svg" alt="CurlARC" className="w-60 inline" />
-        </motion.h1>
-        <motion.p 
-          className="text-2xl text-center mb-12 text-blue-800 font-mincho italic"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          カーリング試合記録の革新的Webアプリ
-        </motion.p>
-        
-        <motion.div 
-          className="grid md:grid-cols-3 gap-6 mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          {features.map((feature, index) => (
-            <Card key={index} className="bg-white border-gray-200 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardHeader className={`bg-gradient-to-r ${feature.color}`}>
-                <CardTitle className="flex items-center text-white font-display text-xl">
-                  <feature.icon className="mr-2" />
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardDescription className="px-6 py-4 text-gray-600 font-sans">
-                {feature.description}
-              </CardDescription>
-            </Card>
-          ))}
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <p className="text-lg mb-6 font-sans leading-relaxed text-gray-700">
-              CurlARCは、カーリングの試合記録を簡単に管理し、チームのパフォーマンスを向上させるための最先端ツールです。
-              プロからアマチュアまで、すべてのカーリング愛好家のゲームを次のレベルへ引き上げます。
-            </p>
-            <Link href="/login">
-              <Button className="w-full text-lg py-6 bg-blue-600 hover:bg-blue-700 transition-all duration-300 font-display" size="lg">
-                今すぐ使ってみる
-              </Button>
-            </Link>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <img
-              src="/assets/sheet.png?height=300&width=500"
-              alt="CurlARCのスクリーンショット"
-              className="rounded-lg shadow-xl w-full h-auto border border-gray-200"
-            />
-          </motion.div>
+    <div className="min-h-screen bg-background w-full">
+      {/* Hero Section */}
+      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/curling.png?height=600&width=1200"
+            alt="Curling stones on ice"
+            className="w-full h-full object-cover brightness-50"
+          />
         </div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <Card className="mb-12 bg-white border-gray-200 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl flex items-center text-blue-700 font-display">
-                <Target className="mr-2" />
-                詳細なデータ記録
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-gray-700 font-sans">CurlARCでは、試合の細かなデータを記録できます：</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-600 font-sans">
-                <li>各エンドの詳細なスコア</li>
-                <li>各ショットごとのデータ：
-                  <ul className="list-circle list-inside ml-6 mt-2 space-y-1">
-                    <li>シューター名</li>
-                    <li>ショットの成功率</li>
-                    <li>ショット終了時のストーンの座標</li>
-                  </ul>
-                </li>
-                <li>チーム全体とプレイヤー個人の統計</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <Card className="bg-white border-gray-200 shadow-lg">
-            <CardHeader className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-              <CardTitle className="text-2xl flex items-center justify-between text-blue-700 font-display">
-                使い方
-                <ChevronDown className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-              </CardTitle>
-            </CardHeader>
-            {isExpanded && (
-              <CardContent>
-                <ol className="list-decimal list-inside space-y-2 text-gray-600 font-sans">
-                  <li>Googleアカウントでログインします。</li>
-                  <li>新しい試合を作成するか、既存のチームを選択します。</li>
-                  <li>試合情報とチーム情報を入力します。</li>
-                  <li>各エンド、各ショットのデータを入力していきます。</li>
-                  <li>試合終了後、詳細な統計や分析を確認できます。</li>
-                  <li>チームメンバーと記録を共有し、パフォーマンス向上に役立てましょう。</li>
-                </ol>
+        <div className="relative z-10 container mx-auto px-4 text-center text-white">
+          <img src="/assets/full-logo.svg" alt="CurlARC" className="flex mx-auto aspect-auto w-1/2 mb-8" />
+          <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8">
+            Revolutionize your curling match recording and management with our comprehensive web application.
+          </p>
+          <SignInWithGoogleLogo handleFunction={() => signIn('google')} />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-slate-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon={<Clock className="w-10 h-10 text-blue-600" />}
+              title="Real-time Match Recording"
+              description="Track scores and progress effortlessly during your matches."
+            />
+            <FeatureCard
+              icon={<Users className="w-10 h-10 text-blue-600" />}
+              title="Team Collaboration"
+              description="Share match records seamlessly with your teammates."
+            />
+            <FeatureCard
+              icon={<Layout className="w-10 h-10 text-blue-600" />}
+              title="User-friendly Interface"
+              description="Clean, intuitive design for users of all skill levels."
+            />
+            <FeatureCard
+              icon={<Globe className="w-10 h-10 text-blue-600" />}
+              title="Web-based Convenience"
+              description="No installation required—accessible from any browser."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Coming Soon Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Coming Soon</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card className="border-2 border-dashed">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <Star className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Public Match Sharing</h3>
+                  <p className="text-muted-foreground">
+                    Share and showcase your match records with the community.
+                  </p>
+                </div>
               </CardContent>
-            )}
-          </Card>
-        </motion.div>
-      </div>
+            </Card>
+            <Card className="border-2 border-dashed">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Follow System</h3>
+                  <p className="text-muted-foreground">
+                    Stay updated on your favorite teams and players.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
     </div>
+  )
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="text-center">
+          {icon}
+          <h3 className="text-xl font-semibold my-4">{title}</h3>
+          <p className="text-muted-foreground">{description}</p>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

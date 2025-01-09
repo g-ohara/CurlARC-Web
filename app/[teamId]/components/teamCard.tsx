@@ -16,7 +16,9 @@ type TeamCardProps = {
 
 export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
   const res = await getRecordsByTeamId(teamId)
-  const records = res.record_indices
+  const records = res.record_indices.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  )
   return (
     <>
       <TeamHeader teamName={teamName} />

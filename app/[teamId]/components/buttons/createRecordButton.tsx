@@ -99,7 +99,6 @@ export const CreateRecordButton = ({ teamId }: Props) => {
                   value={place}
                   onChange={(e) => setPlace(e.target.value)}
                   placeholder="Enter the place"
-                  required
                 />
               </div>
               <div className="mb-4 grid gap-2">

@@ -106,7 +106,9 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
     headerBg: 'bg-gray-100',
     disabledHeaderBg: 'bg-gray-500',
     selectedBorder: 'bg-blue-200',
-    hoverBg: 'hover:bg-gray-200'
+    hoverBg: 'hover:bg-gray-200',
+    redBg: 'bg-red-500',
+    yellowBg: 'bg-yellow-300',
   }
 
   const FriendRow = () => (
@@ -116,7 +118,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
       selectedRoundIndex={selectedEndIndex}
       isFirst={isFirst}
       isFriend={true}
-      color='bg-red-500'
+      color={isRed ? colors.redBg : colors.yellowBg}
       isEditMode={isEditMode}
       onEndSelect={onEndSelect}
       onIsFirstChange={handleIsFirstChange}
@@ -130,7 +132,7 @@ const ScoreBoard: FC<ScoreBoardProps> = ({
       selectedRoundIndex={selectedEndIndex}
       isFriend={false}
       isFirst={!isFirst}
-      color='bg-yellow-300'
+      color={isRed ? colors.yellowBg : colors.redBg}
       isEditMode={isEditMode}
       onEndSelect={onEndSelect}
       onIsFirstChange={handleIsFirstChange}

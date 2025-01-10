@@ -16,20 +16,22 @@ type TeamCardProps = {
 
 export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
   const res = await getRecordsByTeamId(teamId)
-  const records = res.record_indices.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
+  const records = res.record_indices
+  if (records) {
+    records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  }
+
   return (
     <>
       <TeamHeader teamName={teamName} />
-      <div className="grid md:grid-cols-2 gap-6 mt-8">
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
         <div>
           <Suspense fallback={<LoadingPlaceholder />}>
             <AsyncTeamMembers teamId={teamId} />
           </Suspense>
         </div>
         <div>
-          <h4 className="flex items-center text-2xl font-medium gap-4">
+          <h4 className="flex items-center gap-4 text-2xl font-medium">
             <p>Records</p>
             <CreateRecordButton teamId={teamId} />
           </h4>
@@ -52,11 +54,7 @@ export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps
         </div>
       </div>
       <div className="fixed bottom-0 left-0 w-full p-4">
-        <TeamFooter
-          lastGameDate={lastGameDate}
-          teamId={teamId}
-          teamName={teamName}
-        />
+        <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} />
       </div>
     </>
   )

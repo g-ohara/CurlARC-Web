@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
+import CommonButton from './commonButton';
 import { RecordDetail } from '@/types/model';
+import { Delete } from 'lucide-react';
 
 type Props = {
   record: RecordDetail;
@@ -10,7 +11,7 @@ type Props = {
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function UndoButton({
+export default function DeleteShotButton({
   record,
   setRecord,
   selectedEndIndex,
@@ -19,11 +20,11 @@ export default function UndoButton({
   setSelectedShotIndex,
 }: Props) {
 
-  // Called when "Undo" button is clicked.
+  // Called when "Delete Shot" button is clicked.
   // If the first shot is selected,
   // remove current end then select the previous end.
   // Otherwise, remove current shot then select the previous shot.
-  const undo = () => {
+  const deleteShot = () => {
     if (selectedShotIndex === 0) {
       setRecord(prevRecord => {
         return {
@@ -55,14 +56,14 @@ export default function UndoButton({
   const shotsNum = record.ends_data[record.ends_data.length - 1].shots.length;
 
   return (
-    <Button
-      onClick={undo}
+    <CommonButton
+      onClick={deleteShot}
       disabled={
         selectedEndIndex < endsNum - 1 || selectedShotIndex < shotsNum - 1 ||
         selectedEndIndex === 0 && selectedShotIndex === 0
       }
     >
-      Undo
-    </Button>
+      <Delete />
+    </CommonButton>
   );
 }

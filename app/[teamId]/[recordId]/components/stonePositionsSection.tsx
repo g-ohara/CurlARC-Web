@@ -12,7 +12,7 @@ import NextShotButton from './sheet/buttons/nextShotButton';
 import LastShotButton from './sheet/buttons/lastShotButton';
 import NextEndButton from './sheet/buttons/nextEndButton';
 
-import UndoButton from './sheet/buttons/undoButton';
+import DeleteShotButton from './sheet/buttons/deleteShotButton';
 import SaveShotButton from './sheet/buttons/saveShotButton';
 
 type Props = {
@@ -116,7 +116,7 @@ export default function StonePositionsSection({
       <div className="flex space-x-4 items-center mb-4">
         {isEditMode &&
           <div className="flex flex-wrap justify-between">
-            <UndoButton
+            <DeleteShotButton
               record={record}
               setRecord={setRecord}
               selectedEndIndex={selectedEndIndex}

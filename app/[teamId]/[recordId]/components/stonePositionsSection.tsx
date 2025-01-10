@@ -13,6 +13,7 @@ import LastShotButton from './sheet/buttons/lastShotButton';
 import NextEndButton from './sheet/buttons/nextEndButton';
 
 import DeleteShotButton from './sheet/buttons/deleteShotButton';
+import UndoButton from './sheet/buttons/undoButton';
 import SaveShotButton from './sheet/buttons/saveShotButton';
 
 type Props = {
@@ -113,29 +114,34 @@ export default function StonePositionsSection({
 
   return (
     <section className="w-full h-full mx-auto">
-      <div className="flex space-x-4 items-center mb-4">
-        {isEditMode &&
-          <div className="flex flex-wrap justify-between">
-            <DeleteShotButton
-              record={record}
-              setRecord={setRecord}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-            />
-            <SaveShotButton
-              record={record}
-              setRecord={setRecord}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-              onStonePositionChange={onStonePositionChange}
-            />
-          </div>
-        }
-      </div>
+      {isEditMode &&
+        <div className="flex flex-wrap justify-between">
+          <DeleteShotButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            setSelectedEndIndex={setSelectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex}
+          />
+          <UndoButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            onStonePositionChange={onStonePositionChange}
+          />
+          <SaveShotButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            setSelectedEndIndex={setSelectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex}
+            onStonePositionChange={onStonePositionChange}
+          />
+        </div>
+      }
       <div className="h-full mt-4">
         <Sheet
           className="h-full w-full"

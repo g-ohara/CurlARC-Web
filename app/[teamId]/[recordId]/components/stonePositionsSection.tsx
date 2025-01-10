@@ -4,13 +4,16 @@ import { Sheet } from './sheet/sheet';
 
 import { Coordinate, Stones } from '@/types/model';
 import { SHEET_CONSTANTS } from './sheet/constants';
+
 import PrevEndButton from './sheet/buttons/prevEndButton';
 import FirstShotButton from './sheet/buttons/firstShotButton';
 import PrevShotButton from './sheet/buttons/prevShotButton';
 import NextShotButton from './sheet/buttons/nextShotButton';
 import LastShotButton from './sheet/buttons/lastShotButton';
 import NextEndButton from './sheet/buttons/nextEndButton';
+
 import UndoButton from './sheet/buttons/undoButton';
+import SaveShotButton from './sheet/buttons/saveShotButton';
 
 type Props = {
   record: RecordDetail;
@@ -112,7 +115,7 @@ export default function StonePositionsSection({
     <section className="w-full h-full mx-auto">
       <div className="flex space-x-4 items-center mb-4">
         {isEditMode &&
-          <div className="flex space-x-4">
+          <div className="flex flex-wrap justify-between">
             <UndoButton
               record={record}
               setRecord={setRecord}
@@ -120,6 +123,15 @@ export default function StonePositionsSection({
               setSelectedEndIndex={setSelectedEndIndex}
               selectedShotIndex={selectedShotIndex}
               setSelectedShotIndex={setSelectedShotIndex}
+            />
+            <SaveShotButton
+              record={record}
+              setRecord={setRecord}
+              selectedEndIndex={selectedEndIndex}
+              setSelectedEndIndex={setSelectedEndIndex}
+              selectedShotIndex={selectedShotIndex}
+              setSelectedShotIndex={setSelectedShotIndex}
+              onStonePositionChange={onStonePositionChange}
             />
           </div>
         }
@@ -151,13 +163,9 @@ export default function StonePositionsSection({
           setSelectedShotIndex={setSelectedShotIndex}
         />
         <NextShotButton
-          record={record}
-          setRecord={setRecord}
-          selectedEndIndex={selectedEndIndex}
-          setSelectedEndIndex={setSelectedEndIndex}
           selectedShotIndex={selectedShotIndex}
           setSelectedShotIndex={setSelectedShotIndex}
-          onStonePositionChange={onStonePositionChange}
+          shotsNum={record.ends_data[selectedEndIndex].shots.length}
         />
         <LastShotButton
           selectedShotIndex={selectedShotIndex}
@@ -171,6 +179,6 @@ export default function StonePositionsSection({
           endsNum={record.ends_data.length}
         />
       </div>
-    </section>
+    </section >
   );
 }

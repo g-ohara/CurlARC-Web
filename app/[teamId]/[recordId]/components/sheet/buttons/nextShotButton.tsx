@@ -142,7 +142,13 @@ export default function NextShotButton({
     }
     else {
       // Select the next shot without changing the record.
-      setSelectedShotIndex(selectedShotIndex + 1);
+      if (selectedShotIndex === 15) {
+        setSelectedShotIndex(0);
+        setSelectedEndIndex(selectedEndIndex + 1);
+      }
+      else {
+        setSelectedShotIndex(selectedShotIndex + 1);
+      }
     }
   };
 

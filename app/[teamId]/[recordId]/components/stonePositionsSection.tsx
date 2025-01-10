@@ -113,41 +113,6 @@ export default function StonePositionsSection({
       <div className="flex space-x-4 items-center mb-4">
         {isEditMode &&
           <div className="flex space-x-4">
-            <PrevEndButton
-              setSelectedShotIndex={setSelectedShotIndex}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-            />
-            <FirstShotButton
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-            />
-            <PrevShotButton
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-            />
-            <NextShotButton
-              record={record}
-              setRecord={setRecord}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-              onStonePositionChange={onStonePositionChange}
-            />
-            <LastShotButton
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-              shotsNum={record.ends_data[selectedEndIndex].shots.length}
-            />
-            <NextEndButton
-              setSelectedShotIndex={setSelectedShotIndex}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              endsNum={record.ends_data.length}
-            />
             <UndoButton
               record={record}
               setRecord={setRecord}
@@ -167,6 +132,43 @@ export default function StonePositionsSection({
           setRecord={setRecord}
           selectedEndIndex={selectedEndIndex}
           selectedShotIndex={selectedShotIndex}
+        />
+      </div>
+      <div className="flex flex-wrap justify-between">
+        <PrevEndButton
+          setSelectedShotIndex={setSelectedShotIndex}
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+        />
+        <FirstShotButton
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+        />
+        <PrevShotButton
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+        />
+        <NextShotButton
+          record={record}
+          setRecord={setRecord}
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+          onStonePositionChange={onStonePositionChange}
+        />
+        <LastShotButton
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+          shotsNum={record.ends_data[selectedEndIndex].shots.length}
+        />
+        <NextEndButton
+          setSelectedShotIndex={setSelectedShotIndex}
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+          endsNum={record.ends_data.length}
         />
       </div>
     </section>

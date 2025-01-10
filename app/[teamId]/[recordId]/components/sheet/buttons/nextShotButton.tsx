@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import CommonButton from './commonButton';
 import { RecordDetail, Shot } from '@/types/model';
 import { Coordinate } from "../types";
 import { SHEET_CONSTANTS } from "../constants";
@@ -153,12 +153,11 @@ export default function NextShotButton({
   };
 
   return (
-    <Button
-      variant="outline"
+    <CommonButton
       onClick={nextShot}
       disabled={selectedShotIndex >= 15 && selectedEndIndex >= 7}
     >
       <ChevronRight />
-    </Button>
+    </CommonButton>
   );
 }

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import CommonButton from './commonButton';
 import { ChevronLeft } from 'lucide-react';
 
 type Props = {
@@ -26,12 +26,11 @@ export default function PrevShotButton({
   };
 
   return (
-    <Button
-      variant="outline"
+    <CommonButton
       onClick={prevShot}
       disabled={selectedShotIndex === 0 && selectedEndIndex === 0}
     >
       <ChevronLeft />
-    </Button>
+    </CommonButton>
   );
 }

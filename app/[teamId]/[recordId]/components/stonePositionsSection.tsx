@@ -4,6 +4,7 @@ import { Sheet } from './sheet/sheet';
 
 import { Coordinate, Stones } from '@/types/model';
 import { SHEET_CONSTANTS } from './sheet/constants';
+import PrevShotButton from './sheet/buttons/prevShotButton';
 import NextShotButton from './sheet/buttons/nextShotButton';
 import UndoButton from './sheet/buttons/undoButton';
 
@@ -106,9 +107,14 @@ export default function StonePositionsSection({
   return (
     <section className="w-full h-full mx-auto">
       <div className="flex space-x-4 items-center mb-4">
-        <h2 className="text-xl font-medium mb-4">Stone Positions</h2>
         {isEditMode &&
           <div className="flex space-x-4">
+            <PrevShotButton
+              selectedEndIndex={selectedEndIndex}
+              setSelectedEndIndex={setSelectedEndIndex}
+              selectedShotIndex={selectedShotIndex}
+              setSelectedShotIndex={setSelectedShotIndex}
+            />
             <NextShotButton
               record={record}
               setRecord={setRecord}

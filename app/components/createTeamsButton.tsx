@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,6 +28,8 @@ export default function CreateTeamsButton({ handleRefresh }: Props) {
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
+  const router = useRouter()
+
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
@@ -44,11 +47,12 @@ export default function CreateTeamsButton({ handleRefresh }: Props) {
     setSuccess(null)
 
     try {
-      await createTeam(teamName)
+      const teamRes = await createTeam(teamName)
       setTeamName('')
       handleRefresh()
 
       setSuccess('Team created successfully!')
+      router.push(`/${teamRes.team.id}`)
     } catch (error) {
       setError('Failed to create team. Please try again.\n' + error)
     } finally {

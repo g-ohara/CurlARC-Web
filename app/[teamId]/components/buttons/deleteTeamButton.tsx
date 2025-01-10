@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -28,6 +29,8 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
+  const router = useRouter()
+
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
@@ -54,6 +57,7 @@ export default function DeleteTeamButton({ teamName, teamId }: DeleteTeamButtonP
       revalidateByTag('getTeamsByUserId')
       setSuccess('Team deleted successfully!')
       setConfirmText('')
+      router.push('/')
     } catch (error) {
       setError('Failed to delete team. Please try again.\n' + error)
     } finally {

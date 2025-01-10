@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -20,12 +21,14 @@ type Props = {
   handleRefresh: () => void
 }
 
-export default function CreateTeamsButton({handleRefresh}: Props) {
+export default function CreateTeamsButton({ handleRefresh }: Props) {
   const [teamName, setTeamName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (success) {
@@ -44,11 +47,12 @@ export default function CreateTeamsButton({handleRefresh}: Props) {
     setSuccess(null)
 
     try {
-      await createTeam(teamName)
-      setTeamName('') 
+      const teamRes = await createTeam(teamName)
+      setTeamName('')
       handleRefresh()
 
       setSuccess('Team created successfully!')
+      router.push(`/${teamRes.team.id}`)
     } catch (error) {
       setError('Failed to create team. Please try again.\n' + error)
     } finally {

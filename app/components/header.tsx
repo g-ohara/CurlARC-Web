@@ -44,6 +44,7 @@ export default function Header({ className }: Props) {
 
   const handleRefresh = () => {
     setRefresh(!refresh);
+    setIsMenuOpen(false);
   }
 
   const handleLogout = () => {
@@ -85,7 +86,7 @@ export default function Header({ className }: Props) {
                 toast.error('You need to be logged in to view your teams.', {
                   position: 'top-center',
                 });
-              return;
+                return;
               }
               setIsMenuOpen(!isMenuOpen);
             }}
@@ -100,23 +101,22 @@ export default function Header({ className }: Props) {
             </Link>
           </div>
         </div>
-        
+
 
         <div className="flex items-center gap-4">
-          <AuthDropdownMenu 
-            user={user} 
-            handleLogin={handleLogin} 
-            handleLogout={handleLogout} 
-            goToProfile={goToProfile} 
+          <AuthDropdownMenu
+            user={user}
+            handleLogin={handleLogin}
+            handleLogout={handleLogout}
+            goToProfile={goToProfile}
           />
         </div>
 
         {/* Navigation Menu */}
         <div
           id="nav"
-          className={`text-black fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
-            isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          className={`text-black fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
         >
           <div className="p-4">
             <button
@@ -145,7 +145,7 @@ export default function Header({ className }: Props) {
                       </Link>
                     </li>
                   ))}
-                  <CreateTeamsButton handleRefresh={handleRefresh}/>
+                  <CreateTeamsButton handleRefresh={handleRefresh} />
                 </ul>
               </div>
 
@@ -171,7 +171,7 @@ export default function Header({ className }: Props) {
 
         {/* Overlay */}
         {isMenuOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={() => setIsMenuOpen(false)}
           />

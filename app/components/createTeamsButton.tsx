@@ -20,7 +20,7 @@ type Props = {
   handleRefresh: () => void
 }
 
-export default function CreateTeamsButton({handleRefresh}: Props) {
+export default function CreateTeamsButton({ handleRefresh }: Props) {
   const [teamName, setTeamName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,7 +45,7 @@ export default function CreateTeamsButton({handleRefresh}: Props) {
 
     try {
       await createTeam(teamName)
-      setTeamName('') 
+      setTeamName('')
       handleRefresh()
 
       setSuccess('Team created successfully!')

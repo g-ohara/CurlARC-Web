@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, Users, Layout, Globe, Star, Heart } from 'lucide-react'
 import { signIn } from "next-auth/react"
 import { SignInWithGoogleLogo } from "./components/googleLogo"
 
 export default function Home() {
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.includes('line')) {
+      alert("You cannot CurlARC on browser on LINE.\nPlease use other browsers.");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background w-full">
       {/* Hero Section */}

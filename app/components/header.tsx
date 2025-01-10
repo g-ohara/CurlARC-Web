@@ -44,6 +44,7 @@ export default function Header({ className }: Props) {
 
   const handleRefresh = () => {
     setRefresh(!refresh);
+    setIsMenuOpen(false);
   }
 
   const handleLogout = () => {

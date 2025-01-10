@@ -4,8 +4,10 @@ import { Sheet } from './sheet/sheet';
 
 import { Coordinate, Stones } from '@/types/model';
 import { SHEET_CONSTANTS } from './sheet/constants';
+import FirstShotButton from './sheet/buttons/firstShotButton';
 import PrevShotButton from './sheet/buttons/prevShotButton';
 import NextShotButton from './sheet/buttons/nextShotButton';
+import LastShotButton from './sheet/buttons/lastShotButton';
 import UndoButton from './sheet/buttons/undoButton';
 
 type Props = {
@@ -109,6 +111,10 @@ export default function StonePositionsSection({
       <div className="flex space-x-4 items-center mb-4">
         {isEditMode &&
           <div className="flex space-x-4">
+            <FirstShotButton
+              selectedShotIndex={selectedShotIndex}
+              setSelectedShotIndex={setSelectedShotIndex}
+            />
             <PrevShotButton
               selectedEndIndex={selectedEndIndex}
               setSelectedEndIndex={setSelectedEndIndex}
@@ -123,6 +129,11 @@ export default function StonePositionsSection({
               selectedShotIndex={selectedShotIndex}
               setSelectedShotIndex={setSelectedShotIndex}
               onStonePositionChange={onStonePositionChange}
+            />
+            <LastShotButton
+              selectedShotIndex={selectedShotIndex}
+              setSelectedShotIndex={setSelectedShotIndex}
+              shotsNum={record.ends_data[selectedEndIndex].shots.length}
             />
             <UndoButton
               record={record}

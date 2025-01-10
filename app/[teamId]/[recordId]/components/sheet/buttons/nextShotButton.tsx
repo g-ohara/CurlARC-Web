@@ -3,6 +3,7 @@ import { RecordDetail, Shot } from '@/types/model';
 import { Coordinate } from "../types";
 import { SHEET_CONSTANTS } from "../constants";
 import { stoneIsOut } from "../sheet";
+import { ChevronRight } from 'lucide-react';
 
 type Props = {
   record: RecordDetail;
@@ -27,7 +28,6 @@ export default function NextShotButton({
   // Add a new stone at the initial position.
   const addStone = (nextEnd: boolean) => {
 
-    // TODO: Implement logic to get which team is first in current end.
     const isFirstInThisEnd = record.is_first;
     const isFirstTurn = selectedShotIndex % 2 === 1;
     const isFriendTurn = isFirstInThisEnd ? isFirstTurn : !isFirstTurn;
@@ -140,14 +140,19 @@ export default function NextShotButton({
         setSelectedEndIndex(selectedEndIndex + 1);
       }
     }
+    else {
+      // Select the next shot without changing the record.
+      setSelectedShotIndex(selectedShotIndex + 1);
+    }
   };
 
   return (
     <Button
+      variant="outline"
       onClick={nextShot}
       disabled={selectedShotIndex >= 15 && selectedEndIndex >= 7}
     >
-      {selectedShotIndex < 15 ? "Next Shot" : "Next End"}
+      <ChevronRight />
     </Button>
   );
 }

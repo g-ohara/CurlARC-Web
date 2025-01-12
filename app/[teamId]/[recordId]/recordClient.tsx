@@ -123,12 +123,12 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
   return (
     <div className="w-full h-full">
-      <RecordHeader
-        friendTeam={teamRes.team}
-        record={editedRecord}
-      />
       <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-8">
         <div className="md:col-span-3 space-y-8">
+          <RecordHeader
+            friendTeam={teamRes.team}
+            record={editedRecord}
+          />
           <ScoreBoardSection
             record={editedRecord}
             friendTeamName={teamRes.team.name}

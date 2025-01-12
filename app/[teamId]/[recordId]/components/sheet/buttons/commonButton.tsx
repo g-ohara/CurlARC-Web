@@ -8,7 +8,7 @@ import {
 
 type Props = {
   onClick: () => void
-  disabled: boolean
+  disabled?: boolean
   hoverText?: string
   children: React.ReactNode
 };

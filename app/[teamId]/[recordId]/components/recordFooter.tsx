@@ -11,16 +11,13 @@ type Props = {
   handleSave: () => void
 }
 
-export default function RecordFooter({ record, toggleEditMode, isEditMode, handleSave}: Props) {
+export default function RecordFooter({ record, toggleEditMode, isEditMode, handleSave }: Props) {
   return (
     <div className="flex justify-end ites-center space-x-4 mt-4">
       <div className="flex items-center">
         <Switch checked={isEditMode} onCheckedChange={toggleEditMode} />
         <label className="ml-2">Edit Mode</label>
       </div>
-      {isEditMode && (
-        <Button onClick={handleSave} className="mr-2">Save Changes</Button>
-      )}
       <DeleteRecordButton recordId={record.id} />
     </div>
   )

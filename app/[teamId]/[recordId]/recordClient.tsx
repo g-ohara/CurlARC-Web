@@ -158,6 +158,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
               selectedShotIndex={selectedShotIndex}
               setSelectedShotIndex={setSelectedShotIndex}
               isEditMode={isEditMode}
+              handleSave={handleSave}
             />
             <MatchDetailsSection
               record={editedRecord}
@@ -179,6 +180,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             selectedShotIndex={selectedShotIndex}
             setSelectedShotIndex={setSelectedShotIndex}
             isEditMode={isEditMode}
+            handleSave={handleSave}
           />
         </div>
       </div>

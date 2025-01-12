@@ -15,6 +15,7 @@ import NextEndButton from './sheet/buttons/nextEndButton';
 import DeleteShotButton from './sheet/buttons/deleteShotButton';
 import UndoButton from './sheet/buttons/undoButton';
 import SaveShotButton from './sheet/buttons/saveShotButton';
+import SaveRecordButton from './sheet/buttons/saveRecordButton';
 
 type Props = {
   record: RecordDetail;
@@ -24,6 +25,7 @@ type Props = {
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
   isEditMode: boolean;
+  handleSave: () => void;
 };
 
 const calcScore = (stones: Stones) => {
@@ -62,6 +64,7 @@ export default function StonePositionsSection({
   selectedShotIndex,
   setSelectedShotIndex,
   isEditMode,
+  handleSave,
 }: Props) {
 
   const onStonePositionChange = (
@@ -139,6 +142,9 @@ export default function StonePositionsSection({
             selectedShotIndex={selectedShotIndex}
             setSelectedShotIndex={setSelectedShotIndex}
             onStonePositionChange={onStonePositionChange}
+          />
+          <SaveRecordButton
+            handleSave={handleSave}
           />
         </div>
       }

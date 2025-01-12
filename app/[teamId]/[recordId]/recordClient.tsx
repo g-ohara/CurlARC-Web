@@ -10,7 +10,6 @@ import { RecordDetail } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
 import { SHEET_CONSTANTS } from './components/sheet/constants';
-import RecordFooter from './components/recordFooter';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;

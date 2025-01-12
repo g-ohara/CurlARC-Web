@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect } from "react"
+import { useSession } from 'next-auth/react';
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, Users, Layout, Globe, Star, Heart } from 'lucide-react'
 import { signIn } from "next-auth/react"
 import { SignInWithGoogleLogo } from "./components/googleLogo"
 
 export default function Home() {
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -31,7 +35,17 @@ export default function Home() {
           <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8">
             Revolutionize your curling match recording and management with our comprehensive web application.
           </p>
-          <SignInWithGoogleLogo handleFunction={() => signIn('google')} />
+          {session ?
+            // TODO: Create Tutorial Page
+            <Button
+              variant="default"
+              className="text-lg bg-gray-100 text-black hover:bg-black hover:text-white"
+            >
+              Get Started
+            </Button>
+            :
+            <SignInWithGoogleLogo handleFunction={() => signIn('google')} />
+          }
         </div>
       </section>
 

@@ -21,6 +21,7 @@ export default function NextShotButton({
     <CommonButton
       onClick={nextShot}
       disabled={selectedShotIndex >= shotsNum - 1}
+      hoverText="Next Shot"
     >
       <ChevronRight />
     </CommonButton>

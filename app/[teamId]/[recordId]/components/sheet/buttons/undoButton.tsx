@@ -110,6 +110,7 @@ export default function DeleteShotButton({
       disabled={
         selectedShotIndex < shotsNum - 1 || selectedEndIndex < endsNum - 1
       }
+      hoverText="Undo"
     >
       <Undo />
     </CommonButton>

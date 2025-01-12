@@ -158,6 +158,7 @@ export default function NextShotButton({
     <CommonButton
       onClick={nextShot}
       disabled={selectedShotIndex < shotsNum - 1}
+      hoverText="Save Shot"
     >
       <Check />
     </CommonButton>

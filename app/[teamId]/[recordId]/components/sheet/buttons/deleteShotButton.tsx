@@ -62,6 +62,7 @@ export default function DeleteShotButton({
         selectedEndIndex < endsNum - 1 || selectedShotIndex < shotsNum - 1 ||
         selectedEndIndex === 0 && selectedShotIndex === 0
       }
+      hoverText="Delete Shot"
     >
       <Delete />
     </CommonButton>

@@ -19,6 +19,7 @@ export default function FirstShotButton({
     <CommonButton
       onClick={selectFirstShot}
       disabled={selectedShotIndex === 0}
+      hoverText="First Shot on This End"
     >
       <ChevronFirst />
     </CommonButton>

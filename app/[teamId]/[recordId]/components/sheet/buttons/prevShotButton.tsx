@@ -21,6 +21,7 @@ export default function PrevShotButton({
     <CommonButton
       onClick={prevShot}
       disabled={selectedShotIndex === 0}
+      hoverText="Previous Shot"
     >
       <ChevronLeft />
     </CommonButton>

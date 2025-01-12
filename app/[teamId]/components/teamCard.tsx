@@ -11,10 +11,9 @@ import RecordItem from './recordItem'
 type TeamCardProps = {
   teamId: string
   teamName: string
-  lastGameDate: string
 }
 
-export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps) {
+export async function TeamCard({ teamId, teamName }: TeamCardProps) {
   const res = await getRecordsByTeamId(teamId)
   const records = res.record_indices
   if (records) {
@@ -54,7 +53,7 @@ export async function TeamCard({ teamId, teamName, lastGameDate }: TeamCardProps
         </div>
       </div>
       <div className="fixed bottom-0 left-0 w-full p-4">
-        <TeamFooter lastGameDate={lastGameDate} teamId={teamId} teamName={teamName} />
+        <TeamFooter teamId={teamId} teamName={teamName} />
       </div>
     </>
   )

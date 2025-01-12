@@ -113,7 +113,7 @@ export default function StonePositionsSection({
   };
 
   return (
-    <section className="w-full h-full mx-auto">
+    <section className="h-full mx-auto aspect-[5/9]">
       {isEditMode &&
         <div className="flex flex-wrap justify-between">
           <DeleteShotButton
@@ -142,7 +142,7 @@ export default function StonePositionsSection({
           />
         </div>
       }
-      <div className="h-full mt-4">
+      <div className="h-full mt-4 ml-1">
         <Sheet
           className="h-full w-full"
           interactive={isEditMode}

@@ -28,7 +28,7 @@ export default function CommonButton({
             variant="outline"
             onClick={onClick}
             disabled={disabled}
-            className="flex-1"
+            className="flex-1 w-0"
           >
             {children}
           </Button>

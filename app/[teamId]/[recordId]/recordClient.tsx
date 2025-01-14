@@ -10,7 +10,6 @@ import { RecordDetail } from '@/types/model';
 import { updateRecord } from '@/lib/api/record';
 import { updateRecordRequest } from '@/types/request';
 import { SHEET_CONSTANTS } from './components/sheet/constants';
-import RecordFooter from './components/recordFooter';
 
 type Props = {
   recordRes: getRecordDetailsByRecordIdResponse;
@@ -123,12 +122,14 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
 
   return (
     <div className="w-full h-full">
-      <RecordHeader
-        friendTeam={teamRes.team}
-        record={editedRecord}
-      />
       <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mt-8">
         <div className="md:col-span-3 space-y-8">
+          <RecordHeader
+            friendTeam={teamRes.team}
+            record={editedRecord}
+            isEditMode={isEditMode}
+            toggleEditMode={toggleEditMode}
+          />
           <ScoreBoardSection
             record={editedRecord}
             friendTeamName={teamRes.team.name}
@@ -158,6 +159,7 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
               selectedShotIndex={selectedShotIndex}
               setSelectedShotIndex={setSelectedShotIndex}
               isEditMode={isEditMode}
+              handleSave={handleSave}
             />
             <MatchDetailsSection
               record={editedRecord}
@@ -179,11 +181,9 @@ export default function EditableRecordClient({ recordRes, teamRes, recordId }: P
             selectedShotIndex={selectedShotIndex}
             setSelectedShotIndex={setSelectedShotIndex}
             isEditMode={isEditMode}
+            handleSave={handleSave}
           />
         </div>
-      </div>
-      <div className="fixed bottom-10 right-5 w-full">
-        <RecordFooter record={editedRecord} toggleEditMode={toggleEditMode} isEditMode={isEditMode} handleSave={handleSave} />
       </div>
     </div>
   );

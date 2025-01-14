@@ -1,29 +1,29 @@
 import CommonButton from './commonButton';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLast } from 'lucide-react';
 
 type Props = {
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
-  shotsNum: number
+  shotsNum: number;
 };
 
-export default function NextShotButton({
+export default function FirstShotButton({
   selectedShotIndex,
   setSelectedShotIndex,
   shotsNum,
 }: Props) {
 
-  const nextShot = () => {
-    setSelectedShotIndex(selectedShotIndex + 1);
+  const selectLastShot = () => {
+    setSelectedShotIndex(shotsNum - 1);
   };
 
   return (
     <CommonButton
-      onClick={nextShot}
+      onClick={selectLastShot}
       disabled={selectedShotIndex >= shotsNum - 1}
-      hoverText="Next Shot"
+      hoverText="Last Shot on This End"
     >
-      <ChevronRight />
+      <ChevronLast />
     </CommonButton>
   );
 }

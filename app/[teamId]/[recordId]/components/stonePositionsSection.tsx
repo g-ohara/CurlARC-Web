@@ -4,8 +4,18 @@ import { Sheet } from './sheet/sheet';
 
 import { Coordinate, Stones } from '@/types/model';
 import { SHEET_CONSTANTS } from './sheet/constants';
+
+import PrevEndButton from './sheet/buttons/prevEndButton';
+import FirstShotButton from './sheet/buttons/firstShotButton';
+import PrevShotButton from './sheet/buttons/prevShotButton';
 import NextShotButton from './sheet/buttons/nextShotButton';
+import LastShotButton from './sheet/buttons/lastShotButton';
+import NextEndButton from './sheet/buttons/nextEndButton';
+
+import DeleteShotButton from './sheet/buttons/deleteShotButton';
 import UndoButton from './sheet/buttons/undoButton';
+import SaveShotButton from './sheet/buttons/saveShotButton';
+import SaveRecordButton from './sheet/buttons/saveRecordButton';
 
 type Props = {
   record: RecordDetail;
@@ -15,6 +25,7 @@ type Props = {
   selectedShotIndex: number;
   setSelectedShotIndex: React.Dispatch<React.SetStateAction<number>>;
   isEditMode: boolean;
+  handleSave: () => void;
 };
 
 const calcScore = (stones: Stones) => {
@@ -53,6 +64,7 @@ export default function StonePositionsSection({
   selectedShotIndex,
   setSelectedShotIndex,
   isEditMode,
+  handleSave,
 }: Props) {
 
   const onStonePositionChange = (
@@ -104,32 +116,39 @@ export default function StonePositionsSection({
   };
 
   return (
-    <section className="w-full h-full mx-auto">
-      <div className="flex space-x-4 items-center mb-4">
-        <h2 className="text-xl font-medium mb-4">Stone Positions</h2>
-        {isEditMode &&
-          <div className="flex space-x-4">
-            <NextShotButton
-              record={record}
-              setRecord={setRecord}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-              onStonePositionChange={onStonePositionChange}
-            />
-            <UndoButton
-              record={record}
-              setRecord={setRecord}
-              selectedEndIndex={selectedEndIndex}
-              setSelectedEndIndex={setSelectedEndIndex}
-              selectedShotIndex={selectedShotIndex}
-              setSelectedShotIndex={setSelectedShotIndex}
-            />
-          </div>
-        }
-      </div>
-      <div className="h-full mt-4">
+    <section className="h-full mx-auto aspect-[5/9]">
+      {isEditMode &&
+        <div className="flex flex-wrap justify-between">
+          <DeleteShotButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            setSelectedEndIndex={setSelectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex}
+          />
+          <UndoButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            onStonePositionChange={onStonePositionChange}
+          />
+          <SaveShotButton
+            record={record}
+            setRecord={setRecord}
+            selectedEndIndex={selectedEndIndex}
+            setSelectedEndIndex={setSelectedEndIndex}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex}
+            onStonePositionChange={onStonePositionChange}
+          />
+          <SaveRecordButton
+            handleSave={handleSave}
+          />
+        </div>
+      }
+      <div className="h-full mt-4 ml-1">
         <Sheet
           className="h-full w-full"
           interactive={isEditMode}
@@ -139,6 +158,39 @@ export default function StonePositionsSection({
           selectedShotIndex={selectedShotIndex}
         />
       </div>
-    </section>
+      <div className="flex flex-wrap justify-between">
+        <PrevEndButton
+          setSelectedShotIndex={setSelectedShotIndex}
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+        />
+        <FirstShotButton
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+        />
+        <PrevShotButton
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+        />
+        <NextShotButton
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+          shotsNum={record.ends_data[selectedEndIndex].shots.length}
+        />
+        <LastShotButton
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex}
+          shotsNum={record.ends_data[selectedEndIndex].shots.length}
+        />
+        <NextEndButton
+          setSelectedShotIndex={setSelectedShotIndex}
+          selectedEndIndex={selectedEndIndex}
+          setSelectedEndIndex={setSelectedEndIndex}
+          endsNum={record.ends_data.length}
+        />
+      </div>
+    </section >
   );
 }

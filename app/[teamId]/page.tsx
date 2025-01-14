@@ -11,7 +11,6 @@ export default async function TeamPage(props: { params: { teamId: string } }) {
       <TeamCard
         teamId={props.params.teamId}
         teamName={teamRes.team.name}
-        lastGameDate="N/A"
       />
     </main>
   )

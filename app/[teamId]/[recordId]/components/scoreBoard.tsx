@@ -41,7 +41,7 @@ const FirstStoneCell: FC<{ isFirst: boolean, isFriend: boolean, isEditMode: bool
     className={`border-b border-muted px-2 py-1 text-center text-xs sm:text-sm md:text-base ${isEditMode ? 'cursor-pointer' : ''}`}
     onClick={() => isEditMode && onIsFirstChange(isFriend)}
   >
-    {isFirst ? <Hammer /> : ''}
+    {isFirst || <Hammer />}
   </td>
 )
 

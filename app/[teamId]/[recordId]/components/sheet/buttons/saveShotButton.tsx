@@ -25,10 +25,27 @@ export default function NextShotButton({
   onStonePositionChange,
 }: Props) {
 
+  // Get whether the user has the first stone in this end or not.
+  // In curling...
+  // (1) the team that got score in the previous end has the first stone.
+  // (2) if the previous end has no score, the team that had the first stone
+  //     in the previous end has the first stone again.
+  const getIsFirstInThisEnd = (endIndex: number): boolean => {
+    if (endIndex === 0) {
+      return record.is_first;
+    }
+    else if (record.ends_data[endIndex - 1].score === 0) {
+      return getIsFirstInThisEnd(endIndex - 1);
+    }
+    else {
+      return record.ends_data[endIndex - 1].score > 0;
+    }
+  }
+
   // Add a new stone at the initial position.
   const addStone = (nextEnd: boolean) => {
 
-    const isFirstInThisEnd = record.is_first;
+    const isFirstInThisEnd = getIsFirstInThisEnd(selectedEndIndex);
     const isFirstTurn = selectedShotIndex % 2 === 1;
     const isFriendTurn = isFirstInThisEnd ? isFirstTurn : !isFirstTurn;
 
@@ -75,6 +92,7 @@ export default function NextShotButton({
       index: 0,
       ...SHEET_CONSTANTS.INITIAL_STONE_POSITION,
     };
+    const isFirstInNextEnd = getIsFirstInThisEnd(selectedEndIndex + 1);
     const newDataPerEnd = {
       score: 0,
       shots: [
@@ -83,8 +101,8 @@ export default function NextShotButton({
           success_rate: 0,
           shooter: '',
           stones: {
-            friend_stones: record.is_first ? [newStone] : [],
-            enemy_stones: record.is_first ? [] : [newStone],
+            friend_stones: isFirstInNextEnd ? [newStone] : [],
+            enemy_stones: isFirstInNextEnd ? [] : [newStone],
           },
         },
       ],

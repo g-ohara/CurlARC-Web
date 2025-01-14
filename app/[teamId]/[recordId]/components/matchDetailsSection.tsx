@@ -40,6 +40,23 @@ const successRates = Array.from({ length: 11 }, (_, i) => i * 10)
 
 export default function MatchDetailsSection({ record, selectedEndIndex, selectedShotIndex, onShotSelect, isEditMode, onShotsDetailsChange }: Props) {
 
+  // Get whether the user has the first stone in this end or not.
+  // In curling...
+  // (1) the team that got score in the previous end has the first stone.
+  // (2) if the previous end has no score, the team that had the first stone
+  //     in the previous end has the first stone again.
+  const getIsFirstInThisEnd = (endIndex: number): boolean => {
+    if (endIndex === 0) {
+      return record.is_first;
+    }
+    else if (record.ends_data[endIndex - 1].score === 0) {
+      return getIsFirstInThisEnd(endIndex - 1);
+    }
+    else {
+      return record.ends_data[endIndex - 1].score > 0;
+    }
+  }
+
   const selectedShotsData = record.ends_data?.[selectedEndIndex]?.shots ?? []
 
   const handleChange = (shotIndex: number, field: string, value: string | number) => {
@@ -94,6 +111,8 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
     );
   }
 
+  const isFirstInThisEnd = getIsFirstInThisEnd(selectedEndIndex);
+
   return (
     <section className="space-y-8">
       <div>
@@ -103,7 +122,7 @@ export default function MatchDetailsSection({ record, selectedEndIndex, selected
             <TableHeader>
               <TableRow>
                 <TableHead className="w-1/6">No.</TableHead>
-                {(record.is_red && record.is_first || !record.is_red && !record.is_first ? headerColors : headerColors.reverse()).map((color) => (
+                {((record.is_red ? isFirstInThisEnd : !isFirstInThisEnd) ? headerColors : headerColors.reverse()).map((color) => (
                   <TableHead className={`w-1/3 ${color}`}>Success Rate</TableHead>
                 ))}
               </TableRow>

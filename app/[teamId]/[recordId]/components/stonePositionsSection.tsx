@@ -115,6 +115,11 @@ export default function StonePositionsSection({
     });
   };
 
+  const endsNum = record.ends_data.length;
+  const shotsNum = record.ends_data[endsNum - 1].shots.length;
+  const latestShotIsSelected =
+    selectedEndIndex === endsNum - 1 && selectedShotIndex === shotsNum - 1;
+
   return (
     <section className="h-full mx-auto aspect-[5/9]">
       {isEditMode &&
@@ -151,7 +156,7 @@ export default function StonePositionsSection({
       <div className="h-full mt-4 ml-1">
         <Sheet
           className="h-full w-full"
-          interactive={isEditMode}
+          interactive={isEditMode && latestShotIsSelected}
           record={record}
           setRecord={setRecord}
           selectedEndIndex={selectedEndIndex}
